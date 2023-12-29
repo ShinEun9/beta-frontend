@@ -8,7 +8,7 @@ import useInputs from "@/hooks/useInputs";
 import { bytesToBase64, getResizedImgFiles } from "@/utils";
 import { Button, DatePicker, DeleteButton, Editor, InputField, RadioButtonGroup, TagInput } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
-import { DateInputType, DateWithTimeObj } from "@/types";
+import { DateInputType, DateWithTimeObj, ShowFormResultType } from "@/types";
 
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import convertArrayToObject from "@/utils/convertArrayToObject";
@@ -32,16 +32,14 @@ const defaultValues = {
   location: "",
   location_detail: "",
   is_reservation: isReservationList[0],
-  method: methodList[0],
-  google_form_url: "",
-  price: "",
-  head_count: "",
-  date_time: [],
 };
+
+const defaultResValues = { method: methodList[0], google_form_url: "", price: "", head_count: "", date_time: [] };
 
 const PostUploadPage = () => {
   const navigate = useNavigate();
-  const [form, onChange] = useInputs(defaultValues);
+  const [form, onChangeForm] = useInputs(defaultValues);
+  const [resForm, onChangeResForm] = useInputs(defaultResValues);
 
   const [tagsInput, setTagInputs] = useState<string[]>([]);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
@@ -118,11 +116,11 @@ const PostUploadPage = () => {
       return;
     }
     if (form.is_reservation === "예") {
-      if (form.method === "구글폼" && !form.google_form_url) {
+      if (resForm.method === "구글폼" && !resForm.google_form_url) {
         toast.error("구글폼 URL을 입력해주세요.");
         return;
       }
-      if (form.method === "예매 대행" && (form.price === null || !form.head_count || form.date_time.length || !editorNoticeData)) {
+      if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || resForm.date_time.length || !editorNoticeData)) {
         toast.error("예매 작성 폼을 완성해주세요.");
         return;
       }
@@ -132,13 +130,13 @@ const PostUploadPage = () => {
     console.log(resizedImgFiles);
     const base64EncodedContents = (!!editorData && bytesToBase64(new TextEncoder().encode(editorData))) || null;
     const base64EncodedNotice =
-      (form.method === "예매 대행" && !!editorNoticeData && bytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
+      (resForm.method === "예매 대행" && !!editorNoticeData && bytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
 
     const roundListToDateTime = () => {
       return roundList.map((item) => item.date + " - " + item.time);
     };
 
-    const result = {
+    const result: ShowFormResultType = {
       ...form,
       main_image_color: main_image_color as string,
       show_sub_type: form.show_type === "전시" ? null : form.show_sub_type,
@@ -150,11 +148,13 @@ const PostUploadPage = () => {
       tags: JSON.stringify(convertArrayToObject(tagsInput)),
       content: base64EncodedContents,
       is_reservation: form.is_reservation === "예" ? "1" : "0",
-      method: form.is_reservation === "예" ? (form.method === "구글폼" ? "google" : "agency") : null,
-      google_form_url: (form.method === "구글폼" && form.google_form_url) || null,
-      price: (form.method === "예매 대행" && form.price.toString()) || null,
-      head_count: (form.method === "예매 대행" && form.head_count.toString()) || null,
-      date_time: (form.method === "예매 대행" && JSON.stringify(convertArrayToObject(roundListToDateTime()))) || null,
+      //
+      ...resForm,
+      method: form.is_reservation === "예" ? (resForm.method === "구글폼" ? "google" : "agency") : null,
+      google_form_url: (resForm.method === "구글폼" && resForm.google_form_url) || null,
+      price: (resForm.method === "예매 대행" && resForm.price.toString()) || null,
+      head_count: (resForm.method === "예매 대행" && resForm.head_count.toString()) || null,
+      date_time: (resForm.method === "예매 대행" && JSON.stringify(convertArrayToObject(roundListToDateTime()))) || null,
       notice: base64EncodedNotice,
     };
 
@@ -169,29 +169,39 @@ const PostUploadPage = () => {
 
     const fileNames: { [key: number]: string } = {};
     finalSubImages.forEach((file: File, index: number) => (fileNames[index + 1] = file.name));
+    formData.append("sub_images_url", JSON.stringify(fileNames)); // 서브 이미지 순서
 
     // 텍스트
-    formData.append("show_type", result.show_type);
-    result.show_sub_type && formData.append("show_sub_type", result.show_sub_type);
-    formData.append("title", result.title);
-    formData.append("start_date", result.start_date);
-    formData.append("end_date", result.end_date);
-    formData.append("location", result.location);
-    result.location_detail && formData.append("location_detail", result.location_detail);
-    formData.append("position", result.position);
-    formData.append("main_image_color", result.main_image_color as string);
-    formData.append("sub_images_url", JSON.stringify(fileNames));
-    formData.append("univ", result.univ);
-    formData.append("department", result.department);
-    result.tags && formData.append("tags", result.tags);
-    result.content && formData.append("content", result.content);
-    result.is_reservation && formData.append("is_reservation", result.is_reservation);
-    result.method && formData.append("method", result.method);
-    result.google_form_url && formData.append("google_form_url", result.google_form_url);
-    result.price && formData.append("price", result.price);
-    result.head_count && formData.append("head_count", result.head_count);
-    result.notice && formData.append("notice", result.notice);
-    result.date_time && formData.append("date_time", result.date_time);
+    const keysToAppend: Array<keyof ShowFormResultType> = [
+      "show_type",
+      "show_sub_type",
+      "title",
+      "start_date",
+      "end_date",
+      "location",
+      "location_detail",
+      "position",
+      "main_image_color",
+      "univ",
+      "department",
+      "tags",
+      "content",
+      "is_reservation",
+      //
+      "method",
+      "google_form_url",
+      "price",
+      "head_count",
+      "date_time",
+      "notice",
+    ];
+
+    for (const key of keysToAppend) {
+      if (result[key]) {
+        // 특정 키에 해당하는 값이 존재할 때만 append
+        formData.append(key, result[key] as string);
+      }
+    }
 
     mutate(formData);
   };
@@ -234,22 +244,36 @@ const PostUploadPage = () => {
 
       <section>
         <h2 className={styles["title"]}>카테고리</h2>
-        <RadioButtonGroup radioList={categoryList} name="show_type" onChange={onChange} />
+        <RadioButtonGroup radioList={categoryList} name="show_type" onChange={onChangeForm} />
         {/* TODO: show_type에 맞는 sub_type 값 처리 */}
         {form.show_type === "공연" && (
-          <RadioButtonGroup radioList={concertCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChange} />
+          <RadioButtonGroup radioList={concertCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChangeForm} />
         )}
         {/* {form.show_type === "스포츠" && (
-          <RadioButtonGroup radioList={sportsCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChange} />
+          <RadioButtonGroup radioList={sportsCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChangeForm} />
         )} */}
       </section>
 
       <section>
         <h2 className={cx("a11y-hidden", "title")}>주최 정보</h2>
-        <InputField type="text" name="title" placeholder="제목을 입력해주세요." value={form.title} onChange={onChange} style={{ padding: "0 1rem" }}>
+        <InputField
+          type="text"
+          name="title"
+          placeholder="제목을 입력해주세요."
+          value={form.title}
+          onChange={onChangeForm}
+          style={{ padding: "0 1rem" }}
+        >
           제목
         </InputField>
-        <InputField type="text" name="univ" placeholder="대학을 입력해주세요." value={form.univ} onChange={onChange} style={{ padding: "0 1rem" }}>
+        <InputField
+          type="text"
+          name="univ"
+          placeholder="대학을 입력해주세요."
+          value={form.univ}
+          onChange={onChangeForm}
+          style={{ padding: "0 1rem" }}
+        >
           대학
         </InputField>
         <InputField
@@ -257,7 +281,7 @@ const PostUploadPage = () => {
           name="department"
           placeholder="학과 또는 학부를 입력해주세요."
           value={form.department}
-          onChange={onChange}
+          onChange={onChangeForm}
           style={{ padding: "0 1rem" }}
         >
           학과
@@ -284,7 +308,7 @@ const PostUploadPage = () => {
           name="location_detail"
           placeholder="상세 주소"
           value={form.location_detail}
-          onChange={onChange}
+          onChange={onChangeForm}
           labelHidden
           style={{ padding: "0 1rem" }}
         >
@@ -304,27 +328,27 @@ const PostUploadPage = () => {
 
       <section>
         <h2 className={styles["title"]}>예매 여부</h2>
-        <RadioButtonGroup radioList={isReservationList} name="is_reservation" defaultValue={form.is_reservation} onChange={onChange} />
+        <RadioButtonGroup radioList={isReservationList} name="is_reservation" defaultValue={form.is_reservation} onChange={onChangeForm} />
         {form.is_reservation === "예" && (
           <>
             <h3 className={styles["title"]}>예매 방법</h3>
-            <RadioButtonGroup radioList={methodList} name="method" defaultValue={form.method} onChange={onChange} />
-            {form.method === "구글폼" ? (
+            <RadioButtonGroup radioList={methodList} name="method" defaultValue={resForm.method} onChange={onChangeResForm} />
+            {resForm.method === "구글폼" ? (
               <InputField
                 type="url"
                 name="google_form_url"
                 placeholder="구글폼 URL을 입력해주세요."
                 labelHidden
-                value={form.google_form_url}
-                onChange={onChange}
+                value={resForm.google_form_url}
+                onChange={onChangeResForm}
                 // pattern="https://.*"
               >
                 구글폼url
               </InputField>
             ) : (
               <ReservationForm
-                form={form}
-                onChange={onChange}
+                form={resForm}
+                onChange={onChangeResForm}
                 roundList={roundList}
                 setRoundList={setRoundList}
                 editorNoticeData={editorNoticeData}
