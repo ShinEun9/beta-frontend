@@ -4,15 +4,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
 import reduceImageSize from "@/utils/reduceImageSize";
-import convertArrayToObject from "@/utils/convertArrayToObject";
-import { base64ToBytes, bytesToBase64, convertUrlToFile } from "@/utils";
+import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject } from "@/utils";
 import { DateInputType, DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 import useInputs from "@/hooks/useInputs";
-import { deleteShow, getShowInfo, getShowReservationInfo, putShow } from "@/apis";
+import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
 import { Button, DatePicker, DeleteButton, Editor, InputField, RadioButtonGroup, TagInput } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
-import styles from "./PostUpdatePage.module.css";
+import styles from "./PostCRUDPage.module.css";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
@@ -44,7 +43,7 @@ const defaultValues = {
 
 const defaultResValues = { method: methodList[0], google_form_url: null, price: null, head_count: null };
 
-const PostUpdatePage = () => {
+const PostCRUDPage = () => {
   const navigate = useNavigate();
   const locationObj = useLocation();
   const showId = locationObj.state || undefined;
@@ -89,10 +88,24 @@ const PostUpdatePage = () => {
     };
   }, [imgPreviewUrls]);
 
+  // 게시글 업로드 POST
+  const { mutate } = useMutation({
+    mutationFn: (formData: FormData) => postShow(formData),
+    onSuccess: (data) => {
+      if (data) {
+        toast.success("게시글 업로드 성공");
+        navigate("/mypage/admin/post");
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
   // 기존 게시글 GET
   const {
     data: showInfoData,
-    status,
+    status: showInfoStatus,
     error,
   } = useQuery({
     queryKey: ["showInfoData", showId],
@@ -140,7 +153,7 @@ const PostUpdatePage = () => {
   });
 
   useEffect(() => {
-    if (status === "success" && showInfoData) {
+    if (showInfoStatus === "success" && showInfoData) {
       const update = {
         title: showInfoData.title,
         show_type: showInfoData.show_type,
@@ -203,13 +216,15 @@ const PostUpdatePage = () => {
     }
   }, [initialResFormValues, resetResForm]);
 
-  if (status === "error") return <h1>{error.message}</h1>;
-  if (status === "pending") return <h1>loading...</h1>;
+  if (showId) {
+    if (showInfoStatus === "error") return <h1>{error.message}</h1>;
+    if (showInfoStatus === "pending") return <h1>loading...</h1>;
 
-  if (showReservationInfoStatus === "error") return <h1>{showReservationInfoError.message}</h1>;
-  if (showInfoData.is_reservation && showReservationInfoStatus === "pending") return <h1>loading reservationInfo...</h1>;
+    if (showReservationInfoStatus === "error") return <h1>{showReservationInfoError.message}</h1>;
+    if (showInfoData.is_reservation && showReservationInfoStatus === "pending") return <h1>loading reservationInfo...</h1>;
 
-  if (isLoading) return <h1>loading state update ...</h1>;
+    if (isLoading) return <h1>loading state update ...</h1>;
+  }
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -239,6 +254,124 @@ const PostUpdatePage = () => {
 
   const handleChangeTags = (tags: string[]) => {
     setTagInputs(tags);
+  };
+
+  // 업로드 버튼
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (imgFiles.length < 2) {
+      toast.error("이미지를 2개 이상 업로드 해주세요.");
+      return;
+    }
+    if (imgFiles.length > 10) {
+      toast.error("이미지를 10개 이하로 업로드 해주세요.");
+      return;
+    }
+    if (!form.title || !form.univ || !form.department) {
+      toast.error("주최자 정보를 입력해주세요.");
+      return;
+    }
+    if (!date.start_date || !date.end_date) {
+      toast.error("기간을 입력해주세요.");
+      return;
+    }
+    if (!location) {
+      toast.error("주소를 입력해주세요.");
+      return;
+    }
+    if (!tagsInput.length) {
+      toast.error("tag를 입력해주세요.");
+      return;
+    }
+    if (form.is_reservation === "예") {
+      if (resForm.method === "구글폼" && !resForm.google_form_url) {
+        toast.error("구글폼 URL을 입력해주세요.");
+        return;
+      }
+      if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
+        toast.error("예매 작성 폼을 완성해주세요.");
+        return;
+      }
+    }
+
+    const resizedImgFiles = await getResizedImgFiles(imgFiles);
+    const base64EncodedContents = (!!editorData && bytesToBase64(new TextEncoder().encode(editorData))) || null;
+    const base64EncodedNotice =
+      (resForm.method === "예매 대행" && !!editorNoticeData && bytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
+
+    const roundListToDateTime = () => {
+      return roundList.map((item) => item.date + " - " + item.time);
+    };
+
+    const result: ShowFormResultType = {
+      ...form,
+      main_image_color: main_image_color as string,
+      show_sub_type: form.show_type === "전시" ? null : form.show_sub_type,
+      start_date: date.start_date,
+      end_date: date.end_date,
+      location,
+      location_detail: form.location_detail ? form.location_detail : null,
+      position: JSON.stringify(position),
+      tags: JSON.stringify(convertArrayToObject(tagsInput)),
+      content: base64EncodedContents,
+      is_reservation: form.is_reservation === "예" ? "1" : "0",
+      //
+      ...resForm,
+      method: form.is_reservation === "예" ? (resForm.method === "구글폼" ? "google" : "agency") : null,
+      google_form_url: (resForm.method === "구글폼" && resForm.google_form_url) || null,
+      price: (resForm.method === "예매 대행" && (resForm.price as number).toString()) || null,
+      head_count: (resForm.method === "예매 대행" && (resForm.head_count as number).toString()) || null,
+      date_time: (resForm.method === "예매 대행" && JSON.stringify(convertArrayToObject(roundListToDateTime()))) || null,
+      notice: base64EncodedNotice,
+    };
+
+    const formData = new FormData();
+
+    // 이미지 파일
+    formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
+    const finalSubImages = resizedImgFiles.slice(1);
+    for (let i = 0; i < finalSubImages.length; i++) {
+      formData.append("subImages", finalSubImages[i]); // 서브 이미지
+    }
+
+    const fileNames: { [key: number]: string } = {};
+    finalSubImages.forEach((file: File, index: number) => (fileNames[index + 1] = file.name));
+    formData.append("sub_images_url", JSON.stringify(fileNames)); // 서브 이미지 순서
+
+    // 텍스트
+    const keysToAppend: Array<keyof ShowFormResultType> = [
+      "show_type",
+      "show_sub_type",
+      "title",
+      "start_date",
+      "end_date",
+      "location",
+      "location_detail",
+      "position",
+      "main_image_color",
+      "univ",
+      "department",
+      "tags",
+      "content",
+      "is_reservation",
+      //
+      "method",
+      "google_form_url",
+      "price",
+      "head_count",
+      "date_time",
+      "notice",
+    ];
+
+    for (const key of keysToAppend) {
+      if (result[key]) {
+        // 특정 키에 해당하는 값이 존재할 때만 append
+        formData.append(key.toString(), result[key] as string);
+      }
+    }
+
+    mutate(formData);
   };
 
   // 수정하기 버튼
@@ -277,7 +410,6 @@ const PostUpdatePage = () => {
         return;
       }
       if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
-        console.log(resForm.price, resForm.head_count, roundList.length, editorNoticeData);
         toast.error("예매 폼을 완성해주세요.");
         return;
       }
@@ -312,7 +444,7 @@ const PostUpdatePage = () => {
     const formData = new FormData();
 
     // 텍스트
-    formData.append("show_id", showId);
+    showId && formData.append("show_id", showId);
     const keysToAppend: Array<keyof ShowFormResultType> = [
       "show_type",
       "show_sub_type",
@@ -402,9 +534,9 @@ const PostUpdatePage = () => {
   };
 
   return (
-    <form className={styles["post-update-section-form"]}>
+    <form className={styles["post-section-form"]}>
       <section>
-        <h2 className={styles["title"]}>공연/전시/스포츠 이미지</h2>
+        <h2 className={styles["title"]}>공연/전시 이미지</h2> {/*스포츠 */}
         <div className={styles["update-imgs-wrapper"]}>
           <label className={styles["update-img-input"]}>
             <ImgUploadIcon />
@@ -548,16 +680,22 @@ const PostUpdatePage = () => {
         )}
       </section>
 
-      <div className={styles["button-group"]}>
-        <Button type="submit" onClick={handleDeleteShow} reverseColor>
-          삭제하기
+      {showId ? (
+        <div className={styles["button-group"]}>
+          <Button type="submit" onClick={handleDeleteShow} reverseColor>
+            삭제하기
+          </Button>
+          <Button type="submit" onClick={handleUpdateShow}>
+            수정하기
+          </Button>
+        </div>
+      ) : (
+        <Button type="submit" onClick={handleSubmit}>
+          업로드하기
         </Button>
-        <Button type="submit" onClick={handleUpdateShow}>
-          수정하기
-        </Button>
-      </div>
+      )}
     </form>
   );
 };
 
-export default PostUpdatePage;
+export default PostCRUDPage;
