@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 interface PropsType {
   radioList: string[];
   name: string;
-  defaultValue?: string;
+  defaultValue?: string | null;
   onChange: React.ChangeEventHandler;
   flexDirectionColumn?: boolean;
 }

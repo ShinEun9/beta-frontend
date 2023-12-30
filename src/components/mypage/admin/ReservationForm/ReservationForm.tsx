@@ -7,8 +7,8 @@ import { type DatePickerRef } from "@/components/common/DatePicker/DatePicker";
 
 interface PropsType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form?: any;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  form: any;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   roundList: DateWithTimeObj[];
   setRoundList: React.Dispatch<React.SetStateAction<DateWithTimeObj[]>>;
   editorNoticeData: string;
@@ -47,10 +47,10 @@ const ReservationForm: React.FC<PropsType> = ({ form, onChange, roundList, setRo
 
   return (
     <div className={styles["reservation-form-wrapper"]}>
-      <InputField type="number" name="price" value={form.price} onChange={onChange} style={{ width: "200px" }} unit="원">
+      <InputField type="number" name="price" value={form.price as number} onChange={onChange} style={{ width: "200px" }} unit="원">
         가격
       </InputField>
-      <InputField type="number" name="head_count" value={form.head_count} onChange={onChange} style={{ width: "200px" }} unit="명">
+      <InputField type="number" name="head_count" value={form.head_count as number} onChange={onChange} style={{ width: "200px" }} unit="명">
         총 수용 가능 인원
       </InputField>
       <section className={styles["round-list"]}>
