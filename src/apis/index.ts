@@ -13,6 +13,7 @@ import deleteReview from "./deleteReview";
 import patchReview from "./patchReview";
 import postLike from "./postLike";
 import deleteLike from "./deleteLike";
+import postShow from "./postShow";
 import putShow from "./putShow";
 import deleteShow from "./deleteShow";
 import postReservation from "./postReservation";
@@ -27,7 +28,7 @@ import deleteStoryUser from "./deleteStoryUser";
 import getUserProfile from "./getUserProfile";
 import putProfileUpdate from "./putProfileUpdate";
 import getUserReservationList from "@/apis/getUserReservationList";
-import deleteCancelShow from "@/apis/deleteCancelShow";
+import deleteCancelShow from "./deleteCancelShow";
 
 export {
   getShows,
@@ -46,6 +47,7 @@ export {
   deleteLike,
   postReservation,
   getUserLikeList,
+  postShow,
   putShow,
   deleteShow,
   getUserReviewList,
