@@ -256,126 +256,8 @@ const PostCRUDPage = () => {
     setTagInputs(tags);
   };
 
-  // 업로드 버튼
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (imgFiles.length < 2) {
-      toast.error("이미지를 2개 이상 업로드 해주세요.");
-      return;
-    }
-    if (imgFiles.length > 10) {
-      toast.error("이미지를 10개 이하로 업로드 해주세요.");
-      return;
-    }
-    if (!form.title || !form.univ || !form.department) {
-      toast.error("주최자 정보를 입력해주세요.");
-      return;
-    }
-    if (!date.start_date || !date.end_date) {
-      toast.error("기간을 입력해주세요.");
-      return;
-    }
-    if (!location) {
-      toast.error("주소를 입력해주세요.");
-      return;
-    }
-    if (!tagsInput.length) {
-      toast.error("tag를 입력해주세요.");
-      return;
-    }
-    if (form.is_reservation === "예") {
-      if (resForm.method === "구글폼" && !resForm.google_form_url) {
-        toast.error("구글폼 URL을 입력해주세요.");
-        return;
-      }
-      if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
-        toast.error("예매 작성 폼을 완성해주세요.");
-        return;
-      }
-    }
-
-    const resizedImgFiles = await getResizedImgFiles(imgFiles);
-    const base64EncodedContents = (!!editorData && bytesToBase64(new TextEncoder().encode(editorData))) || null;
-    const base64EncodedNotice =
-      (resForm.method === "예매 대행" && !!editorNoticeData && bytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
-
-    const roundListToDateTime = () => {
-      return roundList.map((item) => item.date + " - " + item.time);
-    };
-
-    const result: ShowFormResultType = {
-      ...form,
-      main_image_color: main_image_color as string,
-      show_sub_type: form.show_type === "전시" ? null : form.show_sub_type,
-      start_date: date.start_date,
-      end_date: date.end_date,
-      location,
-      location_detail: form.location_detail ? form.location_detail : null,
-      position: JSON.stringify(position),
-      tags: JSON.stringify(convertArrayToObject(tagsInput)),
-      content: base64EncodedContents,
-      is_reservation: form.is_reservation === "예" ? "1" : "0",
-      //
-      ...resForm,
-      method: form.is_reservation === "예" ? (resForm.method === "구글폼" ? "google" : "agency") : null,
-      google_form_url: (resForm.method === "구글폼" && resForm.google_form_url) || null,
-      price: (resForm.method === "예매 대행" && (resForm.price as number).toString()) || null,
-      head_count: (resForm.method === "예매 대행" && (resForm.head_count as number).toString()) || null,
-      date_time: (resForm.method === "예매 대행" && JSON.stringify(convertArrayToObject(roundListToDateTime()))) || null,
-      notice: base64EncodedNotice,
-    };
-
-    const formData = new FormData();
-
-    // 이미지 파일
-    formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
-    const finalSubImages = resizedImgFiles.slice(1);
-    for (let i = 0; i < finalSubImages.length; i++) {
-      formData.append("subImages", finalSubImages[i]); // 서브 이미지
-    }
-
-    const fileNames: { [key: number]: string } = {};
-    finalSubImages.forEach((file: File, index: number) => (fileNames[index + 1] = file.name));
-    formData.append("sub_images_url", JSON.stringify(fileNames)); // 서브 이미지 순서
-
-    // 텍스트
-    const keysToAppend: Array<keyof ShowFormResultType> = [
-      "show_type",
-      "show_sub_type",
-      "title",
-      "start_date",
-      "end_date",
-      "location",
-      "location_detail",
-      "position",
-      "main_image_color",
-      "univ",
-      "department",
-      "tags",
-      "content",
-      "is_reservation",
-      //
-      "method",
-      "google_form_url",
-      "price",
-      "head_count",
-      "date_time",
-      "notice",
-    ];
-
-    for (const key of keysToAppend) {
-      if (result[key]) {
-        // 특정 키에 해당하는 값이 존재할 때만 append
-        formData.append(key.toString(), result[key] as string);
-      }
-    }
-
-    mutate(formData);
-  };
-
-  // 수정하기 버튼
-  const handleUpdateShow = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  // 업로드하기, 수정하기 버튼
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>, submitFor: "upload" | "update") => {
     e.preventDefault();
 
     const imgCnt = imgFiles.length + imgExistingUrls.length;
@@ -410,7 +292,7 @@ const PostCRUDPage = () => {
         return;
       }
       if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
-        toast.error("예매 폼을 완성해주세요.");
+        toast.error("예매 작성 폼을 완성해주세요.");
         return;
       }
     }
@@ -443,8 +325,7 @@ const PostCRUDPage = () => {
 
     const formData = new FormData();
 
-    // 텍스트
-    showId && formData.append("show_id", showId);
+    // 텍스트 formData
     const keysToAppend: Array<keyof ShowFormResultType> = [
       "show_type",
       "show_sub_type",
@@ -460,6 +341,7 @@ const PostCRUDPage = () => {
       "tags",
       "content",
       "is_reservation",
+      //
       "method",
       "google_form_url",
       "price",
@@ -475,53 +357,68 @@ const PostCRUDPage = () => {
       }
     }
 
-    // 이미지
-    const resizedImgFiles = await Promise.all(
-      imgFiles.map(async (file) => {
-        const blobString = URL.createObjectURL(file);
-        const jpeg = await reduceImageSize(blobString);
-        return new File([jpeg], new Date().toISOString(), { type: "image/jpeg" });
-      }),
-    );
+    // 이미지 formData
+    const resizedImgFiles = await getResizedImgFiles(imgFiles);
 
-    // 서버에 새로 업로드할 이미지들 고르기
-    let finalSubImageFiles;
-    // 기존 이미지가 남아있으면
-    if (imgExistingUrls.length) {
-      finalSubImageFiles = resizedImgFiles;
-      // 기존 메인 이미지가 변경되면 (그대로면 보내지 않음)
-      if (imgExistingUrls[0] !== originMainUrl) {
-        // imgExistingUrls[0]을 file로 변환하고 jpeg 리사이즈해서 보내기
-        const mainImageFile = await convertUrlToFile(import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0]);
-        const blobString = URL.createObjectURL(mainImageFile);
-        const jpeg = await reduceImageSize(blobString);
-        const finalMainImageFile = new File([jpeg], imgExistingUrls[0], { type: "image/jpeg" });
-        formData.append("mainImage", finalMainImageFile); // 메인 이미지
+    switch (submitFor) {
+      case "upload": {
+        formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
+        const finalSubImages = resizedImgFiles.slice(1);
+        for (let i = 0; i < finalSubImages.length; i++) {
+          formData.append("subImages", finalSubImages[i]); // 서브 이미지
+        }
+
+        const fileNames: { [key: number]: string } = {};
+        finalSubImages.forEach((file: File, index: number) => (fileNames[index + 1] = file.name));
+        formData.append("sub_images_url", JSON.stringify(fileNames)); // 서브 이미지 순서
+
+        mutate(formData);
+        break;
       }
-    } // 기존 이미지가 다 삭제되면
-    else {
-      formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
-      finalSubImageFiles = resizedImgFiles.slice(1);
-    }
+      case "update": {
+        showId && formData.append("show_id", showId);
 
-    for (let i = 0; i < finalSubImageFiles.length; i++) {
-      formData.append("subImages", finalSubImageFiles[i]); // 서브 이미지
-    }
+        // 서버에 새로 업로드할 이미지들 고르기
+        let finalSubImageFiles;
+        // 기존 이미지가 남아있으면
+        if (imgExistingUrls.length) {
+          finalSubImageFiles = resizedImgFiles;
+          // 기존 메인 이미지가 변경되면 (그대로면 보내지 않음)
+          if (imgExistingUrls[0] !== originMainUrl) {
+            // imgExistingUrls[0]을 file로 변환하고 jpeg 리사이즈해서 보내기
+            const mainImageFile = await convertUrlToFile(import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0]);
+            const blobString = URL.createObjectURL(mainImageFile);
+            const jpeg = await reduceImageSize(blobString);
+            const finalMainImageFile = new File([jpeg], imgExistingUrls[0], { type: "image/jpeg" });
+            formData.append("mainImage", finalMainImageFile); // 메인 이미지
+          }
+        } // 기존 이미지가 다 삭제되면
+        else {
+          formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
+          finalSubImageFiles = resizedImgFiles.slice(1);
+        }
 
-    // 이미지 순서와 저장된 기존 서브 이미지 name를 파악하기 위한 file name list 만들기
-    const fileNames: { [key: number]: string } = {};
-    let finalSubImageUrls;
-    if (imgExistingUrls.length > 1) {
-      const existingFileNames = imgExistingUrls.slice(1).map((url) => url.split("/show/")[1]);
-      const newFileNames = finalSubImageFiles.map((file) => file.name);
-      finalSubImageUrls = [...existingFileNames, ...newFileNames];
-    } else {
-      finalSubImageUrls = finalSubImageFiles.map((file) => file.name);
-    }
-    finalSubImageUrls.forEach((fileName, index) => (fileNames[index + 1] = fileName));
-    formData.append("sub_images_url", JSON.stringify(fileNames));
+        for (let i = 0; i < finalSubImageFiles.length; i++) {
+          formData.append("subImages", finalSubImageFiles[i]); // 서브 이미지
+        }
 
-    editMutate(formData);
+        // 이미지 순서와 저장된 기존 서브 이미지 name를 파악하기 위한 file name list 만들기
+        const fileNames: { [key: number]: string } = {};
+        let finalSubImageUrls;
+        if (imgExistingUrls.length > 1) {
+          const existingFileNames = imgExistingUrls.slice(1).map((url) => url.split("/show/")[1]);
+          const newFileNames = finalSubImageFiles.map((file) => file.name);
+          finalSubImageUrls = [...existingFileNames, ...newFileNames];
+        } else {
+          finalSubImageUrls = finalSubImageFiles.map((file) => file.name);
+        }
+        finalSubImageUrls.forEach((fileName, index) => (fileNames[index + 1] = fileName));
+        formData.append("sub_images_url", JSON.stringify(fileNames));
+
+        editMutate(formData);
+        break;
+      }
+    }
   };
 
   // 삭제하기 버튼
@@ -685,12 +582,12 @@ const PostCRUDPage = () => {
           <Button type="submit" onClick={handleDeleteShow} reverseColor>
             삭제하기
           </Button>
-          <Button type="submit" onClick={handleUpdateShow}>
+          <Button type="submit" onClick={(e) => handleSubmit(e, "update")}>
             수정하기
           </Button>
         </div>
       ) : (
-        <Button type="submit" onClick={handleSubmit}>
+        <Button type="submit" onClick={(e) => handleSubmit(e, "upload")}>
           업로드하기
         </Button>
       )}
