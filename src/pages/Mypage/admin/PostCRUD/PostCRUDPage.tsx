@@ -59,19 +59,18 @@ const PostCRUDPage = () => {
       title: "asdfsa",
       univ: "",
       department: "",
+      date: {
+        start_date: "",
+        end_date: "",
+      },
       location: "",
       location_detail: null,
+      content: "",
       is_reservation: isReservationList[0],
       method: methodList[0],
       google_form_url: null,
       price: null,
       head_count: null,
-      position: { lng: null, lag: null },
-      content: "",
-      date: {
-        start_date: "",
-        end_date: "",
-      },
       notice: "",
     },
   });
@@ -84,7 +83,7 @@ const PostCRUDPage = () => {
   //   end_date: "",
   // });
   // const [location, setLocation] = useState<string>("");
-  // const [position, setPosition] = useState<object>({});
+  const [position, setPosition] = useState<object>({});
   const [tagsInput, setTagInputs] = useState<string[]>([]);
   // const [editorData, setEditorData] = useState<string>("");
 
@@ -552,8 +551,7 @@ const PostCRUDPage = () => {
             <InputFieldRHF type="text" placeholder="도로명 주소" labelHidden style={{ padding: "0 1rem" }} readOnly name="location">
               도로명 주소
             </InputFieldRHF>
-            <input type="text" {...method.register("position")} />
-            <Postcode />
+            <Postcode setPosition={setPosition} />
           </div>
           <InputFieldRHF type="text" placeholder="상세 주소" labelHidden style={{ padding: "0 1rem" }} name="location_detail">
             상세 주소
