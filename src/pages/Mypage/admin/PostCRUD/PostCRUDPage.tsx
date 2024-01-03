@@ -486,7 +486,9 @@ const PostCRUDPage = () => {
     }
   };
 
-  // const watchShowType = method.watch("show_type");
+  const watchShowType = method.watch("show_type");
+  const watchIsRes = method.watch("is_reservation");
+  const watchMethod = method.watch("method");
 
   return (
     <FormProvider {...method}>
@@ -518,11 +520,11 @@ const PostCRUDPage = () => {
           </div>
         </section> */}
 
-        {/* <section>
+        <section>
           <h2 className={styles["title"]}>카테고리</h2>
           <RadioButtonGroupRHF radioList={categoryList} name="show_type" />
           {watchShowType === "공연" && <RadioButtonGroupRHF radioList={concertCategoryList} name="show_sub_type" />}
-        </section> */}
+        </section>
 
         <section>
           <h2 className={cx("a11y-hidden", "title")}>주최 정보</h2>
@@ -568,30 +570,30 @@ const PostCRUDPage = () => {
           <Editor register={register} setValue={setValue} name="content" />
         </section> */}
 
-        {/* <section>
+        <section>
           <h2 className={styles["title"]}>예매 여부</h2>
-          <RadioButtonGroup radioList={isReservationList} {...register("is_reservation")} />
-          {getValues("is_reservation") === isReservationList[0] && (
+          <RadioButtonGroupRHF radioList={isReservationList} name="is_reservation" />
+          {watchIsRes === isReservationList[0] && (
             <>
               <h3 className={styles["title"]}>예매 방법</h3>
-              <RadioButtonGroup radioList={methodList} {...register("method")} />
-              {getValues("method") === methodList[0] && (
-                <InputField
+              <RadioButtonGroupRHF radioList={methodList} name="method" />
+              {watchMethod === methodList[0] && (
+                <InputFieldRHF
                   type="url"
                   placeholder="구글폼 URL을 입력해주세요."
                   labelHidden
-                  {...register("google_form_url")}
+                  name="google_form_url"
                   // pattern="https://.*"
                 >
                   구글폼url
-                </InputField>
+                </InputFieldRHF>
               )}
-              {getValues("method") === methodList[1] && (
+              {/* {watchMethod === methodList[1] && (
                 <ReservationForm register={register} errors={errors} roundList={roundList} setRoundList={setRoundList} />
-              )}
+              )} */}
             </>
           )}
-        </section> */}
+        </section>
 
         {showId ? (
           <div className={styles["button-group"]}>
