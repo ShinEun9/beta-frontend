@@ -65,7 +65,7 @@ const PostCRUDPage = () => {
       },
       location: "",
       location_detail: null,
-      content: "",
+      content: "ㅎㅎㅎ",
       is_reservation: isReservationList[0],
       method: methodList[0],
       google_form_url: null,
@@ -563,10 +563,10 @@ const PostCRUDPage = () => {
           <TagInput defaultValue={tagsInput} handleChange={handleChangeTags} />
         </section> */}
 
-        {/* <section>
+        <section>
           <h2 className={styles["title"]}>소개</h2>
-          <Editor register={register} setValue={setValue} name="content" />
-        </section> */}
+          <Editor name="content" />
+        </section>
 
         <section>
           <h2 className={styles["title"]}>예매 여부</h2>
