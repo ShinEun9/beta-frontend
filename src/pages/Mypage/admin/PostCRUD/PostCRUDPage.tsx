@@ -586,9 +586,7 @@ const PostCRUDPage = () => {
                   구글폼url
                 </InputFieldRHF>
               )}
-              {/* {watchMethod === methodList[1] && (
-                <ReservationForm register={register} errors={errors} roundList={roundList} setRoundList={setRoundList} />
-              )} */}
+              {watchMethod === methodList[1] && <ReservationForm roundList={roundList} setRoundList={setRoundList} />}
             </>
           )}
         </section>

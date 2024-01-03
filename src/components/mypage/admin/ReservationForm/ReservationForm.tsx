@@ -1,21 +1,18 @@
 import React, { useRef, useState } from "react";
-import { DatePicker, Editor, InputField, DeleteButton } from "@/components/common";
-import styles from "./ReservationForm.module.css";
-import { DateInputType, DateWithTimeObj } from "@/types";
 import { toast } from "react-toastify";
+import { DatePicker, Editor, DeleteButton } from "@/components/common";
 import { type DatePickerRef } from "@/components/common/DatePicker/DatePicker";
+import { DateInputType, DateWithTimeObj } from "@/types";
+import styles from "./ReservationForm.module.css";
+import InputFieldRHF from "@/components/common/InputField/InputFieldRHF";
 
 interface PropsType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   roundList: DateWithTimeObj[];
   setRoundList: React.Dispatch<React.SetStateAction<DateWithTimeObj[]>>;
-  editorNoticeData: string;
-  setEditorNoticeData: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const ReservationForm: React.FC<PropsType> = ({ form, onChange, roundList, setRoundList, editorNoticeData, setEditorNoticeData }) => {
+const ReservationForm: React.FC<PropsType> = ({ roundList, setRoundList }) => {
   const datePickerInputRef = useRef<DatePickerRef | null>(null);
   const [dateTime, setDateTime] = useState({
     id: "",
@@ -47,12 +44,12 @@ const ReservationForm: React.FC<PropsType> = ({ form, onChange, roundList, setRo
 
   return (
     <div className={styles["reservation-form-wrapper"]}>
-      <InputField type="number" name="price" value={form.price as number} onChange={onChange} style={{ width: "200px" }} unit="원">
+      <InputFieldRHF name="price" type="number" style={{ width: "200px" }} unit="원">
         가격
-      </InputField>
-      <InputField type="number" name="head_count" value={form.head_count as number} onChange={onChange} style={{ width: "200px" }} unit="명">
+      </InputFieldRHF>
+      <InputFieldRHF name="head_count" type="number" style={{ width: "200px" }} unit="명">
         총 수용 가능 인원
-      </InputField>
+      </InputFieldRHF>
       <section className={styles["round-list"]}>
         <h4 className={styles["title"]}>회차</h4>
         {roundList.map((round, index) => (
@@ -74,7 +71,7 @@ const ReservationForm: React.FC<PropsType> = ({ form, onChange, roundList, setRo
         <article className={styles["round-item-add"]}>
           <div className={styles["round-item-add__dateTime"]}>
             <span className={styles["round-item__title"]}>날짜 및 시간</span>
-            <DatePicker type="dateWithTime" onChange={handleDateTimeInput} ref={datePickerInputRef} />
+            {/* <DatePicker type="dateWithTime" onChange={handleDateTimeInput} ref={datePickerInputRef} /> */}
           </div>
           <button type="button" className={styles["round-item-add__btn"]} onClick={handleRoundAdd}>
             회차 추가
@@ -84,7 +81,7 @@ const ReservationForm: React.FC<PropsType> = ({ form, onChange, roundList, setRo
 
       <section>
         <h4 className={styles["title"]}>유의사항</h4>
-        <Editor editorData={editorNoticeData} setEditorData={setEditorNoticeData} />
+        {/* <Editor name="notice" /> */}
       </section>
     </div>
   );
