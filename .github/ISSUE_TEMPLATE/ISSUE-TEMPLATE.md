@@ -1,9 +1,10 @@
 ---
 name: issue template
 about: github issue 등록을 위한 템플릿
-title: "이슈 제목"
-labels: ""
-assignees: ""
+title: 이슈 제목
+labels: "\U0001F41E 버그"
+assignees: ''
+
 ---
 
 ### ❗️checklist
