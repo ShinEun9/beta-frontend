@@ -8,7 +8,7 @@ interface ReviewDeleteResponse {
 
 const deleteReview = async (review: ReviewDeleteParamType) => {
   const { review_id, show_id } = review;
-  await axios.delete<ReviewDeleteResponse>(`/api/show/review-delete/${review_id}/${show_id}`);
+  await axios.delete<ReviewDeleteResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/review-delete/${review_id}/${show_id}`);
 };
 
 export default deleteReview;

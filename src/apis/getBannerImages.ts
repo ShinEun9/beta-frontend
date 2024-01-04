@@ -14,7 +14,7 @@ interface BannerImage {
 }
 
 const getBannerImages = async () => {
-  const { data } = await axios<BannerImageResponse>("/api/bannerImages");
+  const { data } = await axios<BannerImageResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/bannerImages`);
   return data.data;
 };
 

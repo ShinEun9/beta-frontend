@@ -105,7 +105,7 @@ const SignupPage = () => {
       body["univ_name"] = univName;
     }
 
-    const { isSuccess, message } = await postSignupAPI("/api/signup", body);
+    const { isSuccess, message } = await postSignupAPI(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/signup`, body);
     if (isSuccess) {
       navigate("/login");
     } else {
@@ -160,7 +160,10 @@ const SignupPage = () => {
       setIsStop(false);
       const body: { user_email: string; univName?: string } = { user_email: fullEmail };
       if (userType === "admin") body["univName"] = univName;
-      const endPoint = userType === "user" ? "/api/send-email" : "/api/send-univ-email";
+      const endPoint =
+        userType === "user"
+          ? `${import.meta.env.VITE_APP_API_ENDPOINT}/api/send-email`
+          : `${import.meta.env.VITE_APP_API_ENDPOINT}/api/send-univ-email`;
       const { isSuccess, message } = await postSignupAPI(endPoint, body);
       if (isSuccess) {
         toast.update(toastId, {
@@ -199,7 +202,10 @@ const SignupPage = () => {
     const fullEmail = userType === "admin" ? univEmail : `${email.email1}@${email.email2}`;
     const body: { user_email: string; code: string; univName?: string } = { user_email: fullEmail, code: emailCertValue };
     if (userType === "admin") body["univName"] = univName;
-    const endPoint = userType === "user" ? "/api/verify-code" : "/api/verify-univ-code";
+    const endPoint =
+      userType === "user"
+        ? `${import.meta.env.VITE_APP_API_ENDPOINT}/api/verify-code`
+        : `${import.meta.env.VITE_APP_API_ENDPOINT}/api/verify-univ-code`;
     const { isSuccess, message } = await postSignupAPI(endPoint, body);
     if (isSuccess) {
       toast.update(toastId, {

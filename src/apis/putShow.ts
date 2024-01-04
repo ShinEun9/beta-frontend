@@ -6,7 +6,7 @@ interface PutShowResponse {
 }
 
 const putShow = async (formData: FormData) => {
-  const { data } = await axios.put<PutShowResponse>("/api/show/update", formData);
+  const { data } = await axios.put<PutShowResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/update`, formData);
   return data.ok;
 };
 
