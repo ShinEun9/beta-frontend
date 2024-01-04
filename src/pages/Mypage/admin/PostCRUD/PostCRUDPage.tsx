@@ -8,15 +8,12 @@ import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, con
 import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 // import useInputs from "@/hooks/useInputs";
 import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
-import { Button, DeleteButton, Editor, RadioButtonGroup, TagInput } from "@/components/common";
+import { Button, DeleteButton, Editor, RadioButtonGroup, TagInput, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import styles from "./PostCRUDPage.module.css";
 import classNames from "classnames/bind";
 import { DevTool } from "@hookform/devtools";
-import InputFieldRHF from "@/components/common/InputField/InputFieldRHF";
-import RadioButtonGroupRHF from "@/components/common/RadioButtonGroup/RadioButtonGroupRHF";
-import DatePickerRHF from "@/components/common/DatePicker/DatePickerRHF";
 
 const cx = classNames.bind(styles);
 
