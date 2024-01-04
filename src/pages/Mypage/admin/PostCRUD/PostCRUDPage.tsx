@@ -8,7 +8,7 @@ import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, con
 import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 // import useInputs from "@/hooks/useInputs";
 import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
-import { Button, DeleteButton, Editor, RadioButtonGroup, TagInput, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF } from "@/components/common";
+import { Button, DeleteButton, Editor, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF, TagInputRHF } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import styles from "./PostCRUDPage.module.css";
@@ -61,6 +61,7 @@ const PostCRUDPage = () => {
       end_date: null,
       location: "",
       location_detail: null,
+      tags: [],
       content: "ㅎㅎㅎ",
       is_reservation: isReservationList[0],
       method: methodList[0],
@@ -81,7 +82,7 @@ const PostCRUDPage = () => {
   // });
   // const [location, setLocation] = useState<string>("");
   const [position, setPosition] = useState<object>({});
-  const [tagsInput, setTagInputs] = useState<string[]>([]);
+  // const [tagsInput, setTagInputs] = useState<string[]>([]);
   // const [editorData, setEditorData] = useState<string>("");
 
   // 이미지 관련
@@ -557,10 +558,10 @@ const PostCRUDPage = () => {
           </InputFieldRHF>
         </section>
 
-        {/* <section className={styles["tags-section"]}>
+        <section className={styles["tags-section"]}>
           <h2 className={styles["title"]}>태그</h2>
-          <TagInput defaultValue={tagsInput} handleChange={handleChangeTags} />
-        </section> */}
+          <TagInputRHF control={method.control} name="tags" rules={{ required: true }} />
+        </section>
 
         <section>
           <h2 className={styles["title"]}>소개</h2>
