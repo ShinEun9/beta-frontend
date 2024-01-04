@@ -1,45 +1,42 @@
-import React, { useRef, useState } from "react";
+import React from "react";
+import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
-import { DatePicker, Editor, DeleteButton } from "@/components/common";
-import { type DatePickerRef } from "@/components/common/DatePicker/DatePicker";
-import { DateInputType, DateWithTimeObj } from "@/types";
+import { Editor, DeleteButton, InputFieldRHF, DatePickerRHF } from "@/components/common";
+import { formattingDate, formattingTime } from "@/utils";
+import { DateWithTimeObj } from "@/types";
 import styles from "./ReservationForm.module.css";
-import InputFieldRHF from "@/components/common/InputField/InputFieldRHF";
+
+const formattingDateTime = (value: Date) => {
+  const dateObject = new Date(value);
+  const date = formattingDate(dateObject);
+  const time = formattingTime(dateObject);
+  return { date, time };
+};
 
 interface PropsType {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   roundList: DateWithTimeObj[];
   setRoundList: React.Dispatch<React.SetStateAction<DateWithTimeObj[]>>;
 }
 
 const ReservationForm: React.FC<PropsType> = ({ roundList, setRoundList }) => {
-  const datePickerInputRef = useRef<DatePickerRef | null>(null);
-  const [dateTime, setDateTime] = useState({
-    id: "",
-    date: "",
-    time: "",
-  });
+  const { getValues, setValue } = useFormContext();
 
-  const handleDateTimeInput = (event: DateInputType) => {
-    if (event.target.value && typeof event.target.value === "object") {
-      const { date, time } = event.target.value;
-      setDateTime({ id: `new${date}${time}`, date, time });
-    }
-  };
+  const handleAddRound = () => {
+    const value = getValues("date_time");
 
-  const handleRoundAdd = () => {
-    if (dateTime.date && dateTime.time) {
-      if (roundList.some((round) => round.date === dateTime.date && round.time === dateTime.time)) {
-        toast("이미 추가된 회차입니다.");
+    if (value) {
+      const { date, time } = formattingDateTime(value);
+      if (roundList.some((round) => round.date === date && round.time === time)) {
+        toast.error("이미 추가된 회차입니다.");
         return;
       }
-      setRoundList([...roundList, dateTime]);
-      (datePickerInputRef.current as DatePickerRef).clearDatePicker();
+      setRoundList([...roundList, { id: `new${date}${time}`, date, time }]);
+      setValue("date_time", null);
     }
   };
 
-  const handleRoundRemove = ({ round: removeRound }: { round: DateWithTimeObj }) => {
-    setRoundList((prev) => prev.filter((round) => round !== removeRound));
+  const handleRemoveRound = ({ round: selectedRound }: { round: DateWithTimeObj }) => {
+    setRoundList((prev) => prev.filter((round) => round !== selectedRound));
   };
 
   return (
@@ -64,16 +61,16 @@ const ReservationForm: React.FC<PropsType> = ({ roundList, setRoundList }) => {
                 <span className={styles["round-item__content"]}>{round.time}</span>
               </div>
             </div>
-            <DeleteButton spanHidden="해당 회차 삭제" onClick={() => handleRoundRemove({ round })} />
+            <DeleteButton spanHidden="해당 회차 삭제" onClick={() => handleRemoveRound({ round })} />
           </article>
         ))}
 
         <article className={styles["round-item-add"]}>
           <div className={styles["round-item-add__dateTime"]}>
             <span className={styles["round-item__title"]}>날짜 및 시간</span>
-            {/* <DatePicker type="dateWithTime" onChange={handleDateTimeInput} ref={datePickerInputRef} /> */}
+            <DatePickerRHF type="dateWithTime" />
           </div>
-          <button type="button" className={styles["round-item-add__btn"]} onClick={handleRoundAdd}>
+          <button type="button" className={styles["round-item-add__btn"]} onClick={handleAddRound}>
             회차 추가
           </button>
         </article>

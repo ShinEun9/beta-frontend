@@ -5,10 +5,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
 import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize } from "@/utils";
-import { DateInputType, DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
+import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 // import useInputs from "@/hooks/useInputs";
 import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
-import { Button, DatePicker, DeleteButton, Editor, RadioButtonGroup, TagInput } from "@/components/common";
+import { Button, DeleteButton, Editor, RadioButtonGroup, TagInput } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import styles from "./PostCRUDPage.module.css";
@@ -16,6 +16,7 @@ import classNames from "classnames/bind";
 import { DevTool } from "@hookform/devtools";
 import InputFieldRHF from "@/components/common/InputField/InputFieldRHF";
 import RadioButtonGroupRHF from "@/components/common/RadioButtonGroup/RadioButtonGroupRHF";
+import DatePickerRHF from "@/components/common/DatePicker/DatePickerRHF";
 
 const cx = classNames.bind(styles);
 
@@ -59,10 +60,8 @@ const PostCRUDPage = () => {
       title: "asdfsa",
       univ: "",
       department: "",
-      date: {
-        start_date: "",
-        end_date: "",
-      },
+      start_date: null,
+      end_date: null,
       location: "",
       location_detail: null,
       content: "ㅎㅎㅎ",
@@ -71,6 +70,7 @@ const PostCRUDPage = () => {
       google_form_url: null,
       price: null,
       head_count: null,
+      // date_time: null,
       notice: "",
     },
   });
@@ -299,11 +299,6 @@ const PostCRUDPage = () => {
     setImgExistingUrls((prev) => prev.filter((existingUrl) => existingUrl !== image));
   };
 
-  // const handleDateInput = (event: DateInputType) => {
-  //   const { name, value } = event.target;
-  //   setDate({ ...date, [name]: value });
-  // };
-
   const handleChangeTags = (tags: string[]) => {
     setTagInputs(tags);
   };
@@ -404,6 +399,13 @@ const PostCRUDPage = () => {
       "date_time",
       "notice",
     ];
+
+    // formData append전에 형 변환
+    // const dateToString = (date: Date | null) => {
+    //     const dateObject = new Date(date);
+    //     const formatedDate = formattingDate(dateObject);
+    //     return formatedDate;
+    // };
 
     // for (const key of keysToAppend) {
     //   if (result[key]) {
@@ -538,12 +540,12 @@ const PostCRUDPage = () => {
           </InputFieldRHF>
         </section>
 
-        {/* <section>
+        <section>
           <h2 className={styles["title"]}>기간</h2>
           <div className={styles["l_date"]}>
-            <DatePicker type="period" startDate={date.start_date} endDate={date.end_date} onChange={handleDateInput} />
+            <DatePickerRHF type="period" />
           </div>
-        </section> */}
+        </section>
 
         <section>
           <h2 className={styles["title"]}>주소</h2>
