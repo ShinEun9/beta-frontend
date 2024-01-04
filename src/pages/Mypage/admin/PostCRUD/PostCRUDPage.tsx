@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { FormProvider, useForm } from "react-hook-form";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
-import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize } from "@/utils";
+import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize, formattingDate } from "@/utils";
 import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 // import useInputs from "@/hooks/useInputs";
 import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
@@ -31,19 +31,6 @@ const roundListArrToObj = (roundList: DateWithTimeObj[]) => {
   return obj;
 };
 
-// const defaultValues = {
-// show_type: categoryList[0],
-// show_sub_type: concertCategoryList[0],
-// title: "",
-// univ: "",
-// department: "",
-// // location: "",
-// location_detail: null,
-// is_reservation: isReservationList[0],
-// };
-
-// const defaultResValues = { method: methodList[0], google_form_url: null, price: null, head_count: null };
-
 const PostCRUDPage = () => {
   const navigate = useNavigate();
   const locationObj = useLocation();
@@ -54,7 +41,7 @@ const PostCRUDPage = () => {
     defaultValues: {
       show_type: categoryList[0],
       show_sub_type: concertCategoryList[0],
-      title: "asdfsa",
+      title: "",
       univ: "",
       department: "",
       start_date: null,
@@ -62,28 +49,19 @@ const PostCRUDPage = () => {
       location: "",
       location_detail: null,
       tags: [],
-      content: "ㅎㅎㅎ",
+      content: "",
       is_reservation: isReservationList[0],
       method: methodList[0],
       google_form_url: null,
       price: null,
       head_count: null,
-      // date_time: null,
+      date_time: null,
       notice: "",
     },
   });
 
   // 게시글 정보
-  // const [initialFormValues, setInitialFormValues] = useState<ShowFormType>(defaultValues);
-  // const [form, onChangeForm, resetForm] = useInputs(initialFormValues);
-  // const [date, setDate] = useState({
-  //   start_date: "",
-  //   end_date: "",
-  // });
-  // const [location, setLocation] = useState<string>("");
   const [position, setPosition] = useState<object>({});
-  // const [tagsInput, setTagInputs] = useState<string[]>([]);
-  // const [editorData, setEditorData] = useState<string>("");
 
   // 이미지 관련
   const [imgFiles, setImgFiles] = useState<File[]>([]);
@@ -99,10 +77,7 @@ const PostCRUDPage = () => {
   );
 
   // 게시글 예매 정보
-  // const [initialResFormValues, setInitialResFormValues] = useState<ShowResFormType>(defaultResValues);
-  // const [resForm, onChangeResForm, resetResForm] = useInputs(initialResFormValues);
   const [roundList, setRoundList] = useState<DateWithTimeObj[]>([]);
-  // const [editorNoticeData, setEditorNoticeData] = useState<string>("");
 
   useEffect(() => {
     return () => {
@@ -297,12 +272,8 @@ const PostCRUDPage = () => {
     setImgExistingUrls((prev) => prev.filter((existingUrl) => existingUrl !== image));
   };
 
-  const handleChangeTags = (tags: string[]) => {
-    setTagInputs(tags);
-  };
-
   // 업로드하기, 수정하기 버튼
-  const handleOnSubmit = async (data, submitFor: "upload" | "update") => {
+  const handleOnSubmit = async (data: ShowFormType & ShowResFormType, submitFor: "upload" | "update") => {
     console.log(data);
 
     // const imgCnt = imgFiles.length + imgExistingUrls.length;
@@ -315,11 +286,11 @@ const PostCRUDPage = () => {
     //   toast.error("이미지를 10개 이하로 업로드 해주세요.");
     //   return;
     // }
-    // if (!form.title || !form.univ || !form.department) {
+    // if (!data.title || !data.univ || !data.department) {
     //   toast.error("주최자 정보를 입력해주세요.");
     //   return;
     // }
-    // if (!date.start_date || !date.end_date) {
+    // if (!data.start_date || !data.end_date) {
     //   toast.error("기간을 입력해주세요.");
     //   return;
     // }
@@ -327,16 +298,16 @@ const PostCRUDPage = () => {
     //   toast.error("주소를 입력해주세요.");
     //   return;
     // }
-    // if (!tagsInput.length) {
+    // if (!data.tags.length) {
     //   toast.error("tag를 입력해주세요.");
     //   return;
     // }
-    // if (form.is_reservation === "예") {
-    //   if (resForm.method === "구글폼" && !resForm.google_form_url) {
+    // if (data.is_reservation === "예") {
+    //   if (data.method === "구글폼" && !data.google_form_url) {
     //     toast.error("구글폼 URL을 입력해주세요.");
     //     return;
     //   }
-    //   if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
+    //   if (data.method === "예매 대행" && (data.price === null || !data.head_count || !roundList.length || !data.notice)) {
     //     toast.error("예매 작성 폼을 완성해주세요.");
     //     return;
     //   }
@@ -349,27 +320,23 @@ const PostCRUDPage = () => {
         bytesToBase64(new TextEncoder().encode(method.getValues("notice")))) ||
       null;
 
-    // const result: ShowFormResultType = {
-    //   ...form,
-    //   main_image_color: main_image_color as string,
-    //   show_sub_type: form.show_type === "전시" ? null : form.show_sub_type,
-    //   start_date: date.start_date,
-    //   end_date: date.end_date,
-    //   location,
-    //   location_detail: form.location_detail ? form.location_detail : null,
-    //   position: JSON.stringify(position),
-    //   tags: JSON.stringify(convertArrayToObject(tagsInput)),
-    //   content: base64EncodedContents,
-    //   is_reservation: form.is_reservation === "예" ? "1" : "0",
-    //   //
-    //   ...resForm,
-    //   method: form.is_reservation === "예" ? (resForm.method === "구글폼" ? "google" : "agency") : null,
-    //   google_form_url: (resForm.method === "구글폼" && resForm.google_form_url) || null,
-    //   price: (resForm.method === "예매 대행" && (resForm.price as number).toString()) || null,
-    //   head_count: (resForm.method === "예매 대행" && (resForm.head_count as number).toString()) || null,
-    //   date_time: (resForm.method === "예매 대행" && JSON.stringify(roundListArrToObj(roundList))) || null,
-    //   notice: base64EncodedNotice,
-    // };
+    const result: ShowFormResultType = {
+      main_image_color: main_image_color as string,
+      ...data,
+      show_sub_type: data.show_type === "전시" ? null : data.show_sub_type,
+      start_date: formattingDate(data.start_date!),
+      end_date: formattingDate(data.end_date!),
+      position: JSON.stringify(position),
+      tags: JSON.stringify(convertArrayToObject(data.tags)),
+      content: base64EncodedContents,
+      is_reservation: data.is_reservation === "예" ? "1" : "0",
+      method: data.is_reservation === "예" ? (data.method === "구글폼" ? "google" : "agency") : null,
+      google_form_url: (data.method === "구글폼" && data.google_form_url) || null,
+      price: (data.method === "예매 대행" && (data.price as number).toString()) || null,
+      head_count: (data.method === "예매 대행" && (data.head_count as number).toString()) || null,
+      date_time: (data.method === "예매 대행" && JSON.stringify(roundListArrToObj(roundList))) || null,
+      notice: base64EncodedNotice,
+    };
 
     const formData = new FormData();
 
@@ -389,7 +356,6 @@ const PostCRUDPage = () => {
       "tags",
       "content",
       "is_reservation",
-      //
       "method",
       "google_form_url",
       "price",
@@ -398,19 +364,12 @@ const PostCRUDPage = () => {
       "notice",
     ];
 
-    // formData append전에 형 변환
-    // const dateToString = (date: Date | null) => {
-    //     const dateObject = new Date(date);
-    //     const formatedDate = formattingDate(dateObject);
-    //     return formatedDate;
-    // };
-
-    // for (const key of keysToAppend) {
-    //   if (result[key]) {
-    //     // 특정 키에 해당하는 값이 존재할 때만 append
-    //     formData.append(key.toString(), result[key] as string);
-    //   }
-    // }
+    for (const key of keysToAppend) {
+      if (result[key]) {
+        // 특정 키에 해당하는 값이 존재할 때만 append
+        formData.append(key.toString(), result[key] as string);
+      }
+    }
 
     // 이미지 formData
     const resizedImgFiles = await getResizedImgFiles(imgFiles);
@@ -427,7 +386,7 @@ const PostCRUDPage = () => {
         finalSubImages.forEach((file: File, index: number) => (fileNames[index + 1] = file.name));
         formData.append("sub_images_url", JSON.stringify(fileNames)); // 서브 이미지 순서
 
-        // mutate(formData);
+        mutate(formData);
         break;
       }
       case "update": {
@@ -492,7 +451,7 @@ const PostCRUDPage = () => {
   return (
     <FormProvider {...method}>
       <form className={styles["post-section-form"]}>
-        {/* <section>
+        <section>
           <div className={styles["update-imgs-wrapper"]}>
             <label className={styles["update-img-input"]}>
               <ImgUploadIcon />
@@ -517,7 +476,7 @@ const PostCRUDPage = () => {
               ))}
             </ul>
           </div>
-        </section> */}
+        </section>
 
         <section>
           <h2 className={styles["title"]}>카테고리</h2>
