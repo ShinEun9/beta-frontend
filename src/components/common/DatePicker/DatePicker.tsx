@@ -6,8 +6,7 @@ import "./DatePicker.css";
 import styles from "./DatePicker.module.css";
 import CalendarIcon from "@/assets/icon-calendar.svg?react";
 import { DateInputType } from "@/types";
-import formattingDate from "@/utils/formattingDate";
-import formattingTime from "@/utils/formattingTime";
+import { formattingDate, formattingTime } from "@/utils";
 
 export interface DatePickerRef {
   clearDatePicker: () => void;

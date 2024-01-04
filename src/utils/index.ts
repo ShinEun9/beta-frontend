@@ -8,6 +8,8 @@ import bytesToBase64 from "./bytesToBase64";
 import getResizedImgFiles from "./getResizedImgFiles";
 import convertArrayToObject from "./convertArrayToObject";
 import reduceImageSize from "./reduceImageSize";
+import formattingDate from "./formattingDate";
+import formattingTime from "./formattingTime";
 
 export {
   isPasswordCheck,
@@ -21,4 +23,6 @@ export {
   getResizedImgFiles,
   convertArrayToObject,
   reduceImageSize,
+  formattingDate,
+  formattingTime,
 };

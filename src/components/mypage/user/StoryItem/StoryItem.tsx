@@ -1,7 +1,7 @@
 import React from "react";
 import { DeleteButton } from "@/components/common";
 import { getTxtColorByBgColor } from "@/utils";
-import formattingDate from "@/utils/formattingDate";
+import { formattingDate } from "@/utils";
 import { StoryType } from "@/types";
 import { deleteStoryUser } from "@/apis";
 import { useMutation } from "@tanstack/react-query";
