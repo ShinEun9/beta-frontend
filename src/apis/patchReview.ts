@@ -7,7 +7,7 @@ interface ReviewPatchResponse {
 }
 
 const patchReview = async (review: ReviewPatchParamType) => {
-  await axios.patch<ReviewPatchResponse>("/api/show/review-update", review);
+  await axios.patch<ReviewPatchResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/review-update`, review);
 };
 
 export default patchReview;

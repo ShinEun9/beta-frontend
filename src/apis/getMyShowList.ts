@@ -12,7 +12,7 @@ interface ShowListItemType extends Omit<ShowType, "user_liked"> {
 }
 
 const getMyShowList = async () => {
-  const { data } = await axios<ShowListResponse>("/api/show/user");
+  const { data } = await axios<ShowListResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/user`);
   return data.data;
 };
 

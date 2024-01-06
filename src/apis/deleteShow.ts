@@ -6,7 +6,7 @@ interface ShowDeleteResponse {
 }
 
 const deleteShow = async (show_id: string) => {
-  const { data } = await axios.delete<ShowDeleteResponse>(`/api/show/delete/${show_id}`);
+  const { data } = await axios.delete<ShowDeleteResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/delete/${show_id}`);
   return data.ok;
 };
 

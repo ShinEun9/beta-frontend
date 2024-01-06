@@ -11,7 +11,7 @@ export const patchUserLogin = async (login_id: string, login_pw: string, user_ro
   let isSuccess = true;
 
   try {
-    const { data } = await axios.patch(`/api/login`, {
+    const { data } = await axios.patch(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/login`, {
       login_id,
       login_pw,
       user_role,

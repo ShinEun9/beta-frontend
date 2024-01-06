@@ -7,7 +7,7 @@ interface ReservationListResponseType {
 }
 
 const getAdminReservationList = async () => {
-  const { data } = await axios<ReservationListResponseType>("/api/show/admin/reservation/manage");
+  const { data } = await axios<ReservationListResponseType>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/admin/reservation/manage`);
 
   return data.data;
 };
