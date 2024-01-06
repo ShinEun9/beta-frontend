@@ -6,6 +6,8 @@ import convertUrlToFile from "./convertUrlToFile";
 import base64ToBytes from "./base64ToBytes";
 import bytesToBase64 from "./bytesToBase64";
 import getResizedImgFiles from "./getResizedImgFiles";
+import convertArrayToObject from "./convertArrayToObject";
+import reduceImageSize from "./reduceImageSize";
 
 export {
   isPasswordCheck,
@@ -17,4 +19,6 @@ export {
   base64ToBytes,
   bytesToBase64,
   getResizedImgFiles,
+  convertArrayToObject,
+  reduceImageSize,
 };

@@ -1,4 +1,5 @@
 import { ShowResponseType, ShowType, ShowFilterRequestType } from "./showType";
+import { ShowFormResultType, ShowFormType, ShowResFormType } from "./showFormType";
 import { StoryResponseType, StoryType } from "./storyType";
 import { ShowReservationInfoResponseType, ShowReservationInfoType, AgencyReservationInfoType } from "./showReservationInfoType";
 import { UserReservationFormType, UserReservationInputsType } from "./userReservationFormType";
@@ -12,6 +13,9 @@ export {
   type ShowResponseType,
   type ShowType,
   type ShowFilterRequestType,
+  type ShowFormType,
+  type ShowResFormType,
+  type ShowFormResultType,
   type StoryResponseType,
   type StoryType,
   type ShowReservationInfoResponseType,
