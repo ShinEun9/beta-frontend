@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { SignForm, Button, InputField, InputFieldGroup, Timer } from "@/components/common";
 import { isPasswordCheck, isPasswordDoubleCheck, isEmailCheck } from "@/utils";
 import { getSignUserInfo, postSignupAPI } from "@/apis";
+import { useHandleWidthResize } from "@/hooks";
 import { SignupBodyType } from "@/types/SignupBodyType";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./SignupPage.module.css";
@@ -24,6 +25,7 @@ interface idPasswordCheck {
 const cx = classNames.bind(styles);
 
 const SignupPage = () => {
+  const [zoom, setZoom] = useState(1);
   const [userType, setUserType] = useState<"user" | "admin">("user");
   const [id, setId] = useState<idPasswordCheck>({ value: "", isConfirm: false });
   const [password, setPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
@@ -47,6 +49,8 @@ const SignupPage = () => {
   const [isStop, setIsStop] = useState(false); // 타이머 정지
 
   const navigate = useNavigate();
+
+  useHandleWidthResize(625, setZoom);
 
   useEffect(() => {
     if (userType === "user") {
@@ -222,7 +226,7 @@ const SignupPage = () => {
   };
 
   return (
-    <main className={styles["sign-main"]}>
+    <main className={styles["sign-main"]} style={{ zoom: zoom }}>
       <img src={betaLogo} alt="로고 이미지" className={styles["logo-img"]} onClick={moveToMain} />
       <SignForm userType={userType} setUserType={setUserType}>
         <form onSubmit={handleSubmit} className={styles["sign-section-form"]}>
