@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { SignForm, Button, InputField } from "@/components/common";
 import { patchUserLogin } from "@/apis/patchUserLogin";
 import { useLoginStore } from "@/stores/useLoginStore";
+import { useResizeZoom } from "@/hooks";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./LoginPage.module.css";
 
@@ -14,6 +15,8 @@ const LoginPage = () => {
   const { setUserState } = useLoginStore();
   const navigate = useNavigate();
   const { state } = useLocation();
+
+  const { zoom } = useResizeZoom(625);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +41,7 @@ const LoginPage = () => {
   };
 
   return (
-    <main className={styles["login-main"]}>
+    <main className={styles["login-main"]} style={{ zoom: zoom }}>
       <div className={styles["logo-div"]}>
         <img src={betaLogo} alt="로고 이미지" className={styles["logo-img"]} onClick={moveToMain} />
       </div>
