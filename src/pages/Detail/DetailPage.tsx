@@ -5,7 +5,7 @@ import { queryClient } from "@/main";
 import { toast } from "react-toastify";
 import { Button, Carousel, Modal, UserAccessModal } from "@/components/common";
 import { NavBar } from "@/components/layouts";
-import { LikeButton, ReservationModal, SubMenuSection } from "@/components/detail";
+import { DetailPageSkeleton, LikeButton, ReservationModal, SubMenuSection } from "@/components/detail";
 import { useLoginStore } from "@/stores/useLoginStore";
 import { useShowInfoStore } from "@/stores/useShowInfoStore";
 import { useModalStore } from "@/stores/useModalStore";
@@ -65,7 +65,13 @@ const DetailPage = () => {
     infoData && setShowInfo(infoData);
   }, [infoData]);
 
-  if (status === "pending") return <h1>loading...</h1>;
+  if (status === "pending")
+    return (
+      <>
+        <NavBar />
+        <DetailPageSkeleton />;
+      </>
+    );
   if (status === "error") return <h1>{error.message}</h1>;
 
   const subImgs = (infoData.sub_images_url && Object.values(JSON.parse(infoData.sub_images_url))) || [];
@@ -110,6 +116,7 @@ const DetailPage = () => {
             </div>
           ))}
         </Carousel>
+
         <div className={styles["btn-group"]}>
           <LikeButton active={infoData.user_liked === 1 && true} onClick={handleLikeButtonClick} />
           {infoData.is_reservation === 1 && (
@@ -126,6 +133,7 @@ const DetailPage = () => {
 
         <SubMenuSection submenuList={submenuList} baseUrl={`/detail/${showId}`} />
       </main>
+
       {openModal.state && openModal.type === "guestAccess" && (
         <Modal title="회원가입/로그인으로 이동" titleHidden width="600px" height="500px">
           <UserAccessModal />

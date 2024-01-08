@@ -11,6 +11,7 @@ import ReviewEditForm from "./ReviewEditForm/ReviewEditForm";
 import ReservationModal from "./ReservationModal/ReservationModal";
 import ReservationForm from "./ReservationForm/ReservationForm";
 import ReservationPayment from "./ReservationPayment/ReservationPayment";
+import DetailPageSkeleton from "./DetailPageSkeleton/DetailPageSkeleton";
 
 export {
   SubMenuSection,
@@ -26,4 +27,5 @@ export {
   ReservationForm,
   ReservationPayment,
   ReviewEditForm,
+  DetailPageSkeleton,
 };
