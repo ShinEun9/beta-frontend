@@ -8,6 +8,7 @@ import { getSignUserInfo, postSignupAPI } from "@/apis";
 import { SignupBodyType } from "@/types/SignupBodyType";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./SignupPage.module.css";
+import { useResizeZoom } from "@/hooks";
 
 interface BirthdateGenderType {
   year: string;
@@ -47,6 +48,8 @@ const SignupPage = () => {
   const [isStop, setIsStop] = useState(false); // 타이머 정지
 
   const navigate = useNavigate();
+
+  const { zoom } = useResizeZoom(625);
 
   useEffect(() => {
     if (userType === "user") {
@@ -228,7 +231,7 @@ const SignupPage = () => {
   };
 
   return (
-    <main className={styles["sign-main"]}>
+    <main className={styles["sign-main"]} style={{ zoom: zoom }}>
       <img src={betaLogo} alt="로고 이미지" className={styles["logo-img"]} onClick={moveToMain} />
       <SignForm userType={userType} setUserType={setUserType}>
         <form onSubmit={handleSubmit} className={styles["sign-section-form"]}>
