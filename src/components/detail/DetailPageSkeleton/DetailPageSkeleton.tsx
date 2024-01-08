@@ -1,8 +1,34 @@
 import { useLocation } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { Carousel } from "@/components/common";
-import styles from "@/pages/Detail/DetaiPage.module.css";
+import bannerStyles from "@/components/detail/Banner/Banner.module.css";
+import buttonGroupStyles from "@/components/detail/ButtonGroup/ButtonGroup.module.css";
 import { InfoSectionSkeleton, ReviewSectionSkeleton } from "..";
+import { Carousel } from "@/components/common";
+
+export const BannerSkeleton = () => {
+  return (
+    <Carousel index={0}>
+      {[1, 2].map((index) => (
+        <div key={index}>
+          <Skeleton className={bannerStyles["slider__img"]} />
+        </div>
+      ))}
+    </Carousel>
+  );
+};
+
+export const ButtonGroupSkeleton = () => {
+  return (
+    <div className={buttonGroupStyles["btn-group"]}>
+      <div style={{ width: "100px" }}>
+        <Skeleton height={40} />
+      </div>
+      <div style={{ width: "100px" }}>
+        <Skeleton height={40} />
+      </div>
+    </div>
+  );
+};
 
 const SubMenuBarSkeleton = () => {
   return (
@@ -17,30 +43,15 @@ const SubMenuBarSkeleton = () => {
   );
 };
 
-const DetailPageSkeleton = () => {
+export const DetailPageSkeleton = () => {
   const location = useLocation();
 
   return (
     <main>
-      <Carousel index={0}>
-        {[1, 2].map((index) => (
-          <div key={index}>
-            <Skeleton className={styles["slider__img"]} />
-          </div>
-        ))}
-      </Carousel>
-      <div className={styles["btn-group"]}>
-        <div style={{ width: "120px" }}>
-          <Skeleton height={40} />
-        </div>
-        <div style={{ width: "120px" }}>
-          <Skeleton height={40} />
-        </div>
-      </div>
+      <BannerSkeleton />
+      <ButtonGroupSkeleton />
       <SubMenuBarSkeleton />
       {location.pathname.endsWith("review") ? <ReviewSectionSkeleton /> : <InfoSectionSkeleton />}
     </main>
   );
 };
-
-export default DetailPageSkeleton;

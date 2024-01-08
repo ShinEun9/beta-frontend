@@ -11,7 +11,9 @@ import ReviewEditForm from "./ReviewEditForm/ReviewEditForm";
 import ReservationModal from "./ReservationModal/ReservationModal";
 import ReservationForm from "./ReservationForm/ReservationForm";
 import ReservationPayment from "./ReservationPayment/ReservationPayment";
-import DetailPageSkeleton from "./DetailPageSkeleton/DetailPageSkeleton";
+import { DetailPageSkeleton, ButtonGroupSkeleton, BannerSkeleton } from "./DetailPageSkeleton/DetailPageSkeleton";
+import Banner from "./Banner/Banner";
+import ButtonGroup from "./ButtonGroup/ButtonGroup";
 
 export {
   SubMenuSection,
@@ -27,5 +29,9 @@ export {
   ReservationForm,
   ReservationPayment,
   ReviewEditForm,
+  Banner,
+  BannerSkeleton,
+  ButtonGroup,
+  ButtonGroupSkeleton,
   DetailPageSkeleton,
 };
