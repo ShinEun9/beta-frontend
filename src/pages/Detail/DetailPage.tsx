@@ -31,13 +31,11 @@ const DetailPage = () => {
   if (status === "error") return <h1>{error.message}</h1>;
 
   return (
-    <>
-      <main>
-        <Banner />
-        <ButtonGroup />
-        <SubMenuSection submenuList={submenuList} baseUrl={`/detail/${showId}`} />
-      </main>
-    </>
+    <main>
+      <Banner />
+      <ButtonGroup />
+      <SubMenuSection submenuList={submenuList} baseUrl={`/detail/${showId}`} />
+    </main>
   );
 };
 
