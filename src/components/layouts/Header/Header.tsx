@@ -33,10 +33,10 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
-    const res = patchUserLogout();
-    if ((await res).ok) {
+    const res = await patchUserLogout();
+    if (res.ok) {
       setUserState({ isLogin: false, login_id: "", user_name: "", user_role: "" });
-      navigate("/");
+      // navigate("/");
     }
   };
 
