@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Banner, ButtonGroup, SubMenuSection, DetailPageSkeleton } from "@/components/detail";
 import { useShowInfoStore } from "@/stores/useShowInfoStore";
 import { getShowInfo } from "@/apis";
+import { Banner, ButtonGroup, SubMenuSection } from "@/components/detail";
+import DetailPageSkeleton from "./DetailPageSkeleton";
 
 const submenuList = [
   { pathname: "", text: "정보" },
