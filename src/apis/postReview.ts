@@ -6,7 +6,7 @@ interface ReviewPostResponse {
   data: boolean;
 }
 const postReview = async (review: ReviewPostParamType) => {
-  const { data } = await axios.post<ReviewPostResponse>("/api/show/review-add", review);
+  const { data } = await axios.post<ReviewPostResponse>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/show/review-add`, review);
 
   return data;
 };

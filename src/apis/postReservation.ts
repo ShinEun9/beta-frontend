@@ -14,7 +14,7 @@ interface ConfirmResponseType {
 
 const postReservation = async (body: PostReservationParamType) => {
   try {
-    const { data } = await axios.post<ConfirmResponseType>("/api/confirm", body);
+    const { data } = await axios.post<ConfirmResponseType>(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/confirm`, body);
 
     if (!data.ok) {
       throw new Error(data.message);

@@ -121,7 +121,7 @@ const ProfilePage = () => {
       user_role: data.user_role as "user" | "admin",
     };
 
-    const { isSuccess, message } = await putProfileUpdate("/api/updateMember", body);
+    const { isSuccess, message } = await putProfileUpdate(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/updateMember`, body);
     if (isSuccess) {
       toast.success("회원정보 수정 완료");
     } else {
@@ -149,7 +149,7 @@ const ProfilePage = () => {
         setIsCodeCheck(false);
         setIsStop(false);
         const body: { user_email: string } = { user_email: fullEmail };
-        const endPoint = "/api/send-email";
+        const endPoint = `${import.meta.env.VITE_APP_API_ENDPOINT}/api/send-email`;
         const { isSuccess, message } = await postSignupAPI(endPoint, body);
         if (isSuccess) {
           toast.update(toastId, {
@@ -188,7 +188,7 @@ const ProfilePage = () => {
     const toastId = toast.loading("이메일을 전송중입니다.");
     const fullEmail = `${email.email1}@${email.email2}`;
     const body: { user_email: string; code: string } = { user_email: fullEmail, code: emailCertValue };
-    const endPoint = "/api/verify-code";
+    const endPoint = `${import.meta.env.VITE_APP_API_ENDPOINT}/api/verify-code`;
     const { isSuccess, message } = await postSignupAPI(endPoint, body);
     if (isSuccess) {
       toast.update(toastId, {

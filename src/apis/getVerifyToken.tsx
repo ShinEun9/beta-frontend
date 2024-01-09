@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 export const verifyTokenAPI = async () => {
   try {
-    const res = await axios.get("/api/verifyToken");
+    const res = await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/verifyToken`);
     const { login_id, user_name, user_role } = res.data.data;
     console.log("Access token is valid");
     return { isLogin: true, login_id, user_name, user_role };
@@ -13,7 +13,7 @@ export const verifyTokenAPI = async () => {
 
     if (axiosError.response && axiosError.response.status === 401) {
       try {
-        const res = await axios.get("/api/refreshToken");
+        const res = await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/api/refreshToken`);
         const { login_id, user_name, user_role } = res.data.data;
         console.log("refresh token is valid and new access token is issued");
         return { isLogin: true, login_id, user_name, user_role };
