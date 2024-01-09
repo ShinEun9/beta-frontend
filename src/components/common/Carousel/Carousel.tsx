@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Slider from "react-slick";
 import { useCarouselDragStore } from "@/stores/useCarouselDragStore";
 import nextArrow from "@/assets/next-arrow.png";
@@ -6,7 +6,6 @@ import prevArrow from "@/assets/prev-arrow.png";
 import "./slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Carousel.module.css";
-import useCarouselTranslateTrack from "@/hooks/useCarouselTranslateTrack";
 
 interface PropsType {
   index: number;
@@ -132,7 +131,6 @@ const settings = [
 
 const Carousel: React.FC<PropsType> = ({ index, initialSlide = 0, children }) => {
   const { setIsDragging } = useCarouselDragStore();
-  useCarouselTranslateTrack(index);
 
   return (
     <Slider
