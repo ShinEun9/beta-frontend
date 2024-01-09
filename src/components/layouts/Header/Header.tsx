@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { MypageNavBar } from "@/components/layouts";
 import { useLoginStore } from "@/stores/useLoginStore";
 import { patchUserLogout } from "@/apis/patchUserLogout";
@@ -12,7 +12,7 @@ import logo from "@/assets/beta-logo.png";
 const cx = classNames.bind(styles);
 
 const Header = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
   const { userState, setUserState } = useLoginStore();
   const [isMyPageNavbarShow, setIsMyPageNavbarShow] = useState(false);
 
@@ -56,7 +56,7 @@ const Header = () => {
 
         <div className={styles["button-group"]}>
           {userState.login_id === "" ? (
-            <Link to="/login" className={styles["button-login"]}>
+            <Link to="/login" className={styles["button-login"]} state={{ from: location }} replace>
               로그인
             </Link>
           ) : (
