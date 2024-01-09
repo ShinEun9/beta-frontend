@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SignForm, Button, InputField } from "@/components/common";
-import { patchUserLogin } from "@/apis/patchUserLogin";
+import { patchMemberLogin } from "@/apis";
 import { useLoginStore } from "@/stores/useLoginStore";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./LoginPage.module.css";
@@ -17,7 +17,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await patchUserLogin(id, password, userType);
+    const res = await patchMemberLogin(id, password, userType);
 
     if (res.isSuccess) {
       setUserState(res.userLoginInfo);
