@@ -85,6 +85,8 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
   // 서버에 보낼 start_date와 end_date를 set하는 함수
   const dateSetFunc = (value: string) => {
     let dateString = todayString;
+    setFilterRequest((prev) => ({ ...prev, start_date: dateString }));
+
     switch (value) {
       case dates[1]:
         ({ dateString } = getStringDate(todayYear, todayMonth, todayDay + 7));
@@ -92,8 +94,10 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
       case dates[2]:
         ({ dateString } = getStringDate(todayYear, todayMonth, todayDay + 14));
         break;
+      default:
+        break;
     }
-    setFilterRequest({ ...filterRequest, end_date: dateString });
+    setFilterRequest((prev) => ({ ...prev, end_date: dateString }));
   };
 
   // progress를 all, 1, 2, 3으로 set하는 함수
