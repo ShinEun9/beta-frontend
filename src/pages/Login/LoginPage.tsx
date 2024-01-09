@@ -25,10 +25,8 @@ const LoginPage = () => {
     if (res.isSuccess) {
       setUserState(res.userLoginInfo);
       if (state?.from) {
-        navigate("/", { replace: true });
-        // navigate(`${state.from.pathname}`, { replace: true });
+        navigate(`${state.from.pathname}`, { replace: true });
       } else {
-        // TODO: 로그인 버튼을 눌렀을 때, 로그인 이전 페이지로 이동하게 해야 함
         navigate("/", { replace: true });
       }
     } else {
