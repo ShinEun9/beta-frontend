@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
-import useInputs from "@/hooks/useInputs";
+import { useInputs } from "@/hooks";
 import { useModalStore, useReservationFormStore } from "@/stores";
 import { UserReservationInputsType, MemberType, UserReservationFormType, ShowReservationInfoType } from "@/types";
 import { convertBase64ToBytes } from "@/utils";
