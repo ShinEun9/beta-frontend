@@ -18,6 +18,7 @@ import {
   UserReservationManagePage,
   PostManagePage,
   PostCRUDPage,
+  PostUpdatePage,
   AdminReservationManagePage,
 } from "@/pages";
 import { InfoSection, ReviewSection } from "@/components/detail";
@@ -90,7 +91,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "post/update",
-                element: <PostCRUDPage />,
+                element: <PostUpdatePage />,
               },
             ],
           },

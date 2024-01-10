@@ -11,6 +11,7 @@ import Mypage from "./Mypage/Mypage";
 import ProfilePage from "./Mypage/ProfilePage/ProfilePage";
 import PostManagePage from "./Mypage/admin/PostManage/PostManagePage";
 import PostCRUDPage from "./Mypage/admin/PostCRUD/PostCRUDPage";
+import PostUpdatePage from "./Mypage/admin/PostUpdate/PostUpdatePage";
 import AdminReservationManagePage from "./Mypage/admin/ReservationManage/ReservationManagePage";
 import LikeManagePage from "./Mypage/user/LikeManage/LikeManagePage";
 import ReviewManagePage from "./Mypage/user/ReviewManage/ReviewManagePage";
@@ -31,6 +32,7 @@ export {
   ProfilePage,
   PostManagePage,
   PostCRUDPage,
+  PostUpdatePage,
   AdminReservationManagePage,
   UserReservationManagePage,
   LikeManagePage,
