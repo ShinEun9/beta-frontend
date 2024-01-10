@@ -8,6 +8,7 @@ import { isEmailCheck } from "@/utils/emailCheck";
 import { ProfileBodyType } from "@/types/SignupBodyType";
 import { getMemberInfo, postSignup, putProfile } from "@/apis";
 import styles from "./ProfilePage.module.css";
+import { useResizeZoom } from "@/hooks";
 
 interface BirthdateGenderType {
   year: string;
@@ -43,6 +44,8 @@ const ProfilePage = () => {
   const [time, setTime] = useState(180); // 3분
   const [isCodeCheck, setIsCodeCheck] = useState(false); // 인증번호 확인 여부
   const [isStop, setIsStop] = useState(false); // 타이머 정지
+
+  const { zoom } = useResizeZoom(600);
 
   const { data, status, error } = useQuery({
     queryKey: ["userProfile"],
@@ -209,7 +212,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles["profile-section-form"]}>
+    <form onSubmit={handleSubmit} className={styles["profile-section-form"]} style={{ zoom: zoom }}>
       <div className={styles["profile-section-form-group"]}>
         <InputField required type="text" value={data.login_id} readOnly>
           아이디

@@ -82,11 +82,13 @@ const StorySection = () => {
           {status === "pending" && <StorySectionSkeleton />}
           {status === "error" && <>{error.message}</>}
 
-          <Carousel index={1}>
-            {data?.map((item, index) => (
-              <StoryCard key={item.id} item={item} onClick={handleClickStoryCard(index)} />
-            ))}
-          </Carousel>
+          {data && (
+            <Carousel index={1}>
+              {data.map((item, index) => (
+                <StoryCard key={item.id} item={item} onClick={handleClickStoryCard(index)} />
+              ))}
+            </Carousel>
+          )}
         </div>
       </section>
     </>
