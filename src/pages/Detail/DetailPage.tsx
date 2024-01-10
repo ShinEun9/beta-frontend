@@ -4,6 +4,7 @@ import { Banner, ButtonGroup, SubMenuSection } from "@/components/detail";
 import DetailPageSkeleton from "./DetailPageSkeleton";
 import { ShowReservationInfoType, ShowType } from "@/types";
 import { getShow, getShowReservationInfo } from "@/apis";
+import { useLoginStore } from "@/stores";
 
 const submenuList = [
   { pathname: "", text: "정보" },
@@ -12,7 +13,9 @@ const submenuList = [
 
 const DetailPage = () => {
   const { id: showId } = useParams();
-
+  const {
+    userState: { isLogin },
+  } = useLoginStore();
   const {
     data: infoData,
     status,
@@ -25,7 +28,7 @@ const DetailPage = () => {
   useQuery<ShowReservationInfoType>({
     queryKey: ["reservationData", showId],
     queryFn: () => getShowReservationInfo(showId!),
-    enabled: !!infoData?.is_reservation,
+    enabled: !!infoData?.is_reservation && isLogin,
   });
 
   if (status === "pending") return <DetailPageSkeleton />;
