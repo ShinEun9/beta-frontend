@@ -14,14 +14,15 @@ const submenuList = [
 const DetailPage = () => {
   const { id: showId } = useParams();
   const {
-    userState: { isLogin },
+    userState: { isLogin, login_id },
   } = useLoginStore();
+
   const {
     data: infoData,
     status,
     error,
   } = useQuery<ShowType>({
-    queryKey: ["infoData", showId],
+    queryKey: ["infoData", showId, login_id],
     queryFn: () => getShow(showId!),
   });
 

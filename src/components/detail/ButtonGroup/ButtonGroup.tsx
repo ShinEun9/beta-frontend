@@ -12,8 +12,11 @@ import styles from "./ButtonGroup.module.css";
 const ButtonGroup = () => {
   const { id: showId } = useParams();
   const { likeMutate, deleteLikeMutate } = useLike(showId!);
+  const {
+    userState: { login_id },
+  } = useLoginStore();
 
-  const infoData = queryClient.getQueryData<ShowType>(["infoData", showId])!;
+  const infoData = queryClient.getQueryData<ShowType>(["infoData", showId, login_id])!;
   const reservationData = queryClient.getQueryData<ShowReservationInfoType>(["reservationData", showId])!;
 
   const {

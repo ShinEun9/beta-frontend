@@ -3,6 +3,7 @@ import { queryClient } from "@/main";
 import { toast } from "react-toastify";
 import LocationMap from "./LocationMap";
 import { ShowType } from "@/types";
+import { useLoginStore } from "@/stores";
 import { convertBase64ToBytes } from "@/utils";
 import styles from "./InfoSection.module.css";
 
@@ -19,7 +20,10 @@ const copyClipBoard: onCopyFn = async (text: string) => {
 
 const InfoSection = () => {
   const { id: showId } = useParams();
-  const showInfo = queryClient.getQueryData<ShowType>(["infoData", showId])!;
+  const {
+    userState: { login_id },
+  } = useLoginStore();
+  const showInfo = queryClient.getQueryData<ShowType>(["infoData", showId, login_id])!;
 
   const {
     univ,
