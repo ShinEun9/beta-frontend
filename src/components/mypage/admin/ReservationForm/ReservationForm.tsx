@@ -77,7 +77,7 @@ const ReservationForm: React.FC<PropsType> = ({ roundList, setRoundList }) => {
       </section>
 
       <section>
-        <h4 className={styles["title"]}>유의사항</h4>
+        <h4 className={styles["title-notice"]}>유의사항</h4>
         <Editor name="notice" />
       </section>
     </div>
