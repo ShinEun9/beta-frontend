@@ -10,7 +10,7 @@ import styles from "./ReservationForm.module.css";
 import classNames from "classnames/bind";
 import RadioStyles from "@/components/common/RadioButtonGroup/RadioButtonGroup.module.css";
 import { postReservation } from "@/apis";
-import { base64ToBytes } from "@/utils";
+import { convertBase64ToBytes } from "@/utils";
 
 const cx = classNames.bind(RadioStyles);
 
@@ -27,7 +27,7 @@ const ReservationForm: React.FC<PropsType> = ({ showInfo, userInfo, goToPaymentS
   const { user_name, user_email, phone_number } = userInfo;
   const [email1, email2] = user_email.split("@");
   const [phone1, phone2, phone3] = phone_number.split("-");
-  const decodedNotice = new TextDecoder().decode(base64ToBytes(notice));
+  const decodedNotice = new TextDecoder().decode(convertBase64ToBytes(notice));
 
   const [btnDisabled, setBtnDisabled] = useState(false);
 

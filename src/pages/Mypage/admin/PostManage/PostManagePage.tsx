@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useModalStore } from "@/stores/useModalStore";
 import { deleteAdminReview, getAdminShowList, getReviewList } from "@/apis";
-import getElapsedTime from "@/utils/getElapsedTime";
+import { getElapsedTime } from "@/utils";
 import { Button, Modal, DeleteButton, NullField } from "@/components/common";
 import { ReviewDeleteParamType, ReviewType } from "@/types";
 import LikeIcon from "@/assets/like.svg?react";

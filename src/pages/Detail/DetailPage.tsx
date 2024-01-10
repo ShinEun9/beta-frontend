@@ -2,11 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useShowInfoStore } from "@/stores/useShowInfoStore";
-import { useModalStore } from "@/stores/useModalStore";
-import { AgencyReservationInfoType, ShowType } from "@/types";
-import { getShow, getShowReservationInfo, deleteLike, postLike } from "@/apis";
-import { isNotUser } from "@/utils";
-import styles from "./DetaiPage.module.css";
+import { getShow } from "@/apis";
 import { Banner, ButtonGroup, SubMenuSection } from "@/components/detail";
 import DetailPageSkeleton from "./DetailPageSkeleton";
 

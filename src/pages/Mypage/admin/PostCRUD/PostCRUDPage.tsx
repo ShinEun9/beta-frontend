@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
-import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize } from "@/utils";
+import { convertBase64ToBytes, convertBytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize } from "@/utils";
 import { DateInputType, DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 import useInputs from "@/hooks/useInputs";
 import { deleteAdminShow, getShow, getShowReservationInfo, putShow, postShow } from "@/apis";
@@ -168,7 +168,7 @@ const PostCRUDPage = () => {
       setPosition(JSON.parse(showInfoData.position));
       setDate({ start_date: showInfoData.start_date, end_date: showInfoData.end_date });
       showInfoData.tags?.length && setTagInputs(Object.values(JSON.parse(showInfoData.tags)) as string[]);
-      showInfoData.content && setEditorData(new TextDecoder().decode(base64ToBytes(showInfoData.content)));
+      showInfoData.content && setEditorData(new TextDecoder().decode(convertBase64ToBytes(showInfoData.content)));
 
       setOriginMainUrl(showInfoData.main_image_url);
       setImgExistingUrls(
@@ -204,7 +204,7 @@ const PostCRUDPage = () => {
           return { id: round.id.toString(), date, time };
         }),
       );
-      showReservationInfoData.notice && setEditorNoticeData(new TextDecoder().decode(base64ToBytes(showReservationInfoData.notice)));
+      showReservationInfoData.notice && setEditorNoticeData(new TextDecoder().decode(convertBase64ToBytes(showReservationInfoData.notice)));
     }
   }, [showReservationInfoData]);
 
@@ -296,9 +296,9 @@ const PostCRUDPage = () => {
       }
     }
 
-    const base64EncodedContents = (!!editorData && bytesToBase64(new TextEncoder().encode(editorData))) || null;
+    const base64EncodedContents = (!!editorData && convertBytesToBase64(new TextEncoder().encode(editorData))) || null;
     const base64EncodedNotice =
-      (resForm.method === "예매 대행" && !!editorNoticeData && bytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
+      (resForm.method === "예매 대행" && !!editorNoticeData && convertBytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
 
     const result: ShowFormResultType = {
       ...form,
