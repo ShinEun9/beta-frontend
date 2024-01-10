@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { SignForm, Button, InputField, InputFieldGroup, Timer } from "@/components/common";
 import { checkPassword, checkPasswordMatch, checkEmail } from "@/utils";
 import { getDuplicateIdCheck, postSignup } from "@/apis";
-import { SignupBodyType } from "@/types/SignupBodyType";
+import { SignupBodyType } from "@/types";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./SignupPage.module.css";
 import { useResizeZoom } from "@/hooks";

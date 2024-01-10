@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import { toast } from "react-toastify";
 import { InputField, InputFieldGroup, Button, Timer } from "@/components/common";
 import { checkEmail, checkPassword, checkPasswordMatch } from "@/utils";
-import { ProfileBodyType } from "@/types/SignupBodyType";
+import { ProfileBodyType } from "@/types";
 import { getMemberInfo, postSignup, putProfile } from "@/apis";
 import styles from "./ProfilePage.module.css";
 import { useResizeZoom } from "@/hooks";

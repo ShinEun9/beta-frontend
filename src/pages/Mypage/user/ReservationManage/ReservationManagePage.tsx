@@ -4,7 +4,7 @@ import { Modal, NullField } from "@/components/common";
 import { ReservationItem, ReservationUserModal } from "@/components/mypage";
 import getUserReservationList from "@/apis/reservation/getUserReservationList";
 import { useModalStore } from "@/stores";
-import { UserReservationInfoType } from "@/types/userReservationInfoType";
+import { UserReservationInfoType } from "@/types";
 import styles from "./ReservationManagePage.module.css";
 
 const ReservationManagePage = () => {
