@@ -5,10 +5,9 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
 import useInputs from "@/hooks/useInputs";
-import { useModalStore } from "@/stores/useModalStore";
-import { useReservationFormStore } from "@/stores/useReservationFormStore";
+import { useModalStore, useReservationFormStore } from "@/stores";
 import { UserReservationInputsType, MemberType, UserReservationFormType, ShowReservationInfoType } from "@/types";
-import { base64ToBytes } from "@/utils";
+import { convertBase64ToBytes } from "@/utils";
 import { postReservation } from "@/apis";
 import RadioStyles from "@/components/common/RadioButtonGroup/RadioButtonGroup.module.css";
 import styles from "./ReservationForm.module.css";
@@ -29,7 +28,7 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
 
   const [email1, email2] = user_email.split("@");
   const [phone1, phone2, phone3] = phone_number.split("-");
-  const decodedNotice = new TextDecoder().decode(base64ToBytes(notice));
+  const decodedNotice = new TextDecoder().decode(convertBase64ToBytes(notice));
   const [form, onChange] = useInputs<UserReservationInputsType>({
     show_times_id: -1,
     is_receive_email: false,

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ReservationForm, ReservationPayment } from "..";
-import { useLoginStore } from "@/stores/useLoginStore";
-import { getUserInfo } from "@/apis";
+import { getMemberInfo } from "@/apis";
 import styles from "./ReservationModal.module.css";
 
 const ReservationModal: React.FC = () => {
@@ -12,13 +11,9 @@ const ReservationModal: React.FC = () => {
     setStep("payment");
   };
 
-  const {
-    userState: { login_id },
-  } = useLoginStore();
-
   const { status, error } = useQuery({
     queryKey: ["userInfo"],
-    queryFn: () => getUserInfo(login_id),
+    queryFn: () => getMemberInfo(),
   });
 
   if (status === "pending") return <h1>loading...</h1>;

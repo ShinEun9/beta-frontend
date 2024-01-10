@@ -3,7 +3,7 @@ import { queryClient } from "@/main";
 import { toast } from "react-toastify";
 import LocationMap from "./LocationMap";
 import { ShowType } from "@/types";
-import { base64ToBytes } from "@/utils";
+import { convertBase64ToBytes } from "@/utils";
 import styles from "./InfoSection.module.css";
 
 type onCopyFn = (text: string) => void;
@@ -19,6 +19,7 @@ const copyClipBoard: onCopyFn = async (text: string) => {
 
 const InfoSection = () => {
   const { id: showId } = useParams();
+  const showInfo = queryClient.getQueryData<ShowType>(["infoData", showId])!;
 
   const {
     univ,
@@ -31,11 +32,11 @@ const InfoSection = () => {
     tags: rawTags,
     position: rawPosition,
     content: rawContent,
-  } = queryClient.getQueryData<ShowType>(["infoData", showId])!;
+  } = showInfo;
 
   const tags = rawTags ? Object.values<string>(JSON.parse(rawTags)) : [];
   const position = rawPosition && JSON.parse(rawPosition);
-  const decodedContent = rawContent ? new TextDecoder().decode(base64ToBytes(rawContent)) : null;
+  const decodedContent = rawContent ? new TextDecoder().decode(convertBase64ToBytes(rawContent)) : null;
 
   return (
     <>

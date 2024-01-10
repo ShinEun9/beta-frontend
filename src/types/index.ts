@@ -1,12 +1,14 @@
-import { ShowResponseType, ShowType, ShowFilterRequestType } from "./showType";
-import { ShowFormResultType, ShowFormType, ShowResFormType } from "./showFormType";
-import { StoryResponseType, StoryType } from "./storyType";
-import { ShowReservationInfoResponseType, ShowReservationInfoType, AgencyReservationInfoType } from "./showReservationInfoType";
-import { UserReservationFormType, UserReservationInputsType } from "./userReservationFormType";
-import { MemberResponseType, MemberType } from "./memberType";
+import { AddressSearchResult } from "./addressSearchType";
 import { DateInputType, DateWithTime, DateWithTimeObj } from "./datePickerInputType";
 import { FormInputs } from "./formInputsType";
+import { MemberResponseType, MemberType } from "./memberType";
 import { ReviewsGetResponse, ReviewType, ReviewPostParamType, ReviewDeleteParamType, ReviewPatchParamType } from "./reviewType";
+import { ShowFormResultType, ShowFormType, ShowResFormType } from "./showFormType";
+import { ShowReservationInfoResponseType, ShowReservationInfoType, AgencyReservationInfoType } from "./showReservationInfoType";
+import { ShowResponseType, ShowType, ShowFilterRequestType } from "./showType";
+import { SignupBodyType, ProfileBodyType } from "./signupBodyType";
+import { StoryResponseType, StoryType } from "./storyType";
+import { UserReservationFormType, UserReservationInputsType } from "./userReservationFormType";
 import { ResponseUserReservationInfoType, UserReservationInfoType } from "./userReservationInfoType";
 
 export {
@@ -20,7 +22,9 @@ export {
   type StoryType,
   type ShowReservationInfoResponseType,
   type ShowReservationInfoType,
+  type SignupBodyType,
   type AgencyReservationInfoType,
+  type AddressSearchResult,
   type UserReservationInputsType,
   type UserReservationFormType,
   type MemberType,
@@ -29,6 +33,7 @@ export {
   type DateWithTime,
   type DateWithTimeObj,
   type FormInputs,
+  type ProfileBodyType,
   type ReviewsGetResponse,
   type ReviewType,
   type ReviewPostParamType,
