@@ -4,7 +4,9 @@
  * @returns boolean
  */
 
-export const isEmailCheck = (value: string) => {
+const checkEmail = (value: string) => {
   const emailRegex = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
   return value.match(emailRegex);
 };
+
+export default checkEmail;

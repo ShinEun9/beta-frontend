@@ -3,8 +3,8 @@
 // input: new Uint8Array([72, 101, 108, 108, 111])
 // output: SGVsbG8=  // "Hello"
 
-const bytesToBase64 = (bytes: Uint8Array): string => {
+const convertBytesToBase64 = (bytes: Uint8Array): string => {
   const binString = String.fromCodePoint(...Array.from(bytes));
   return btoa(binString);
 };
-export default bytesToBase64;
+export default convertBytesToBase64;

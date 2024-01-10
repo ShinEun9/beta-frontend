@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
-import { base64ToBytes } from "@/utils";
-import { useShowInfoStore } from "@/stores/useShowInfoStore";
+import { convertBase64ToBytes } from "@/utils";
+import { useShowInfoStore } from "@/stores";
 import LocationMap from "./LocationMap";
 import { InfoSectionSkeleton } from "@/components/detail";
 import styles from "./InfoSection.module.css";
@@ -24,7 +24,7 @@ const InfoSection = () => {
 
   const tags: string[] = showInfo.tags ? Object.values(JSON.parse(showInfo.tags)) : [];
   const position = showInfo.position && JSON.parse(showInfo.position);
-  const decodedContent = showInfo.content ? new TextDecoder().decode(base64ToBytes(showInfo.content)) : null;
+  const decodedContent = showInfo.content ? new TextDecoder().decode(convertBase64ToBytes(showInfo.content)) : null;
 
   return (
     <>

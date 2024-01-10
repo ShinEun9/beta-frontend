@@ -6,8 +6,8 @@ import { ReviewEditForm } from "..";
 import EllipsisProfileImg from "@/assets/ellipsis-profile.svg?react";
 import IconEllipsisVertical from "@/assets/icon-ellipsis-vertical.png";
 import { ReviewDeleteParamType, ReviewType } from "@/types";
-import { useLoginStore } from "@/stores/useLoginStore";
-import getElapsedTime from "@/utils/getElapsedTime";
+import { useLoginStore } from "@/stores";
+import { getElapsedTime } from "@/utils";
 import { deleteUserReview } from "@/apis";
 import styles from "./ReviewItem.module.css";
 

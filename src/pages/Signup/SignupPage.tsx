@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import { toast } from "react-toastify";
 import { SignForm, Button, InputField, InputFieldGroup, Timer } from "@/components/common";
-import { isPasswordCheck, isPasswordDoubleCheck, isEmailCheck } from "@/utils";
+import { checkPassword, checkPasswordMatch, checkEmail } from "@/utils";
 import { getDuplicateIdCheck, postSignup } from "@/apis";
-import { SignupBodyType } from "@/types/SignupBodyType";
+import { SignupBodyType } from "@/types";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./SignupPage.module.css";
 import { useResizeZoom } from "@/hooks";
@@ -28,7 +28,7 @@ const SignupPage = () => {
   const [userType, setUserType] = useState<"user" | "admin">("user");
   const [id, setId] = useState<idPasswordCheck>({ value: "", isConfirm: false });
   const [password, setPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
-  const [checkPassword, setCheckPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
+  const [matchPassword, setMatchPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState({ phone1: "", phone2: "", phone3: "" });
   const [birthGender, setBirthGender] = useState<BirthdateGenderType>({
@@ -71,7 +71,7 @@ const SignupPage = () => {
       toast.error("비밀번호는 8자 이상의 영문, 숫자, 특수문자를 사용해 주세요.");
       return;
     }
-    if (!checkPassword.isConfirm) {
+    if (!matchPassword.isConfirm) {
       toast.error("비밀번호가 일치하지 않습니다.");
       return;
     }
@@ -146,19 +146,19 @@ const SignupPage = () => {
 
   // 비밀번호
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword({ ...password, value: e.currentTarget.value, isConfirm: isPasswordCheck(e.currentTarget.value) });
+    setPassword({ ...password, value: e.currentTarget.value, isConfirm: checkPassword(e.currentTarget.value) });
   };
 
   // 비밀번호 확인
   const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckPassword({ ...checkPassword, value: e.currentTarget.value, isConfirm: isPasswordDoubleCheck(password.value, e.currentTarget.value) });
+    setMatchPassword({ ...checkPassword, value: e.currentTarget.value, isConfirm: checkPasswordMatch(password.value, e.currentTarget.value) });
   };
 
   // 이메일 전송
   const handleSendEmail = async () => {
     const fullEmail = userType === "admin" ? univEmail : `${email.email1}@${email.email2}`;
     const toastId = toast.loading("이메일을 전송중입니다.");
-    if (isEmailCheck(fullEmail)) {
+    if (checkEmail(fullEmail)) {
       setIsCodeCheck(false);
       setIsStop(false);
       const body: { user_email: string; univName?: string } = { user_email: fullEmail };
@@ -260,9 +260,9 @@ const SignupPage = () => {
             type="password"
             name="password"
             placeholder="비밀번호를 다시 입력해주세요."
-            value={checkPassword.value}
+            value={matchPassword.value}
             onChange={handleCheckPassword}
-            isConfirm={checkPassword.isConfirm}
+            isConfirm={matchPassword.isConfirm}
           >
             비밀번호 확인
           </InputField>

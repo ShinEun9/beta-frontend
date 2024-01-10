@@ -9,11 +9,11 @@
  * @returns boolean
  */
 
-export const isPasswordCheck = (value: string): boolean => {
+export const checkPassword = (value: string): boolean => {
   const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*]).{8,}$/;
   return pwRegex.test(value);
 };
 
-export const isPasswordDoubleCheck = (value: string, value2: string) => {
+export const checkPasswordMatch = (value: string, value2: string) => {
   return value === value2;
 };

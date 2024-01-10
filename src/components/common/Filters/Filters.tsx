@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FilterButton, SelectBox } from "@/components/common";
-import getTodayStringDate from "@/utils/getTodayStringDate";
+import { ShowFilterRequestType } from "@/types";
+import { getTodayStringDate, getStringDate } from "@/utils";
 import { useFilterSlide } from "@/hooks";
 import classNames from "classnames/bind";
 import styles from "./Filters.module.css";
-import getStringDate from "@/utils/getStringDate";
-import { ShowFilterRequestType } from "@/types";
 
 const cx = classNames.bind(styles);
 

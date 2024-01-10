@@ -3,14 +3,12 @@ import { useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { queryClient } from "@/main";
-import { useLoginStore } from "@/stores/useLoginStore";
-import { useModalStore } from "@/stores/useModalStore";
+import { useLoginStore, useModalStore, useShowInfoStore } from "@/stores";
 import { getShowReservationInfo, deleteLike, postLike } from "@/apis";
 import { AgencyReservationInfoType, ShowType } from "@/types";
-import { isNotUser } from "@/utils";
+import { checkIsNotUser } from "@/utils";
 import { ButtonGroupSkeleton, LikeButton, ReservationModal } from "@/components/detail";
 import { Button, Modal, UserAccessModal } from "@/components/common";
-import { useShowInfoStore } from "@/stores/useShowInfoStore";
 import styles from "./ButtonGroup.module.css";
 
 const ButtonGroup = () => {
@@ -48,7 +46,7 @@ const ButtonGroup = () => {
   if (!showInfo) return <ButtonGroupSkeleton />;
 
   const handleLikeButtonClick = () => {
-    if (isNotUser(user_role)) {
+    if (checkIsNotUser(user_role)) {
       setOpenModal({ state: true, type: "guestAccess" });
       return;
     }
@@ -56,7 +54,7 @@ const ButtonGroup = () => {
   };
 
   const handleReservationButtonClick = async () => {
-    if (isNotUser(user_role)) {
+    if (checkIsNotUser(user_role)) {
       setOpenModal({ state: true, type: "guestAccess" });
       return;
     }

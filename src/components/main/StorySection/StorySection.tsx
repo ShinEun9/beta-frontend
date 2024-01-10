@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Carousel, Modal, UserAccessModal } from "@/components/common";
 import { StoryCard, StoryUploadModal, StoryViewModal, StorySectionSkeleton } from "@/components/main";
-import { useModalStore } from "@/stores/useModalStore";
-import { useLoginStore } from "@/stores/useLoginStore";
-import { useCarouselDragStore } from "@/stores/useCarouselDragStore";
+import { useModalStore, useLoginStore, useCarouselDragStore } from "@/stores";
 import { getStoryList } from "@/apis";
-import { isNotUser } from "@/utils";
+import { checkIsNotUser } from "@/utils";
 import styles from "./StorySection.module.css";
 
 const StorySection = () => {
@@ -24,7 +22,7 @@ const StorySection = () => {
   });
 
   const handleClickUploadBtn = () => {
-    if (isNotUser(user_role)) {
+    if (checkIsNotUser(user_role)) {
       setOpenModal({ state: true, type: "guestAccess" });
       return;
     }

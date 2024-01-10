@@ -1,4 +1,4 @@
-const isWithinOneDay = (stringDate: string): boolean => {
+const checkIsWithinOneDay = (stringDate: string): boolean => {
   const inputDate = new Date(stringDate).getTime();
   const now = new Date().getTime();
 
@@ -7,4 +7,4 @@ const isWithinOneDay = (stringDate: string): boolean => {
   return diffHours < 24;
 };
 
-export default isWithinOneDay;
+export default checkIsWithinOneDay;

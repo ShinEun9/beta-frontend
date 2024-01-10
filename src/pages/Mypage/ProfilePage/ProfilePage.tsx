@@ -3,9 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import classNames from "classnames/bind";
 import { toast } from "react-toastify";
 import { InputField, InputFieldGroup, Button, Timer } from "@/components/common";
-import { isPasswordCheck, isPasswordDoubleCheck } from "@/utils/passwordCheck";
-import { isEmailCheck } from "@/utils/emailCheck";
-import { ProfileBodyType } from "@/types/SignupBodyType";
+import { checkEmail, checkPassword, checkPasswordMatch } from "@/utils";
+import { ProfileBodyType } from "@/types";
 import { getMemberInfo, postSignup, putProfile } from "@/apis";
 import styles from "./ProfilePage.module.css";
 import { useResizeZoom } from "@/hooks";
@@ -26,7 +25,7 @@ const cx = classNames.bind(styles);
 
 const ProfilePage = () => {
   const [password, setPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
-  const [checkPassword, setCheckPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
+  const [matchPassword, setMatchPassword] = useState<idPasswordCheck>({ value: "", isConfirm: false });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState({ phone1: "", phone2: "", phone3: "" });
   const [birthGender, setBirthGender] = useState<BirthdateGenderType>({
@@ -77,13 +76,13 @@ const ProfilePage = () => {
     const birth_date = `${birthGender.year}-${birthGender.month}-${birthGender.day}`;
     const gender = `${birthGender.gender === "male" ? "1" : "2"}`;
 
-    if (password.value && checkPassword.value) {
+    if (password.value && matchPassword.value) {
       if (!password.isConfirm) {
         toast.error("비밀번호는 8자 이상의 영문, 숫자, 특수문자를 사용해 주세요.");
         return;
       }
 
-      if (!checkPassword.isConfirm) {
+      if (!matchPassword.isConfirm) {
         toast.error("비밀번호가 일치하지 않습니다.");
         return;
       }
@@ -95,7 +94,7 @@ const ProfilePage = () => {
       phone_number === data.phone_number &&
       birth_date === data.birth_date &&
       gender === String(data.gender) &&
-      !checkPassword.value
+      !matchPassword.value
     ) {
       toast.error("수정할 내용이 없습니다.");
       return;
@@ -133,18 +132,18 @@ const ProfilePage = () => {
 
   // 비밀번호
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword({ ...password, value: e.currentTarget.value, isConfirm: isPasswordCheck(e.currentTarget.value) });
+    setPassword({ ...password, value: e.currentTarget.value, isConfirm: checkPassword(e.currentTarget.value) });
   };
 
   // 비밀번호 확인
   const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckPassword({ ...checkPassword, value: e.currentTarget.value, isConfirm: isPasswordDoubleCheck(password.value, e.currentTarget.value) });
+    setMatchPassword({ ...checkPassword, value: e.currentTarget.value, isConfirm: checkPasswordMatch(password.value, e.currentTarget.value) });
   };
 
   // 이메일 전송
   const handleSendEmail = async () => {
     const fullEmail = `${email.email1}@${email.email2}`;
-    if (isEmailCheck(fullEmail)) {
+    if (checkEmail(fullEmail)) {
       const toastId = toast.loading("이메일을 전송중입니다.");
       if (fullEmail !== data.user_email) {
         setIsCodeCheck(false);
@@ -232,9 +231,9 @@ const ProfilePage = () => {
         type="password"
         name="password"
         placeholder="비밀번호를 다시 입력해주세요."
-        value={checkPassword.value}
+        value={matchPassword.value}
         onChange={handleCheckPassword}
-        isConfirm={checkPassword.isConfirm}
+        isConfirm={matchPassword.isConfirm}
       >
         새 비밀번호 확인
       </InputField>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./components/layouts";
-import { useModalStore } from "./stores/useModalStore";
+import { useModalStore } from "./stores";
 import PrivateRoute from "./PrivateRoute";
 
 function App() {

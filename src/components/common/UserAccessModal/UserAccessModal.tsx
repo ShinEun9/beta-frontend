@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useLoginStore } from "@/stores";
 import styles from "./UserAccessModal.module.css";
 
 const UserAccessModal = () => {

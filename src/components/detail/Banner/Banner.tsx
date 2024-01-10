@@ -1,4 +1,4 @@
-import { useShowInfoStore } from "@/stores/useShowInfoStore";
+import { useShowInfoStore } from "@/stores";
 import { Carousel } from "@/components/common";
 import { BannerSkeleton } from "@/components/detail";
 import styles from "./Banner.module.css";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ResponseUserReservationInfoType } from "@/types/userReservationInfoType";
+import { ResponseUserReservationInfoType } from "@/types";
 
 const getUserReservationList = async () => {
   const { data } = await axios.get<ResponseUserReservationInfoType>(`/api/show/user/reservation`);

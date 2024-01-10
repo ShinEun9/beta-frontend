@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MypageNavBar } from "@/components/layouts";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useLoginStore } from "@/stores";
 import { patchMemberLogout } from "@/apis";
 import MenuIcon from "@/assets/menu.svg?react";
 import NavbarCloseIcon from "@/assets/navbar-close.svg?react";
