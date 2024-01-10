@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SignForm, Button, InputField } from "@/components/common";
 import { patchMemberLogin } from "@/apis";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useLoginStore } from "@/stores";
 import { useResizeZoom } from "@/hooks";
 import betaLogo from "@/assets/beta-logo.png";
 import styles from "./LoginPage.module.css";

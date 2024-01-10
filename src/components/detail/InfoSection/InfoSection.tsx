@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { convertBase64ToBytes } from "@/utils";
-import { useShowInfoStore } from "@/stores/useShowInfoStore";
+import { useShowInfoStore } from "@/stores";
 import LocationMap from "./LocationMap";
 import { InfoSectionSkeleton } from "@/components/detail";
 import styles from "./InfoSection.module.css";

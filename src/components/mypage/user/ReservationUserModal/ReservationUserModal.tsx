@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import LocationMap from "@/components/detail/InfoSection/LocationMap";
 import { deleteReservation } from "@/apis";
-import { useModalStore } from "@/stores/useModalStore";
+import { useModalStore } from "@/stores";
 import { queryClient } from "@/main";
 import styles from "./ReservationUserModal.module.css";
 

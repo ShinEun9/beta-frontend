@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useModalStore } from "@/stores/useModalStore";
+import { useModalStore } from "@/stores";
 import { deleteAdminReview, getAdminShowList, getReviewList } from "@/apis";
 import { getElapsedTime } from "@/utils";
 import { Button, Modal, DeleteButton, NullField } from "@/components/common";

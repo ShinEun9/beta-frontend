@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useLoginStore } from "@/stores";
 import getVerifyToken from "@/apis/user/getVerifyToken";
 
 const useAuth = () => {

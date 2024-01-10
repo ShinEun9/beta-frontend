@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Button, NullField } from "@/components/common";
 import { ReviewItem, ReviewForm, ReviewSectionSkeleton } from "@/components/detail";
-import { useModalStore } from "@/stores/useModalStore";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useModalStore, useLoginStore } from "@/stores";
 import { getReviewList } from "@/apis";
 import styles from "./ReviewSection.module.css";
 
