@@ -12,7 +12,7 @@ interface PropsType {
 }
 
 const ShowInfoInputsSection: React.FC<PropsType> = ({ setPosition }) => {
-  const { control, watch } = useFormContext();
+  const { watch } = useFormContext();
   const watchShowType = watch("show_type");
 
   return (
@@ -58,7 +58,7 @@ const ShowInfoInputsSection: React.FC<PropsType> = ({ setPosition }) => {
 
       <section className={styles["tags-section"]}>
         <h2 className={styles["title"]}>태그</h2>
-        <TagInputRHF control={control} name="tags" rules={{ required: true }} />
+        <TagInputRHF />
       </section>
 
       <section>
