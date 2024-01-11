@@ -7,11 +7,12 @@ import {
   CONCERT_CATEGORY_LIST,
   IS_RESERVATION_LIST,
   METHOD_LIST,
+  appendResultToFormData,
   convertFormatForFormData,
   getResizedImgFiles,
   validateShowForm,
 } from "@/utils";
-import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
+import { DateWithTimeObj, ShowFormType, ShowResFormType } from "@/types";
 import { useUploadShowQuery } from "@/hooks";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
@@ -58,7 +59,7 @@ const PostUploadPage = () => {
   const { mutateUploadShow } = useUploadShowQuery();
 
   // 업로드하기 버튼
-  const handleOnSubmit = async (data: ShowFormType & ShowResFormType) => {
+  const onSubmit = async (data: ShowFormType & ShowResFormType) => {
     const checkValid = validateShowForm(imgFiles.length, data, roundList.length);
 
     if (!checkValid.isValid) {
@@ -71,35 +72,7 @@ const PostUploadPage = () => {
     const formData = new FormData();
 
     // 1. 텍스트 formData
-    const keysToAppend: Array<keyof ShowFormResultType> = [
-      "show_type",
-      "show_sub_type",
-      "title",
-      "start_date",
-      "end_date",
-      "location",
-      "location_detail",
-      "position",
-      "main_image_color",
-      "univ",
-      "department",
-      "tags",
-      "content",
-      "is_reservation",
-      "method",
-      "google_form_url",
-      "price",
-      "head_count",
-      "date_time",
-      "notice",
-    ];
-
-    for (const key of keysToAppend) {
-      if (result[key]) {
-        // 특정 키에 해당하는 값이 존재할 때만 append
-        formData.append(key.toString(), result[key] as string);
-      }
-    }
+    appendResultToFormData(result, formData);
 
     // 2. 이미지 formData
     const resizedImgFiles = await getResizedImgFiles(imgFiles);
@@ -121,14 +94,12 @@ const PostUploadPage = () => {
 
   return (
     <FormProvider {...method}>
-      <form className={styles["post-section-form"]}>
+      <form className={styles["post-section-form"]} onSubmit={method.handleSubmit(onSubmit)}>
         <ImageInputSection setImgFiles={setImgFiles} imgFiles={imgFiles} imgPreviewUrls={imgPreviewUrls} setImgPreviewUrls={setImgPreviewUrls} />
         <ShowInfoInputsSection setPosition={setPosition} />
         {watchIsRes === "예" && <ShowResInfoInputsSection roundList={roundList} setRoundList={setRoundList} />}
 
-        <Button type="submit" onClick={method.handleSubmit(handleOnSubmit)}>
-          업로드하기
-        </Button>
+        <Button type="submit">업로드하기</Button>
       </form>
     </FormProvider>
   );

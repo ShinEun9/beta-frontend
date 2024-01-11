@@ -1,3 +1,4 @@
+import appendResultToFormData from "./appendResultToFormData";
 import { isPasswordCheck, isPasswordDoubleCheck } from "./passwordCheck";
 import { isEmailCheck } from "./emailCheck";
 import getTxtColorByBgColor from "./getTxtColorByBgColor";
@@ -16,6 +17,7 @@ import validateShowForm from "./validateShowForm";
 import { CATEGORY_LIST, CONCERT_CATEGORY_LIST, IS_RESERVATION_LIST, METHOD_LIST } from "./constant";
 
 export {
+  appendResultToFormData,
   isPasswordCheck,
   isPasswordDoubleCheck,
   isEmailCheck,

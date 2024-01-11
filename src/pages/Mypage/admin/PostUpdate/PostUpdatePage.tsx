@@ -8,6 +8,7 @@ import {
   CONCERT_CATEGORY_LIST,
   IS_RESERVATION_LIST,
   METHOD_LIST,
+  appendResultToFormData,
   base64ToBytes,
   convertFormatForFormData,
   convertUrlToFile,
@@ -15,7 +16,7 @@ import {
   reduceImageSize,
   validateShowForm,
 } from "@/utils";
-import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType, ShowReservationInfoType, ShowType } from "@/types";
+import { DateWithTimeObj, ShowFormType, ShowResFormType, ShowReservationInfoType, ShowType } from "@/types";
 import { useDeleteShowQuery, useEditShowQuery, useGetShowInfoQuery, useGetShowResInfoQuery } from "@/hooks";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
@@ -139,8 +140,8 @@ const PostUpdatePage = () => {
           return { id: round.id.toString(), date, time };
         }),
       );
+      setIsLoading(() => false);
     }
-    setIsLoading(() => false);
   }, [showResInfoData]);
 
   if (showInfoStatus === "error") return <h1>{showInfoError?.message}</h1>;
@@ -168,35 +169,7 @@ const PostUpdatePage = () => {
     formData.append("show_id", showId);
 
     // 1. 텍스트 formData
-    const keysToAppend: Array<keyof ShowFormResultType> = [
-      "show_type",
-      "show_sub_type",
-      "title",
-      "start_date",
-      "end_date",
-      "location",
-      "location_detail",
-      "position",
-      "main_image_color",
-      "univ",
-      "department",
-      "tags",
-      "content",
-      "is_reservation",
-      "method",
-      "google_form_url",
-      "price",
-      "head_count",
-      "date_time",
-      "notice",
-    ];
-
-    for (const key of keysToAppend) {
-      if (result[key]) {
-        // 특정 키에 해당하는 값이 존재할 때만 append
-        formData.append(key.toString(), result[key] as string);
-      }
-    }
+    appendResultToFormData(result, formData);
 
     // 2. 이미지 formData
     const resizedImgFiles = await getResizedImgFiles(imgFiles);
