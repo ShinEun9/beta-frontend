@@ -22,7 +22,7 @@ const RadioButtonGroupRHF: React.FC<PropsType> = ({ radioList, name, flexDirecti
         <fieldset className={cx("fieldset", flexDirectionColumn && "column")} {...field}>
           {radioList.map((item) => (
             <label key={item}>
-              <input type="radio" value={item} checked={field.value === item} />
+              <input type="radio" value={item} checked={field.value === item} onChange={field.onChange} />
               <span>{item}</span>
             </label>
           ))}
