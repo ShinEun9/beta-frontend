@@ -15,6 +15,8 @@ import convertRoundListToObject from "./convertRoundListToObject";
 import convertFormatForFormData from "./convertFormatForFormData";
 import validateShowForm from "./validateShowForm";
 import { CATEGORY_LIST, CONCERT_CATEGORY_LIST, IS_RESERVATION_LIST, METHOD_LIST } from "./constant";
+import setShowInfo from "./setShowInfo";
+import setShowResInfo from "./setShowResInfo";
 
 export {
   appendResultToFormData,
@@ -34,6 +36,8 @@ export {
   convertRoundListToObject,
   convertFormatForFormData,
   validateShowForm,
+  setShowInfo,
+  setShowResInfo,
   //
   CATEGORY_LIST,
   CONCERT_CATEGORY_LIST,

@@ -9,14 +9,15 @@ import {
   IS_RESERVATION_LIST,
   METHOD_LIST,
   appendResultToFormData,
-  base64ToBytes,
   convertFormatForFormData,
   convertUrlToFile,
   getResizedImgFiles,
   reduceImageSize,
+  setShowInfo,
+  setShowResInfo,
   validateShowForm,
 } from "@/utils";
-import { DateWithTimeObj, ShowFormType, ShowResFormType, ShowReservationInfoType, ShowType } from "@/types";
+import { DateWithTimeObj, ShowFormType, ShowResFormType } from "@/types";
 import { useDeleteShowQuery, useEditShowQuery, useGetShowInfoQuery, useGetShowResInfoQuery } from "@/hooks";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
@@ -80,38 +81,8 @@ const PostUpdatePage = () => {
 
   useEffect(() => {
     if (showInfoStatus === "success" && showInfoData) {
-      const keysOfShowInfo: Array<keyof ShowType> = [
-        "show_type",
-        "show_sub_type",
-        "title",
-        "start_date",
-        "end_date",
-        "location",
-        "location_detail",
-        // "position",
-        "univ",
-        "department",
-        "tags",
-        "content",
-        "is_reservation",
-      ];
-
-      keysOfShowInfo.forEach((key) => {
-        if (key === "start_date" || key === "end_date") {
-          method.setValue(key as string, new Date(showInfoData[key]));
-        } else if (key === "tags") {
-          showInfoData.tags?.length && method.setValue("tags", Object.values(JSON.parse(showInfoData.tags)) as string[]);
-        } else if (key === "content") {
-          showInfoData.content && method.setValue("content", new TextDecoder().decode(base64ToBytes(showInfoData.content)));
-        } else if (key === "is_reservation") {
-          method.setValue("is_reservation", showInfoData.is_reservation === 0 ? "아니오" : "예");
-        } else {
-          method.setValue(key as string, showInfoData[key]!);
-        }
-      });
-
+      setShowInfo({ showInfoData, setValue: method.setValue });
       setPosition(JSON.parse(showInfoData.position));
-
       setOriginMainUrl(showInfoData.main_image_url);
       setImgExistingUrls(
         showInfoData.sub_images_url
@@ -125,21 +96,14 @@ const PostUpdatePage = () => {
 
   useEffect(() => {
     if (showResInfoStatus === "success" && showResInfoData) {
-      const keysOfShowResInfo: Array<keyof ShowReservationInfoType> = ["method", "google_form_url", "price", "head_count", "notice"];
-
-      keysOfShowResInfo.forEach((key) => {
-        if (key === "method") method.setValue("method", showResInfoData.method === "google" ? "구글폼" : "예매 대행");
-        else if (key === "notice")
-          showResInfoData.notice && method.setValue("notice", new TextDecoder().decode(base64ToBytes(showResInfoData.notice)));
-        else method.setValue(key as string, showResInfoData[key]);
-      });
-
+      setShowResInfo({ showResInfoData, setValue: method.setValue });
       setRoundList(
         showResInfoData.date_time.map((round) => {
           const [date, time] = round.date_time.split(" - ");
           return { id: round.id.toString(), date, time };
         }),
       );
+
       setIsLoading(() => false);
     }
   }, [showResInfoData]);
