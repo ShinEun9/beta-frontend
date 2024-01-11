@@ -30,7 +30,7 @@ const InputFieldRHF: React.FC<PropsType> = ({ children, type, name, placeholder,
         control={control}
         name={name}
         render={({ field: { value, ...rest } }) => (
-          <input id={name} readOnly={readOnly} type={type} placeholder={placeholder} style={{ ...style }} value={value || ""} {...rest} />
+          <input id={name} readOnly={readOnly} type={type} placeholder={placeholder} style={{ ...style }} value={value ?? ""} {...rest} />
         )}
       />
       {unit && <span className={styles["input-unit"]}>{unit}</span>}
