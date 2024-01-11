@@ -117,7 +117,7 @@ const PostUpdatePage = () => {
   if (isLoading) return <h1>loading update data ...</h1>;
 
   // 수정하기 버튼
-  const handleOnSubmit = async (data: ShowFormType & ShowResFormType) => {
+  const onSubmit = async (data: ShowFormType & ShowResFormType) => {
     const imgCnt = imgFiles.length + imgExistingUrls.length;
 
     const checkValid = validateShowForm(imgCnt, data, roundList.length);
@@ -207,7 +207,7 @@ const PostUpdatePage = () => {
           <Button type="submit" onClick={handleDeleteShow} reverseColor>
             삭제하기
           </Button>
-          <Button type="submit" onClick={method.handleSubmit(handleOnSubmit)}>
+          <Button type="submit" onClick={method.handleSubmit(onSubmit)}>
             수정하기
           </Button>
         </div>
