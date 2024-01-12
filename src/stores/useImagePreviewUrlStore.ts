@@ -7,7 +7,7 @@ interface useImagePreviewUrlStore {
   removeImagePreviewUrls: (blobUrl: string) => void;
 }
 
-export const useImagePreviewUrlStore = create<useImagePreviewUrlStore>((set) => ({
+const useImagePreviewUrlStore = create<useImagePreviewUrlStore>((set) => ({
   imagePreviewUrls: [],
   resetImagePreviewUrls: () => set((state) => ({ ...state, imagePreviewUrls: [] })),
   addImagePreviewUrls: (files) => {
@@ -18,3 +18,5 @@ export const useImagePreviewUrlStore = create<useImagePreviewUrlStore>((set) => 
   removeImagePreviewUrls: (blobUrl: string) =>
     set((state) => ({ ...state, imagePreviewUrls: state.imagePreviewUrls.filter((previewUrl) => previewUrl !== blobUrl) })),
 }));
+
+export default useImagePreviewUrlStore;

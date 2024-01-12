@@ -16,7 +16,7 @@ import { useUploadShowQuery, usePickMainImageColor } from "@/hooks";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
 import styles from "../PostUpdate/PostUpdatePage.module.css";
-import { useImageFileStore } from "@/stores/useImageFileStore";
+import { useImageFileStore } from "@/stores";
 
 const PostUploadPage = () => {
   const method = useForm<ShowFormType & ShowResFormType>({

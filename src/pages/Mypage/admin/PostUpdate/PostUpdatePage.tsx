@@ -16,10 +16,10 @@ import {
 } from "@/utils";
 import { DateWithTimeObj, ShowFormType, ShowResFormType } from "@/types";
 import { useDeleteShowQuery, useEditShowQuery, useGetShowInfoQuery, useGetShowResInfoQuery, usePickMainImageColor } from "@/hooks";
+import { useImageFileStore } from "@/stores";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
 import styles from "./PostUpdatePage.module.css";
-import { useImageFileStore } from "@/stores/useImageFileStore";
 
 const PostUpdatePage = () => {
   const locationObj = useLocation();

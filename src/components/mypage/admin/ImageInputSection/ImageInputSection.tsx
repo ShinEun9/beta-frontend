@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import { DeleteButton } from "@/components/common";
 import styles from "./ImageInputSection.module.css";
-import { useImagePreviewUrlStore } from "@/stores/useImagePreviewUrlStore";
-import { useImageFileStore } from "@/stores/useImageFileStore";
+import { useImageFileStore, useImagePreviewUrlStore } from "@/stores";
 
 interface PropsType {
   imgExistingUrls?: string[];

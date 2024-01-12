@@ -7,7 +7,7 @@ interface useImageFileStore {
   removeImageFiles: (fileIndex: number) => void;
 }
 
-export const useImageFileStore = create<useImageFileStore>((set) => ({
+const useImageFileStore = create<useImageFileStore>((set) => ({
   imageFiles: [],
   resetImageFiles: () => set((state) => ({ ...state, imageFiles: [] })),
   addImageFiles: (files) => set((state) => ({ ...state, imageFiles: [...state.imageFiles, ...files] })),
@@ -15,3 +15,5 @@ export const useImageFileStore = create<useImageFileStore>((set) => ({
     set((state) => ({ ...state, imageFiles: [...state.imageFiles.slice(0, deleteImgIndex), ...state.imageFiles.slice(deleteImgIndex + 1)] }));
   },
 }));
+
+export default useImageFileStore;

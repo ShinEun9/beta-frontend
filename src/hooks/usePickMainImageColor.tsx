@@ -1,4 +1,4 @@
-import { useImagePreviewUrlStore } from "@/stores/useImagePreviewUrlStore";
+import { useImagePreviewUrlStore } from "@/stores";
 import { useColor } from "color-thief-react";
 
 const usePickMainImageColor = (imageExistingUrl = "") => {
