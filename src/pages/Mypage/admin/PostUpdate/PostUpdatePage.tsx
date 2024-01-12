@@ -3,10 +3,6 @@ import { useLocation } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import {
-  CATEGORY_LIST,
-  CONCERT_CATEGORY_LIST,
-  IS_RESERVATION_LIST,
-  METHOD_LIST,
   appendResultToFormData,
   appendUpdateImageToFormData,
   convertFormatForFormData,
@@ -26,28 +22,7 @@ const PostUpdatePage = () => {
   const showId = locationObj.state;
   const [isLoading, setIsLoading] = useState(true);
 
-  const method = useForm<ShowFormType & ShowResFormType>({
-    defaultValues: {
-      show_type: CATEGORY_LIST[0],
-      show_sub_type: CONCERT_CATEGORY_LIST[0],
-      title: "",
-      univ: "",
-      department: "",
-      start_date: null,
-      end_date: null,
-      location: "",
-      location_detail: null,
-      tags: [],
-      content: "",
-      is_reservation: IS_RESERVATION_LIST[0],
-      method: METHOD_LIST[0],
-      google_form_url: null,
-      price: null,
-      head_count: null,
-      date_time: null,
-      notice: "",
-    },
-  });
+  const method = useForm<ShowFormType & ShowResFormType>();
 
   // 이미지 관련
   const { imageFiles } = useImageFileStore();
