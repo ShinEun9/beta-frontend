@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
-import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
 import {
   CATEGORY_LIST,
@@ -9,19 +8,18 @@ import {
   IS_RESERVATION_LIST,
   METHOD_LIST,
   appendResultToFormData,
+  appendUpdateImageToFormData,
   convertFormatForFormData,
-  convertUrlToFile,
-  getResizedImgFiles,
-  reduceImageSize,
   setShowInfo,
   setShowResInfo,
   validateShowForm,
 } from "@/utils";
 import { DateWithTimeObj, ShowFormType, ShowResFormType } from "@/types";
-import { useDeleteShowQuery, useEditShowQuery, useGetShowInfoQuery, useGetShowResInfoQuery } from "@/hooks";
+import { useDeleteShowQuery, useEditShowQuery, useGetShowInfoQuery, useGetShowResInfoQuery, usePickMainImageColor } from "@/hooks";
 import { Button } from "@/components/common";
 import { ImageInputSection, ShowInfoInputsSection, ShowResInfoInputsSection } from "@/components/mypage";
 import styles from "./PostUpdatePage.module.css";
+import { useImageFileStore } from "@/stores/useImageFileStore";
 
 const PostUpdatePage = () => {
   const locationObj = useLocation();
@@ -51,21 +49,14 @@ const PostUpdatePage = () => {
     },
   });
 
-  // 게시글 정보
-  const [position, setPosition] = useState<object>({});
-
   // 이미지 관련
-  const [imgFiles, setImgFiles] = useState<File[]>([]);
-  const [imgPreviewUrls, setImgPreviewUrls] = useState<string[]>([]);
+  const { imageFiles } = useImageFileStore();
   const [imgExistingUrls, setImgExistingUrls] = useState<string[]>([]);
   const [originMainUrl, setOriginMainUrl] = useState<string>("");
-  const { data: main_image_color } = useColor(
-    imgExistingUrls[0] ? `${import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0]}` : imgPreviewUrls[0],
-    "hex",
-    {
-      crossOrigin: "anonymous",
-    },
-  );
+  const main_image_color = usePickMainImageColor(imgExistingUrls[0]);
+
+  // 게시글 정보
+  const [position, setPosition] = useState<object>({});
 
   // 게시글 예매 정보
   const [roundList, setRoundList] = useState<DateWithTimeObj[]>([]);
@@ -109,71 +100,28 @@ const PostUpdatePage = () => {
   }, [showResInfoData]);
 
   if (showInfoStatus === "error") return <h1>{showInfoError?.message}</h1>;
-  if (showInfoStatus === "pending") return <h1>loading...</h1>;
-
   if (showResInfoStatus === "error") return <h1>{showResInfoError?.message}</h1>;
-  if (showInfoData?.is_reservation && showResInfoStatus === "pending") return <h1>loading reservationInfo...</h1>;
 
   if (isLoading) return <h1>loading update data ...</h1>;
 
   // 수정하기 버튼
   const onSubmit = async (data: ShowFormType & ShowResFormType) => {
-    const imgCnt = imgFiles.length + imgExistingUrls.length;
-
+    const imgCnt = imgExistingUrls.length + imageFiles.length;
     const checkValid = validateShowForm(imgCnt, data, roundList.length);
-
     if (!checkValid.isValid) {
       toast.error(checkValid.message);
       return;
     }
 
-    const result = convertFormatForFormData(data, main_image_color!, position, roundList);
-
     const formData = new FormData();
     formData.append("show_id", showId);
 
-    // 1. 텍스트 formData
-    appendResultToFormData(result, formData);
+    // 1. 이미지 formData
+    await appendUpdateImageToFormData(formData, imageFiles, imgExistingUrls, originMainUrl);
 
-    // 2. 이미지 formData
-    const resizedImgFiles = await getResizedImgFiles(imgFiles);
-
-    // 서버에 새로 업로드할 이미지들 고르기
-    let finalSubImageFiles;
-    // 기존 이미지가 남아있으면
-    if (imgExistingUrls.length) {
-      finalSubImageFiles = resizedImgFiles;
-      // 기존 메인 이미지가 변경되면 (그대로면 보내지 않음)
-      if (imgExistingUrls[0] !== originMainUrl) {
-        // imgExistingUrls[0]을 file로 변환하고 jpeg 리사이즈해서 보내기
-        const mainImageFile = await convertUrlToFile(import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0]);
-        const blobString = URL.createObjectURL(mainImageFile);
-        const jpeg = await reduceImageSize(blobString);
-        const finalMainImageFile = new File([jpeg], imgExistingUrls[0], { type: "image/jpeg" });
-        formData.append("mainImage", finalMainImageFile); // 메인 이미지
-      }
-    } // 기존 이미지가 다 삭제되면
-    else {
-      formData.append("mainImage", resizedImgFiles[0]); // 메인 이미지
-      finalSubImageFiles = resizedImgFiles.slice(1);
-    }
-
-    for (let i = 0; i < finalSubImageFiles.length; i++) {
-      formData.append("subImages", finalSubImageFiles[i]); // 서브 이미지
-    }
-
-    // 이미지 순서와 저장된 기존 서브 이미지 name를 파악하기 위한 file name list 만들기
-    const fileNames: { [key: number]: string } = {};
-    let finalSubImageUrls;
-    if (imgExistingUrls.length > 1) {
-      const existingFileNames = imgExistingUrls.slice(1).map((url) => url.split("/show/")[1]);
-      const newFileNames = finalSubImageFiles.map((file) => file.name);
-      finalSubImageUrls = [...existingFileNames, ...newFileNames];
-    } else {
-      finalSubImageUrls = finalSubImageFiles.map((file) => file.name);
-    }
-    finalSubImageUrls.forEach((fileName, index) => (fileNames[index + 1] = fileName));
-    formData.append("sub_images_url", JSON.stringify(fileNames));
+    // 2. 텍스트 formData
+    const result = convertFormatForFormData(data, main_image_color!, position, roundList);
+    appendResultToFormData(formData, result);
 
     mutateEditShow(formData);
   };
@@ -192,14 +140,7 @@ const PostUpdatePage = () => {
   return (
     <FormProvider {...method}>
       <form className={styles["post-section-form"]}>
-        <ImageInputSection
-          setImgFiles={setImgFiles}
-          imgFiles={imgFiles}
-          imgPreviewUrls={imgPreviewUrls}
-          setImgPreviewUrls={setImgPreviewUrls}
-          imgExistingUrls={imgExistingUrls}
-          setImgExistingUrls={setImgExistingUrls}
-        />
+        <ImageInputSection imgExistingUrls={imgExistingUrls} setImgExistingUrls={setImgExistingUrls} />
         <ShowInfoInputsSection setPosition={setPosition} />
         {watchIsRes === "예" && <ShowResInfoInputsSection roundList={roundList} setRoundList={setRoundList} />}
 
