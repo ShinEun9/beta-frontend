@@ -1,4 +1,4 @@
-import { getShowInfo } from "@/apis";
+import { getShow } from "@/apis";
 import { useQuery } from "@tanstack/react-query";
 
 const useGetShowInfoQuery = (showId: string) => {
@@ -8,7 +8,7 @@ const useGetShowInfoQuery = (showId: string) => {
     error: showInfoError,
   } = useQuery({
     queryKey: ["showInfoData", showId],
-    queryFn: () => getShowInfo(showId),
+    queryFn: () => getShow(showId),
     enabled: !!showId,
   });
   return { showInfoData, showInfoStatus, showInfoError };

@@ -2,14 +2,14 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Editor, DeleteButton, InputFieldRHF, DatePickerRHF } from "@/components/common";
-import { formattingDate, formattingTime } from "@/utils";
+import { formatDate, formatTime } from "@/utils";
 import { DateWithTimeObj } from "@/types";
 import styles from "./ReservationForm.module.css";
 
 const formattingDateTime = (value: Date) => {
   const dateObject = new Date(value);
-  const date = formattingDate(dateObject);
-  const time = formattingTime(dateObject);
+  const date = formatDate(dateObject);
+  const time = formatTime(dateObject);
   return { date, time };
 };
 

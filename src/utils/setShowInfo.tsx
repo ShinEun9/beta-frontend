@@ -1,5 +1,5 @@
 import { ShowFormType, ShowResFormType, ShowType } from "@/types";
-import { base64ToBytes } from "@/utils";
+import { convertBase64ToBytes } from "@/utils";
 import { UseFormSetValue } from "react-hook-form";
 
 interface ParamsType {
@@ -30,7 +30,7 @@ const setShowInfo = ({ showInfoData, setValue }: ParamsType) => {
     } else if (key === "tags") {
       showInfoData.tags?.length && setValue("tags", Object.values(JSON.parse(showInfoData.tags)) as string[]);
     } else if (key === "content") {
-      showInfoData.content && setValue("content", new TextDecoder().decode(base64ToBytes(showInfoData.content)));
+      showInfoData.content && setValue("content", new TextDecoder().decode(convertBase64ToBytes(showInfoData.content)));
     } else if (key === "is_reservation") {
       setValue("is_reservation", showInfoData.is_reservation === 0 ? "아니오" : "예");
     } else {

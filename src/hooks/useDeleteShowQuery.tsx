@@ -1,4 +1,4 @@
-import { deleteShow } from "@/apis";
+import { deleteAdminShow } from "@/apis";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const useDeleteShowQuery = () => {
   const navigate = useNavigate();
   const { mutate: mutateDeleteShow } = useMutation({
-    mutationFn: (showId: string) => deleteShow(showId),
+    mutationFn: (showId: string) => deleteAdminShow(showId),
     onSuccess: (data) => {
       if (data) {
         toast.success("게시글 삭제 완료");

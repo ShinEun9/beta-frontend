@@ -1,6 +1,6 @@
 import { ShowFormType, ShowResFormType, ShowReservationInfoType } from "@/types";
 import { UseFormSetValue } from "react-hook-form";
-import { base64ToBytes } from ".";
+import { convertBase64ToBytes } from ".";
 
 interface ParamsType {
   showResInfoData: ShowReservationInfoType;
@@ -12,7 +12,7 @@ const setShowResInfo = ({ showResInfoData, setValue }: ParamsType) => {
 
   keysOfShowResInfo.forEach((key) => {
     if (key === "method") setValue("method", showResInfoData.method === "google" ? "구글폼" : "예매 대행");
-    else if (key === "notice") showResInfoData.notice && setValue("notice", new TextDecoder().decode(base64ToBytes(showResInfoData.notice)));
+    else if (key === "notice") showResInfoData.notice && setValue("notice", new TextDecoder().decode(convertBase64ToBytes(showResInfoData.notice)));
     else setValue(key as string, showResInfoData[key]);
   });
 };
