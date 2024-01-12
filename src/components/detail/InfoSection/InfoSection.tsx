@@ -1,8 +1,9 @@
-import { base64ToBytes } from "@/utils";
-import styles from "./InfoSection.module.css";
-import LocationMap from "./LocationMap";
-import { useShowInfoStore } from "@/stores/useShowInfoStore";
 import { toast } from "react-toastify";
+import { convertBase64ToBytes } from "@/utils";
+import { useShowInfoStore } from "@/stores";
+import LocationMap from "./LocationMap";
+import { InfoSectionSkeleton } from "@/components/detail";
+import styles from "./InfoSection.module.css";
 
 type onCopyFn = (text: string) => void;
 
@@ -17,13 +18,13 @@ const copyClipBoard: onCopyFn = async (text: string) => {
 
 const InfoSection = () => {
   const { showInfo } = useShowInfoStore();
-  if (!showInfo) return <h2>loading...</h2>;
+  if (!showInfo) return <InfoSectionSkeleton />;
 
   const { univ, department, title, location, location_detail, start_date, end_date } = showInfo;
 
   const tags: string[] = showInfo.tags ? Object.values(JSON.parse(showInfo.tags)) : [];
   const position = showInfo.position && JSON.parse(showInfo.position);
-  const decodedContent = showInfo.content ? new TextDecoder().decode(base64ToBytes(showInfo.content)) : null;
+  const decodedContent = showInfo.content ? new TextDecoder().decode(convertBase64ToBytes(showInfo.content)) : null;
 
   return (
     <>

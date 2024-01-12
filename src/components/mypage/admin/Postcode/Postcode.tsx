@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/common";
 import { useDaumPostcodePopup, Address } from "react-daum-postcode";
-import { AddressSearchResult } from "@/types/addressSearchType";
+import { AddressSearchResult } from "@/types";
 import { useFormContext } from "react-hook-form";
 
 const kakao = window.kakao;
