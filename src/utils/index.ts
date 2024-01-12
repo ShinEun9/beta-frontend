@@ -1,4 +1,6 @@
 import appendResultToFormData from "./appendResultToFormData";
+import appendUploadImageToFormData from "./appendUploadImageToFormData";
+import appendUpdateImageToFormData from "./appendUpdateImageToFormData";
 import { isPasswordCheck, isPasswordDoubleCheck } from "./passwordCheck";
 import { isEmailCheck } from "./emailCheck";
 import getTxtColorByBgColor from "./getTxtColorByBgColor";
@@ -20,6 +22,8 @@ import setShowResInfo from "./setShowResInfo";
 
 export {
   appendResultToFormData,
+  appendUploadImageToFormData,
+  appendUpdateImageToFormData,
   isPasswordCheck,
   isPasswordDoubleCheck,
   isEmailCheck,
