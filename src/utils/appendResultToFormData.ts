@@ -1,6 +1,6 @@
 import { ShowFormResultType } from "@/types";
 
-const appendResultToFormData = (result: ShowFormResultType, formData: FormData) => {
+const appendResultToFormData = (formData: FormData, result: ShowFormResultType) => {
   const keysToAppend: Array<keyof ShowFormResultType> = [
     "show_type",
     "show_sub_type",
