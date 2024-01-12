@@ -13,14 +13,6 @@ const ImageInputSection: React.FC<PropsType> = ({ imgExistingUrls, setImgExistin
   const { resetImageFiles, addImageFiles, removeImageFiles } = useImageFileStore();
   const { imagePreviewUrls, resetImagePreviewUrls, addImagePreviewUrls, removeImagePreviewUrls } = useImagePreviewUrlStore();
 
-  // useEffect(() => {
-  //   return () => {
-  //     if (imagePreviewUrls.length) {
-  //       imagePreviewUrls.forEach((objUrl) => URL.revokeObjectURL(objUrl));
-  //     }
-  //   };
-  // }, [imagePreviewUrls]);
-
   useEffect(() => {
     return () => {
       resetImageFiles();
