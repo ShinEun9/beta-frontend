@@ -15,8 +15,6 @@ import getTodayStringDate from "./getTodayStringDate";
 import getTxtColorByBgColor from "./getTxtColorByBgColor";
 import { getDays, getMonths, getYears } from "./selectDate";
 import reduceImageSize from "./reduceImageSize";
-import formattingDate from "./formattingDate";
-import formattingTime from "./formattingTime";
 
 export {
   checkEmail,
@@ -39,6 +37,4 @@ export {
   getMonths,
   getDays,
   reduceImageSize,
-  formattingDate,
-  formattingTime,
 };
