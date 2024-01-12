@@ -4,10 +4,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { FormProvider, useForm } from "react-hook-form";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
-import { base64ToBytes, bytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize, formattingDate } from "@/utils";
+import { convertBytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize, formatDate } from "@/utils";
 import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 // import useInputs from "@/hooks/useInputs";
-import { deleteShow, getShowInfo, getShowReservationInfo, putShow, postShow } from "@/apis";
+import { deleteAdminShow, getShow, getShowReservationInfo, putShow, postShow } from "@/apis";
 import { Button, DeleteButton, Editor, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF, TagInputRHF } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
@@ -108,7 +108,7 @@ const PostCRUDPage = () => {
     error,
   } = useQuery({
     queryKey: ["showInfoData", showId],
-    queryFn: () => getShowInfo(showId),
+    queryFn: () => getShow(showId),
     enabled: !!showId,
   });
 
@@ -139,7 +139,7 @@ const PostCRUDPage = () => {
 
   // 게시글 삭제 DELETE
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: () => deleteShow(showId),
+    mutationFn: () => deleteAdminShow(showId),
     onSuccess: (data) => {
       if (data) {
         toast.success("게시글 삭제 완료");
@@ -313,19 +313,20 @@ const PostCRUDPage = () => {
     //   }
     // }
 
-    const base64EncodedContents = (!!method.getValues("content") && bytesToBase64(new TextEncoder().encode(method.getValues("content")))) || null;
+    const base64EncodedContents =
+      (!!method.getValues("content") && convertBytesToBase64(new TextEncoder().encode(method.getValues("content")))) || null;
     const base64EncodedNotice =
       (method.getValues("method") === "예매 대행" &&
         !!method.getValues("notice") &&
-        bytesToBase64(new TextEncoder().encode(method.getValues("notice")))) ||
+        convertBytesToBase64(new TextEncoder().encode(method.getValues("notice")))) ||
       null;
 
     const result: ShowFormResultType = {
       main_image_color: main_image_color as string,
       ...data,
       show_sub_type: data.show_type === "전시" ? null : data.show_sub_type,
-      start_date: formattingDate(data.start_date!),
-      end_date: formattingDate(data.end_date!),
+      start_date: formatDate(data.start_date!),
+      end_date: formatDate(data.end_date!),
       position: JSON.stringify(position),
       tags: JSON.stringify(convertArrayToObject(data.tags)),
       content: base64EncodedContents,

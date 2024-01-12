@@ -6,10 +6,12 @@ interface useShowInfoStoreType {
   setShowInfo: (item: ShowType) => void;
 }
 
-export const useShowInfoStore = create<useShowInfoStoreType>((set) => ({
+const useShowInfoStore = create<useShowInfoStoreType>((set) => ({
   showInfo: null,
   setShowInfo: (showInfo) =>
     set(() => ({
       showInfo,
     })),
 }));
+
+export default useShowInfoStore;
