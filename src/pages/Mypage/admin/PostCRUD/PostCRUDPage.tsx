@@ -6,7 +6,6 @@ import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
 import { convertBytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize, formatDate } from "@/utils";
 import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
-// import useInputs from "@/hooks/useInputs";
 import { deleteAdminShow, getShow, getShowReservationInfo, putShow, postShow } from "@/apis";
 import { Button, DeleteButton, Editor, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF, TagInputRHF } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";

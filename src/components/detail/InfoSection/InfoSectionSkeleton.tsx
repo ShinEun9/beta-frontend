@@ -8,8 +8,8 @@ const InfoSkeleton = () => (
     <Skeleton height={15} width="50%" style={{ margin: "0.2rem 0" }} />
     <Skeleton height={15} width="50%" />
     <ul className={styles["info-title__tags"]}>
-      {Array.from({ length: 3 }).map(() => (
-        <li>
+      {Array.from({ length: 3 }).map((_item, index) => (
+        <li key={index}>
           <Skeleton height={30} width="80px" style={{ borderRadius: "1rem" }} />
         </li>
       ))}

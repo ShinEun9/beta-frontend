@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useShowInfoStore } from "@/stores";
-import { getShow } from "@/apis";
 import { Banner, ButtonGroup, SubMenuSection } from "@/components/detail";
 import DetailPageSkeleton from "./DetailPageSkeleton";
+import { ShowReservationInfoType, ShowType } from "@/types";
+import { getShow, getShowReservationInfo } from "@/apis";
+import { useLoginStore } from "@/stores";
 
 const submenuList = [
   { pathname: "", text: "정보" },
@@ -13,20 +13,24 @@ const submenuList = [
 
 const DetailPage = () => {
   const { id: showId } = useParams();
-  const { setShowInfo } = useShowInfoStore();
+  const {
+    userState: { isLogin, login_id },
+  } = useLoginStore();
 
   const {
-    status,
     data: infoData,
+    status,
     error,
-  } = useQuery({
-    queryKey: ["infoData", showId],
+  } = useQuery<ShowType>({
+    queryKey: ["infoData", showId, login_id],
     queryFn: () => getShow(showId!),
   });
 
-  useEffect(() => {
-    infoData && setShowInfo(infoData);
-  }, [infoData]);
+  useQuery<ShowReservationInfoType>({
+    queryKey: ["reservationData", showId],
+    queryFn: () => getShowReservationInfo(showId!),
+    enabled: !!infoData?.is_reservation && isLogin,
+  });
 
   if (status === "pending") return <DetailPageSkeleton />;
   if (status === "error") return <h1>{error.message}</h1>;
