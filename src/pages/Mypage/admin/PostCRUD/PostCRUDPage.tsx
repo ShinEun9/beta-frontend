@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { FormProvider, useForm } from "react-hook-form";
 import { useColor } from "color-thief-react";
 import { toast } from "react-toastify";
-import { convertBase64ToBytes, convertBytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize } from "@/utils";
-import { DateInputType, DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
-import { useInputs } from "@/hooks";
+import { convertBytesToBase64, convertUrlToFile, getResizedImgFiles, convertArrayToObject, reduceImageSize, formatDate } from "@/utils";
+import { DateWithTimeObj, ShowFormResultType, ShowFormType, ShowResFormType } from "@/types";
 import { deleteAdminShow, getShow, getShowReservationInfo, putShow, postShow } from "@/apis";
-import { Button, DatePicker, DeleteButton, Editor, InputField, RadioButtonGroup, TagInput } from "@/components/common";
+import { Button, DeleteButton, Editor, InputFieldRHF, DatePickerRHF, RadioButtonGroupRHF, TagInputRHF } from "@/components/common";
 import { Postcode, ReservationForm } from "@/components/mypage";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import styles from "./PostCRUDPage.module.css";
 import classNames from "classnames/bind";
+import { DevTool } from "@hookform/devtools";
 
 const cx = classNames.bind(styles);
 
@@ -29,36 +30,37 @@ const roundListArrToObj = (roundList: DateWithTimeObj[]) => {
   return obj;
 };
 
-const defaultValues = {
-  show_type: categoryList[0],
-  show_sub_type: concertCategoryList[0],
-  title: "",
-  univ: "",
-  department: "",
-  // location: "",
-  location_detail: null,
-  is_reservation: isReservationList[0],
-};
-
-const defaultResValues = { method: methodList[0], google_form_url: null, price: null, head_count: null };
-
 const PostCRUDPage = () => {
   const navigate = useNavigate();
   const locationObj = useLocation();
   const showId = locationObj.state || undefined;
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  const method = useForm({
+    defaultValues: {
+      show_type: categoryList[0],
+      show_sub_type: concertCategoryList[0],
+      title: "",
+      univ: "",
+      department: "",
+      start_date: null,
+      end_date: null,
+      location: "",
+      location_detail: null,
+      tags: [],
+      content: "",
+      is_reservation: isReservationList[0],
+      method: methodList[0],
+      google_form_url: null,
+      price: null,
+      head_count: null,
+      date_time: null,
+      notice: "",
+    },
+  });
 
   // 게시글 정보
-  const [initialFormValues, setInitialFormValues] = useState<ShowFormType>(defaultValues);
-  const [form, onChangeForm, resetForm] = useInputs(initialFormValues);
-  const [date, setDate] = useState({
-    start_date: "",
-    end_date: "",
-  });
-  const [location, setLocation] = useState<string>("");
   const [position, setPosition] = useState<object>({});
-  const [tagsInput, setTagInputs] = useState<string[]>([]);
-  const [editorData, setEditorData] = useState<string>("");
 
   // 이미지 관련
   const [imgFiles, setImgFiles] = useState<File[]>([]);
@@ -74,10 +76,7 @@ const PostCRUDPage = () => {
   );
 
   // 게시글 예매 정보
-  const [initialResFormValues, setInitialResFormValues] = useState<ShowResFormType>(defaultResValues);
-  const [resForm, onChangeResForm, resetResForm] = useInputs(initialResFormValues);
   const [roundList, setRoundList] = useState<DateWithTimeObj[]>([]);
-  const [editorNoticeData, setEditorNoticeData] = useState<string>("");
 
   useEffect(() => {
     return () => {
@@ -93,7 +92,7 @@ const PostCRUDPage = () => {
     onSuccess: (data) => {
       if (data) {
         toast.success("게시글 업로드 성공");
-        navigate("/mypage/admin/post");
+        // navigate("/mypage/admin/post");
       }
     },
     onError: (err) => {
@@ -151,69 +150,95 @@ const PostCRUDPage = () => {
     },
   });
 
-  useEffect(() => {
-    if (showInfoStatus === "success" && showInfoData) {
-      const update = {
-        title: showInfoData.title,
-        show_type: showInfoData.show_type,
-        show_sub_type: showInfoData.show_sub_type,
-        univ: showInfoData.univ,
-        department: showInfoData.department,
-        location_detail: showInfoData.location_detail,
-        is_reservation: showInfoData.is_reservation === 1 ? "예" : "아니오",
-      };
-      setInitialFormValues(() => update);
+  // useEffect(() => {
+  //   if (showInfoStatus === "success" && showInfoData) {
+  //     // const update = {
+  //     //   title: showInfoData.title,
+  //     //   show_type: showInfoData.show_type,
+  //     //   show_sub_type: showInfoData.show_sub_type,
+  //     //   univ: showInfoData.univ,
+  //     //   department: showInfoData.department,
+  //     //   location_detail: showInfoData.location_detail,
+  //     //   is_reservation: showInfoData.is_reservation === 1 ? "예" : "아니오",
+  //     // };
+  //     // setInitialFormValues(() => update);
 
-      setLocation(showInfoData.location);
-      setPosition(JSON.parse(showInfoData.position));
-      setDate({ start_date: showInfoData.start_date, end_date: showInfoData.end_date });
-      showInfoData.tags?.length && setTagInputs(Object.values(JSON.parse(showInfoData.tags)) as string[]);
-      showInfoData.content && setEditorData(new TextDecoder().decode(convertBase64ToBytes(showInfoData.content)));
+  //     // setLocation(showInfoData.location);
 
-      setOriginMainUrl(showInfoData.main_image_url);
-      setImgExistingUrls(
-        showInfoData.sub_images_url
-          ? [showInfoData.main_image_url, ...(Object.values(JSON.parse(showInfoData.sub_images_url)) as string[])]
-          : [showInfoData.main_image_url],
-      );
-    }
-  }, [showInfoData]);
+  //     const keysOfShowInfo = [
+  //       "show_type",
+  //       "show_sub_type",
+  //       "title",
+  //       // "start_date",
+  //       // "end_date",
+  //       "location",
+  //       "location_detail",
+  //       // "position",
+  //       "univ",
+  //       "department",
+  //       // "tags",
+  //       // "content",
+  //       // "is_reservation",
+  //     ];
 
-  useEffect(() => {
-    if (showInfoData) {
-      resetForm();
-      if (!showInfoData.is_reservation) {
-        setIsLoading(() => false);
-      }
-    }
-  }, [initialFormValues, resetForm]);
+  //     keysOfShowInfo.forEach((key) => method.setValue(key, showInfoData[key]));
 
-  useEffect(() => {
-    if (showReservationInfoStatus === "success" && showReservationInfoData) {
-      const update = {
-        method: showReservationInfoData.method === "google" ? "구글폼" : "예매 대행",
-        google_form_url: showReservationInfoData.google_form_url,
-        price: showReservationInfoData.price,
-        head_count: showReservationInfoData.head_count,
-      };
-      setInitialResFormValues(() => update);
+  //     method.setValue("position", JSON.parse(showInfoData.position));
+  //     method.setValue("date", { start_date: showInfoData.start_date, end_date: showInfoData.end_date });
+  //     showInfoData.tags?.length && setTagInputs(Object.values(JSON.parse(showInfoData.tags)) as string[]);
+  //     showInfoData.content && method.setValue("content", new TextDecoder().decode(base64ToBytes(showInfoData.content)));
 
-      setRoundList(
-        showReservationInfoData.date_time.map((round) => {
-          const [date, time] = round.date_time.split(" - ");
-          return { id: round.id.toString(), date, time };
-        }),
-      );
-      showReservationInfoData.notice && setEditorNoticeData(new TextDecoder().decode(convertBase64ToBytes(showReservationInfoData.notice)));
-    }
-  }, [showReservationInfoData]);
+  //     setOriginMainUrl(showInfoData.main_image_url);
+  //     setImgExistingUrls(
+  //       showInfoData.sub_images_url
+  //         ? [showInfoData.main_image_url, ...(Object.values(JSON.parse(showInfoData.sub_images_url)) as string[])]
+  //         : [showInfoData.main_image_url],
+  //     );
+  //   }
+  // }, [showInfoData]);
 
-  useEffect(() => {
-    if (showReservationInfoData) {
-      resetResForm();
-      setIsLoading(() => false);
-    }
-  }, [initialResFormValues, resetResForm]);
+  // useEffect(() => {
+  //   if (showInfoData) {
+  //     resetForm();
+  //     if (!showInfoData.is_reservation) {
+  //       setIsLoading(() => false);
+  //     }
+  //   }
+  // }, [initialFormValues, resetForm]);
+
+  // useEffect(() => {
+  //   if (showReservationInfoStatus === "success" && showReservationInfoData) {
+  //     // const update = {
+  //     //   method: showReservationInfoData.method === "google" ? "구글폼" : "예매 대행",
+  //     //   google_form_url: showReservationInfoData.google_form_url,
+  //     //   price: showReservationInfoData.price,
+  //     //   head_count: showReservationInfoData.head_count,
+  //     // };
+  //     // setInitialResFormValues(() => update);
+
+  //     const keysOfShowResInfo = ["google_form_url", "price", "head_count"];
+
+  //     keysOfShowResInfo.forEach((key) => {
+  //       method.setValue(key, showReservationInfoData[key]);
+  //     });
+
+  //     method.setValue("method", showReservationInfoData.method === "google" ? "구글폼" : "예매 대행");
+  //     setRoundList(
+  //       showReservationInfoData.date_time.map((round) => {
+  //         const [date, time] = round.date_time.split(" - ");
+  //         return { id: round.id.toString(), date, time };
+  //       }),
+  //     );
+  //     showReservationInfoData.notice && method.setValue("notice", new TextDecoder().decode(base64ToBytes(showReservationInfoData.notice)));
+  //   }
+  // }, [showReservationInfoData]);
+
+  // useEffect(() => {
+  //   if (showReservationInfoData) {
+  //     resetResForm();
+  //     setIsLoading(() => false);
+  //   }
+  // }, [initialResFormValues, resetResForm]);
 
   if (showId) {
     if (showInfoStatus === "error") return <h1>{error.message}</h1>;
@@ -222,7 +247,7 @@ const PostCRUDPage = () => {
     if (showReservationInfoStatus === "error") return <h1>{showReservationInfoError.message}</h1>;
     if (showInfoData.is_reservation && showReservationInfoStatus === "pending") return <h1>loading reservationInfo...</h1>;
 
-    if (isLoading) return <h1>loading state update ...</h1>;
+    // if (isLoading) return <h1>loading state update ...</h1>;
   }
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,79 +271,70 @@ const PostCRUDPage = () => {
     setImgExistingUrls((prev) => prev.filter((existingUrl) => existingUrl !== image));
   };
 
-  const handleDateInput = (event: DateInputType) => {
-    const { name, value } = event.target;
-    setDate({ ...date, [name]: value });
-  };
-
-  const handleChangeTags = (tags: string[]) => {
-    setTagInputs(tags);
-  };
-
   // 업로드하기, 수정하기 버튼
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>, submitFor: "upload" | "update") => {
-    e.preventDefault();
+  const handleOnSubmit = async (data: ShowFormType & ShowResFormType, submitFor: "upload" | "update") => {
+    console.log(data);
 
-    const imgCnt = imgFiles.length + imgExistingUrls.length;
+    // const imgCnt = imgFiles.length + imgExistingUrls.length;
 
-    if (imgCnt < 2) {
-      toast.error("이미지를 2개 이상 업로드 해주세요.");
-      return;
-    }
-    if (imgCnt > 10) {
-      toast.error("이미지를 10개 이하로 업로드 해주세요.");
-      return;
-    }
-    if (!form.title || !form.univ || !form.department) {
-      toast.error("주최자 정보를 입력해주세요.");
-      return;
-    }
-    if (!date.start_date || !date.end_date) {
-      toast.error("기간을 입력해주세요.");
-      return;
-    }
-    if (!location) {
-      toast.error("주소를 입력해주세요.");
-      return;
-    }
-    if (!tagsInput.length) {
-      toast.error("tag를 입력해주세요.");
-      return;
-    }
-    if (form.is_reservation === "예") {
-      if (resForm.method === "구글폼" && !resForm.google_form_url) {
-        toast.error("구글폼 URL을 입력해주세요.");
-        return;
-      }
-      if (resForm.method === "예매 대행" && (resForm.price === null || !resForm.head_count || !roundList.length || !editorNoticeData)) {
-        toast.error("예매 작성 폼을 완성해주세요.");
-        return;
-      }
-    }
+    // if (imgCnt < 2) {
+    //   toast.error("이미지를 2개 이상 업로드 해주세요.");
+    //   return;
+    // }
+    // if (imgCnt > 10) {
+    //   toast.error("이미지를 10개 이하로 업로드 해주세요.");
+    //   return;
+    // }
+    // if (!data.title || !data.univ || !data.department) {
+    //   toast.error("주최자 정보를 입력해주세요.");
+    //   return;
+    // }
+    // if (!data.start_date || !data.end_date) {
+    //   toast.error("기간을 입력해주세요.");
+    //   return;
+    // }
+    // if (!location) {
+    //   toast.error("주소를 입력해주세요.");
+    //   return;
+    // }
+    // if (!data.tags.length) {
+    //   toast.error("tag를 입력해주세요.");
+    //   return;
+    // }
+    // if (data.is_reservation === "예") {
+    //   if (data.method === "구글폼" && !data.google_form_url) {
+    //     toast.error("구글폼 URL을 입력해주세요.");
+    //     return;
+    //   }
+    //   if (data.method === "예매 대행" && (data.price === null || !data.head_count || !roundList.length || !data.notice)) {
+    //     toast.error("예매 작성 폼을 완성해주세요.");
+    //     return;
+    //   }
+    // }
 
-    const base64EncodedContents = (!!editorData && convertBytesToBase64(new TextEncoder().encode(editorData))) || null;
+    const base64EncodedContents =
+      (!!method.getValues("content") && convertBytesToBase64(new TextEncoder().encode(method.getValues("content")))) || null;
     const base64EncodedNotice =
-      (resForm.method === "예매 대행" && !!editorNoticeData && convertBytesToBase64(new TextEncoder().encode(editorNoticeData))) || null;
+      (method.getValues("method") === "예매 대행" &&
+        !!method.getValues("notice") &&
+        convertBytesToBase64(new TextEncoder().encode(method.getValues("notice")))) ||
+      null;
 
     const result: ShowFormResultType = {
-      ...form,
       main_image_color: main_image_color as string,
-      show_sub_type: form.show_type === "전시" ? null : form.show_sub_type,
-      start_date: date.start_date,
-      end_date: date.end_date,
-      location,
-      location_detail: form.location_detail ? form.location_detail : null,
+      ...data,
+      show_sub_type: data.show_type === "전시" ? null : data.show_sub_type,
+      start_date: formatDate(data.start_date!),
+      end_date: formatDate(data.end_date!),
       position: JSON.stringify(position),
-      tags: JSON.stringify(convertArrayToObject(tagsInput)),
+      tags: JSON.stringify(convertArrayToObject(data.tags)),
       content: base64EncodedContents,
-      is_reservation: form.is_reservation === "예" ? "1" : "0",
-      //
-      ...resForm,
-      method: form.is_reservation === "예" ? (resForm.method === "구글폼" ? "google" : "agency") : null,
-      google_form_url: (resForm.method === "구글폼" && resForm.google_form_url) || null,
-      price: (resForm.method === "예매 대행" && (resForm.price as number).toString()) || null,
-      head_count: (resForm.method === "예매 대행" && (resForm.head_count as number).toString()) || null,
-      date_time: (resForm.method === "예매 대행" && JSON.stringify(roundListArrToObj(roundList))) || null,
+      is_reservation: data.is_reservation === "예" ? "1" : "0",
+      method: data.is_reservation === "예" ? (data.method === "구글폼" ? "google" : "agency") : null,
+      google_form_url: (data.method === "구글폼" && data.google_form_url) || null,
+      price: (data.method === "예매 대행" && (data.price as number).toString()) || null,
+      head_count: (data.method === "예매 대행" && (data.head_count as number).toString()) || null,
+      date_time: (data.method === "예매 대행" && JSON.stringify(roundListArrToObj(roundList))) || null,
       notice: base64EncodedNotice,
     };
 
@@ -340,7 +356,6 @@ const PostCRUDPage = () => {
       "tags",
       "content",
       "is_reservation",
-      //
       "method",
       "google_form_url",
       "price",
@@ -414,7 +429,7 @@ const PostCRUDPage = () => {
         finalSubImageUrls.forEach((fileName, index) => (fileNames[index + 1] = fileName));
         formData.append("sub_images_url", JSON.stringify(fileNames));
 
-        editMutate(formData);
+        // editMutate(formData);
         break;
       }
     }
@@ -429,168 +444,129 @@ const PostCRUDPage = () => {
     }
   };
 
+  const watchShowType = method.watch("show_type");
+  const watchIsRes = method.watch("is_reservation");
+  const watchMethod = method.watch("method");
+
   return (
-    <form className={styles["post-section-form"]}>
-      <section>
-        <h2 className={styles["title"]}>공연/전시 이미지</h2> {/*스포츠 */}
-        <div className={styles["update-imgs-wrapper"]}>
-          <label className={styles["update-img-input"]}>
-            <ImgUploadIcon />
-            <input type="file" accept="image/*" multiple onChange={handleChangeImage} />
-          </label>
-          <ul className={styles["imgs-list"]}>
-            {imgExistingUrls.map((image) => (
-              <li key={image}>
-                <div className={styles["img-cover"]}>
-                  <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + image} alt="" />
-                  <DeleteButton spanHidden="해당 이미지 삭제" onClick={() => handleRemoveExistingImage(image)} forImage />
-                </div>
-              </li>
-            ))}
-            {imgPreviewUrls.map((image) => (
-              <li key={image}>
-                <div className={styles["img-cover"]}>
-                  <img src={image} alt="" />
-                  <DeleteButton spanHidden="해당 이미지 삭제" onClick={() => handleRemoveImage(image)} forImage />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+    <FormProvider {...method}>
+      <form className={styles["post-section-form"]}>
+        <section>
+          <div className={styles["update-imgs-wrapper"]}>
+            <label className={styles["update-img-input"]}>
+              <ImgUploadIcon />
+              <input type="file" accept="image/*" multiple onChange={handleChangeImage} />
+            </label>
+            <ul className={styles["imgs-list"]}>
+              {imgExistingUrls.map((image) => (
+                <li key={image}>
+                  <div className={styles["img-cover"]}>
+                    <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + image} alt="" />
+                    <DeleteButton spanHidden="해당 이미지 삭제" onClick={() => handleRemoveExistingImage(image)} forImage />
+                  </div>
+                </li>
+              ))}
+              {imgPreviewUrls.map((image) => (
+                <li key={image}>
+                  <div className={styles["img-cover"]}>
+                    <img src={image} alt="" />
+                    <DeleteButton spanHidden="해당 이미지 삭제" onClick={() => handleRemoveImage(image)} forImage />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-      <section>
-        <h2 className={styles["title"]}>카테고리</h2>
-        <RadioButtonGroup radioList={categoryList} name="show_type" onChange={onChangeForm} defaultValue={form.show_type} />
-        {form.show_type === "공연" && (
-          <RadioButtonGroup radioList={concertCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChangeForm} />
-        )}
-        {/* {showType === "스포츠" && (
-          <RadioButtonGroup radioList={sportsCategoryList} name="show_sub_type" defaultValue={form.show_sub_type} onChange={onChangeForm} />
-        )} */}
-      </section>
+        <section>
+          <h2 className={styles["title"]}>카테고리</h2>
+          <RadioButtonGroupRHF radioList={categoryList} name="show_type" />
+          {watchShowType === "공연" && <RadioButtonGroupRHF radioList={concertCategoryList} name="show_sub_type" />}
+        </section>
 
-      <section>
-        <h2 className={cx("a11y-hidden", "title")}>주최 정보</h2>
-        <InputField
-          type="text"
-          name="title"
-          placeholder="제목을 입력해주세요."
-          value={form.title}
-          onChange={onChangeForm}
-          style={{ padding: "0 1rem" }}
-        >
-          제목
-        </InputField>
-        <InputField
-          type="text"
-          name="univ"
-          placeholder="대학을 입력해주세요."
-          value={form.univ}
-          onChange={onChangeForm}
-          style={{ padding: "0 1rem" }}
-        >
-          대학
-        </InputField>
-        <InputField
-          type="text"
-          name="department"
-          placeholder="학과 또는 학부를 입력해주세요."
-          value={form.department}
-          onChange={onChangeForm}
-          style={{ padding: "0 1rem" }}
-        >
-          학과
-        </InputField>
-      </section>
+        <section>
+          <h2 className={cx("a11y-hidden", "title")}>주최 정보</h2>
+          <InputFieldRHF type="text" placeholder="제목을 입력해주세요." style={{ padding: "0 1rem" }} name="title">
+            제목
+          </InputFieldRHF>
+          <InputFieldRHF type="text" placeholder="대학을 입력해주세요." style={{ padding: "0 1rem" }} name="univ">
+            대학
+          </InputFieldRHF>
+          <InputFieldRHF type="text" placeholder="학과 또는 학부를 입력해주세요." style={{ padding: "0 1rem" }} name="department">
+            학과
+          </InputFieldRHF>
+        </section>
 
-      <section>
-        <h2 className={styles["title"]}>기간</h2>
-        <div className={styles["l_date"]}>
-          <DatePicker type="period" startDate={date.start_date} endDate={date.end_date} onChange={handleDateInput} />
-        </div>
-      </section>
+        <section>
+          <h2 className={styles["title"]}>기간</h2>
+          <div className={styles["l_date"]}>
+            <DatePickerRHF type="period" />
+          </div>
+        </section>
 
-      <section>
-        <h2 className={styles["title"]}>주소</h2>
-        <div className={styles["l_address"]}>
-          <InputField type="text" name="location" placeholder="도로명 주소" value={location} labelHidden style={{ padding: "0 1rem" }} readOnly>
-            도로명 주소
-          </InputField>
-          <Postcode setPosition={setPosition} setLocation={setLocation} />
-        </div>
-        <InputField
-          type="text"
-          name="location_detail"
-          placeholder="상세 주소"
-          value={form.location_detail}
-          onChange={onChangeForm}
-          labelHidden
-          style={{ padding: "0 1rem" }}
-        >
-          상세 주소
-        </InputField>
-      </section>
+        <section>
+          <h2 className={styles["title"]}>주소</h2>
+          <div className={styles["l_address"]}>
+            <InputFieldRHF type="text" placeholder="도로명 주소" labelHidden style={{ padding: "0 1rem" }} readOnly name="location">
+              도로명 주소
+            </InputFieldRHF>
+            <Postcode setPosition={setPosition} />
+          </div>
+          <InputFieldRHF type="text" placeholder="상세 주소" labelHidden style={{ padding: "0 1rem" }} name="location_detail">
+            상세 주소
+          </InputFieldRHF>
+        </section>
 
-      <section className={styles["tags-section"]}>
-        <h2 className={styles["title"]}>태그</h2>
-        <TagInput defaultValue={tagsInput} handleChange={handleChangeTags} />
-      </section>
+        <section className={styles["tags-section"]}>
+          <h2 className={styles["title"]}>태그</h2>
+          <TagInputRHF control={method.control} name="tags" rules={{ required: true }} />
+        </section>
 
-      <section>
-        <h2 className={styles["title"]}>소개</h2>
-        <Editor editorData={editorData} setEditorData={setEditorData} />
-      </section>
+        <section>
+          <h2 className={styles["title"]}>소개</h2>
+          <Editor name="content" />
+        </section>
 
-      <section>
-        <h2 className={styles["title"]}>예매 여부</h2>
-        <RadioButtonGroup radioList={isReservationList} name="is_reservation" defaultValue={form.is_reservation} onChange={onChangeForm} />
-        {form.is_reservation === isReservationList[0] && (
-          <>
-            <h3 className={styles["title"]}>예매 방법</h3>
-            <RadioButtonGroup radioList={methodList} name="method" onChange={onChangeResForm} defaultValue={resForm.method} />
-            {resForm.method === methodList[0] && (
-              <InputField
-                type="url"
-                name="google_form_url"
-                placeholder="구글폼 URL을 입력해주세요."
-                labelHidden
-                value={resForm.google_form_url}
-                onChange={onChangeResForm}
-                // pattern="https://.*"
-              >
-                구글폼url
-              </InputField>
-            )}
-            {resForm.method === methodList[1] && (
-              <ReservationForm
-                form={resForm}
-                onChange={onChangeResForm}
-                roundList={roundList}
-                setRoundList={setRoundList}
-                editorNoticeData={editorNoticeData}
-                setEditorNoticeData={setEditorNoticeData}
-              />
-            )}
-          </>
-        )}
-      </section>
+        <section>
+          <h2 className={styles["title"]}>예매 여부</h2>
+          <RadioButtonGroupRHF radioList={isReservationList} name="is_reservation" />
+          {watchIsRes === isReservationList[0] && (
+            <>
+              <h3 className={styles["title"]}>예매 방법</h3>
+              <RadioButtonGroupRHF radioList={methodList} name="method" />
+              {watchMethod === methodList[0] && (
+                <InputFieldRHF
+                  type="url"
+                  placeholder="구글폼 URL을 입력해주세요."
+                  labelHidden
+                  name="google_form_url"
+                  // pattern="https://.*"
+                >
+                  구글폼url
+                </InputFieldRHF>
+              )}
+              {watchMethod === methodList[1] && <ReservationForm roundList={roundList} setRoundList={setRoundList} />}
+            </>
+          )}
+        </section>
 
-      {showId ? (
-        <div className={styles["button-group"]}>
-          <Button type="submit" onClick={handleDeleteShow} reverseColor>
-            삭제하기
+        {showId ? (
+          <div className={styles["button-group"]}>
+            <Button type="submit" onClick={handleDeleteShow} reverseColor>
+              삭제하기
+            </Button>
+            <Button type="submit" onClick={method.handleSubmit((data) => handleOnSubmit(data, "update"))}>
+              수정하기
+            </Button>
+          </div>
+        ) : (
+          <Button type="submit" onClick={method.handleSubmit((data) => handleOnSubmit(data, "upload"))}>
+            업로드하기
           </Button>
-          <Button type="submit" onClick={(e) => handleSubmit(e, "update")}>
-            수정하기
-          </Button>
-        </div>
-      ) : (
-        <Button type="submit" onClick={(e) => handleSubmit(e, "upload")}>
-          업로드하기
-        </Button>
-      )}
-    </form>
+        )}
+      </form>
+      <DevTool control={method.control} />
+    </FormProvider>
   );
 };
 
