@@ -1,8 +1,10 @@
+import { useParams } from "react-router-dom";
+import { queryClient } from "@/main";
 import { toast } from "react-toastify";
-import { convertBase64ToBytes } from "@/utils";
-import { useShowInfoStore } from "@/stores";
 import LocationMap from "./LocationMap";
-import { InfoSectionSkeleton } from "@/components/detail";
+import { ShowType } from "@/types";
+import { useLoginStore } from "@/stores";
+import { convertBase64ToBytes } from "@/utils";
 import styles from "./InfoSection.module.css";
 
 type onCopyFn = (text: string) => void;
@@ -17,14 +19,28 @@ const copyClipBoard: onCopyFn = async (text: string) => {
 };
 
 const InfoSection = () => {
-  const { showInfo } = useShowInfoStore();
-  if (!showInfo) return <InfoSectionSkeleton />;
+  const { id: showId } = useParams();
+  const {
+    userState: { login_id },
+  } = useLoginStore();
+  const showInfo = queryClient.getQueryData<ShowType>(["infoData", showId, login_id])!;
 
-  const { univ, department, title, location, location_detail, start_date, end_date } = showInfo;
+  const {
+    univ,
+    department,
+    title,
+    location,
+    location_detail,
+    start_date,
+    end_date,
+    tags: rawTags,
+    position: rawPosition,
+    content: rawContent,
+  } = showInfo;
 
-  const tags: string[] = showInfo.tags ? Object.values(JSON.parse(showInfo.tags)) : [];
-  const position = showInfo.position && JSON.parse(showInfo.position);
-  const decodedContent = showInfo.content ? new TextDecoder().decode(convertBase64ToBytes(showInfo.content)) : null;
+  const tags = rawTags ? Object.values<string>(JSON.parse(rawTags)) : [];
+  const position = rawPosition && JSON.parse(rawPosition);
+  const decodedContent = rawContent ? new TextDecoder().decode(convertBase64ToBytes(rawContent)) : null;
 
   return (
     <>

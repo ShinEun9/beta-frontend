@@ -4,7 +4,7 @@ import { FormInputs } from "./formInputsType";
 import { MemberResponseType, MemberType } from "./memberType";
 import { ReviewsGetResponse, ReviewType, ReviewPostParamType, ReviewDeleteParamType, ReviewPatchParamType } from "./reviewType";
 import { ShowFormResultType, ShowFormType, ShowResFormType } from "./showFormType";
-import { ShowReservationInfoResponseType, ShowReservationInfoType, AgencyReservationInfoType } from "./showReservationInfoType";
+import { ShowReservationInfoResponseType, ShowReservationInfoType } from "./showReservationInfoType";
 import { ShowResponseType, ShowType, ShowFilterRequestType } from "./showType";
 import { SignupBodyType, ProfileBodyType } from "./signupBodyType";
 import { StoryResponseType, StoryType } from "./storyType";
@@ -23,7 +23,6 @@ export {
   type ShowReservationInfoResponseType,
   type ShowReservationInfoType,
   type SignupBodyType,
-  type AgencyReservationInfoType,
   type AddressSearchResult,
   type UserReservationInputsType,
   type UserReservationFormType,

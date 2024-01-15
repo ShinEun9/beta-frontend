@@ -1,25 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ReservationForm, ReservationPayment } from "..";
-import { AgencyReservationInfoType } from "@/types";
 import { getMemberInfo } from "@/apis";
 import styles from "./ReservationModal.module.css";
 
-interface PropsType {
-  agencyReservationInfo: AgencyReservationInfoType;
-}
-const ReservationModal: React.FC<PropsType> = ({ agencyReservationInfo }) => {
+const ReservationModal: React.FC = () => {
   const [step, setStep] = useState("form");
 
   const goToPaymentStep = () => {
     setStep("payment");
   };
 
-  const {
-    status,
-    error,
-    data: userInfo,
-  } = useQuery({
+  const { status, error } = useQuery({
     queryKey: ["userInfo"],
     queryFn: () => getMemberInfo(),
   });
@@ -29,9 +21,8 @@ const ReservationModal: React.FC<PropsType> = ({ agencyReservationInfo }) => {
 
   return (
     <section className={styles["reservation-section"]}>
-      {step === "form" && <ReservationForm showInfo={agencyReservationInfo} userInfo={userInfo} goToPaymentStep={goToPaymentStep} />}
-
-      {step === "payment" && <ReservationPayment showInfo={agencyReservationInfo} userInfo={userInfo} />}
+      {step === "form" && <ReservationForm goToPaymentStep={goToPaymentStep} />}
+      {step === "payment" && <ReservationPayment />}
     </section>
   );
 };
