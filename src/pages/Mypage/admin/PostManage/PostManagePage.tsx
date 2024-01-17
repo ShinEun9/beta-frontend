@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useModalStore } from "@/stores";
 import { deleteAdminReview, getAdminShowList, getReviewList } from "@/apis";
@@ -15,6 +15,7 @@ import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
 
 const PostManagePage = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openModal, setOpenModal } = useModalStore();
   const [showId, setShowId] = useState<string>("");
@@ -35,7 +36,6 @@ const PostManagePage = () => {
     status: statusReviewList,
     data: reviewList,
     error: errorReviewList,
-    refetch: refetchReviews,
   } = useQuery({
     queryKey: ["reviewList", showId],
     queryFn: () => getReviewList(showId),
@@ -45,8 +45,20 @@ const PostManagePage = () => {
   // 후기 삭제를 위한 뮤테이션
   const { mutate: deleteMutate } = useMutation({
     mutationFn: (review: ReviewDeleteParamType) => deleteAdminReview(review),
-    onSuccess: () => refetchReviews(),
-    onError: () => toast.error("댓글 삭제 실패"),
+    onMutate: async (review) => {
+      await queryClient.cancelQueries({ queryKey: ["reviewList", showId] });
+      const oldData = queryClient.getQueryData<ReviewType[]>(["reviewList", showId])!;
+      const newData = oldData.filter((item) => item.id !== review.review_id);
+      queryClient.setQueryData(["reviewList", showId], [...newData]);
+      return { oldData };
+    },
+    onError: (_error, _variables, context) => {
+      queryClient.setQueryData(["reviewList", showId], [...context!.oldData]);
+      toast.error("댓글 삭제 실패");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["reviewList", showId] });
+    },
   });
 
   if (statusShowList === "pending") return <h1>loading...</h1>;
@@ -108,8 +120,8 @@ const PostManagePage = () => {
               <strong className={styles["review-count"]}>총 후기수: {reviewList.length}명</strong>
               {reviewList.length ? (
                 <ul className={styles["review-list"]}>
-                  {reviewList.map((item, index) => (
-                    <li className={styles["review"]} key={index}>
+                  {reviewList.map((item) => (
+                    <li className={styles["review"]} key={item.id}>
                       <div className={styles["review-contents"]}>
                         <strong className={styles["review__nickname"]}>{item.login_id.slice(0, 3) + "***"}</strong>
                         <p className={styles["review__content"]}>{item.comment}</p>
