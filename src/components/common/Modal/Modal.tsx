@@ -25,9 +25,6 @@ const Modal: React.FC<PropsType> = ({ children, width, height, title, titleHidde
     const targetClassName = (e.target as HTMLElement).className;
 
     if (targetClassName.includes("modal-background") || targetClassName.includes("modal__close")) {
-      if (openModal.type === "reivewManage") {
-        queryClient.fetchQuery({ queryKey: ["showList"] });
-      }
       setOpenModal({ state: false, type: "" });
     }
   };
