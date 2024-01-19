@@ -17,7 +17,8 @@ import {
   StoryManagePage,
   UserReservationManagePage,
   PostManagePage,
-  PostCRUDPage,
+  PostUploadPage,
+  PostUpdatePage,
   AdminReservationManagePage,
 } from "@/pages";
 import { InfoSection, ReviewSection } from "@/components/detail";
@@ -87,11 +88,11 @@ const router = createBrowserRouter([
               },
               {
                 path: "post/upload",
-                element: <PostCRUDPage />,
+                element: <PostUploadPage />,
               },
               {
                 path: "post/update",
-                element: <PostCRUDPage />,
+                element: <PostUpdatePage />,
               },
             ],
           },
