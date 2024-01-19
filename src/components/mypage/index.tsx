@@ -8,6 +8,7 @@ import ReservationItem from "./user/ReservationItem/ReservationItem";
 import ReservationUserModal from "./user/ReservationUserModal/ReservationUserModal";
 import ReviewItem from "./user/ReviewItem/ReviewItem";
 import StoryItem from "./user/StoryItem/StoryItem";
+import LikeItemList from "./user/ListItemList/LikeItemList";
 import LikeItem from "./user/LikeItem/LikeItem";
 
 export {
@@ -21,5 +22,6 @@ export {
   ShowInfoInputsSection,
   ShowResInfoInputsSection,
   ImageInputSection,
+  LikeItemList,
   LikeItem,
 };
