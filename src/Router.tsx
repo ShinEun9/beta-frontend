@@ -44,12 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/detail/:id",
-        element: (
-          <>
-            <NavBar />
-            <DetailPage />
-          </>
-        ),
+        element: <DetailPage />,
         children: [
           {
             index: true,
