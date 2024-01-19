@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
@@ -20,6 +20,7 @@ interface PropsType {
 }
 
 const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
+  const queryClient = useQueryClient();
   const { id: showId } = useParams();
   const { setOpenModal } = useModalStore();
 
