@@ -4,6 +4,8 @@ import useInputs from "./useInputs";
 import useLike from "./useLike";
 import usePreventScroll from "./usePreventScroll";
 import useResizeZoom from "./useResizeZoom";
+import useApiError from "./useApiError";
+import useNetworkOffline from "./useNetworkOffline";
 import useGetShowInfoQuery from "./useGetShowInfoQuery";
 import useGetShowResInfoQuery from "./useGetShowResInfoQuery";
 import useUploadShowQuery from "./useUploadShowQuery";
@@ -24,4 +26,6 @@ export {
   useEditShowQuery,
   useDeleteShowQuery,
   usePickMainImageColor,
+  useApiError,
+  useNetworkOffline,
 };
