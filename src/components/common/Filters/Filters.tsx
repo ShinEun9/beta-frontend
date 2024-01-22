@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { FilterButton, SelectBox } from "@/components/common";
+import { Button, FilterButton, SelectBox } from "@/components/common";
 import { ShowFilterRequestType } from "@/types";
 import { getTodayStringDate, getStringDate } from "@/utils";
 import { useFilterSlide } from "@/hooks";
@@ -59,7 +59,12 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
     date: "오늘",
     location: "전체",
     category: "전체",
-    progress: "전체",
+    progress: "진행중",
+  });
+
+  const [selectDate, setSelectDate] = useState({
+    start_date: todayString,
+    end_date: todayString,
   });
 
   const isEndDateAfterStartDate = (startDate: string, endDate: string) => {
@@ -73,12 +78,15 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
 
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target as HTMLInputElement;
-    if (name === "end_date" && !isEndDateAfterStartDate(filterRequest.start_date, value)) {
+    setSelectDate((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleChangeDateSubmit = () => {
+    if (!isEndDateAfterStartDate(selectDate.start_date, selectDate.end_date)) {
       toast.warn("시작날짜보다 끝나는 날짜가 앞설 수 없습니다. 날짜를 다시 설정해주세요.");
       return;
     }
-
-    setFilterRequest((prev) => ({ ...prev, [name]: value }));
+    setFilterRequest((prev) => ({ ...prev, start_date: selectDate.start_date, end_date: selectDate.end_date }));
   };
 
   // 서버에 보낼 start_date와 end_date를 set하는 함수
@@ -96,7 +104,7 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
       default:
         break;
     }
-    setFilterRequest((prev) => ({ ...prev, end_date: dateString }));
+    setFilterRequest((prev) => ({ ...prev, start_date: dateString }));
   };
 
   // progress를 all, 1, 2, 3으로 set하는 함수
@@ -147,12 +155,15 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
       <div className={cx("date-select-container", filter.date === "직접선택" && "show")}>
         <label>
           <p className="a11y-hidden">시작일</p>
-          <input className={styles["date-input"]} type="date" name="start_date" value={filterRequest.start_date} onChange={handleChangeDate} />
+          <input className={styles["date-input"]} type="date" name="start_date" value={selectDate.start_date} onChange={handleChangeDate} />
         </label>
         <label>
           <p className={"a11y-hidden"}>종료일</p>
-          <input className={styles["date-input"]} type="date" name="end_date" value={filterRequest.end_date} onChange={handleChangeDate} />
+          <input className={styles["date-input"]} type="date" name="end_date" value={selectDate.end_date} onChange={handleChangeDate} />
         </label>
+        <Button onClick={handleChangeDateSubmit} style={{ borderRadius: "24px", width: "80px", height: "40px", padding: "0" }}>
+          적용
+        </Button>
       </div>
 
       <div className={styles["filter-row"]}>
