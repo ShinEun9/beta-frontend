@@ -82,18 +82,17 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
   };
 
   const handleChangeDateSubmit = () => {
-    if (!isEndDateAfterStartDate(selectDate.start_date, selectDate.end_date)) {
+    const { start_date, end_date } = selectDate;
+    if (!isEndDateAfterStartDate(start_date, end_date)) {
       toast.warn("시작날짜보다 끝나는 날짜가 앞설 수 없습니다. 날짜를 다시 설정해주세요.");
       return;
     }
-    setFilterRequest((prev) => ({ ...prev, start_date: selectDate.start_date, end_date: selectDate.end_date }));
+    setFilterRequest((prev) => ({ ...prev, start_date: start_date, end_date: end_date }));
   };
 
   // 서버에 보낼 start_date와 end_date를 set하는 함수
   const dateSetFunc = (value: string) => {
     let dateString = todayString;
-    setFilterRequest((prev) => ({ ...prev, start_date: dateString }));
-
     switch (value) {
       case dates[1]:
         ({ dateString } = getStringDate(todayYear, todayMonth, todayDay + 7));
@@ -161,9 +160,9 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
           <p className={"a11y-hidden"}>종료일</p>
           <input className={styles["date-input"]} type="date" name="end_date" value={selectDate.end_date} onChange={handleChangeDate} />
         </label>
-        <Button onClick={handleChangeDateSubmit} style={{ borderRadius: "24px", width: "80px", height: "40px", padding: "0" }}>
+        <FilterButton onClick={handleChangeDateSubmit} selected={true}>
           적용
-        </Button>
+        </FilterButton>
       </div>
 
       <div className={styles["filter-row"]}>
