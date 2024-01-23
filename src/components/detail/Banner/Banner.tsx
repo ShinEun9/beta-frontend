@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import { Carousel } from "@/components/common";
 import { ShowType } from "@/types";
 import styles from "./Banner.module.css";
 import { useLoginStore } from "@/stores";
 
 const Banner = () => {
+  const queryClient = useQueryClient();
   const { id: showId } = useParams();
   const {
     userState: { login_id },
