@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
 import { Carousel } from "@/components/common";
 import { getBannerImages } from "@/apis";
 import styles from "./Banner.module.css";
@@ -9,7 +8,7 @@ import styles from "./Banner.module.css";
 const Banner = () => {
   const navigate = useNavigate();
   const [isCarouselDragging, setIsCarouselDragging] = useState(false);
-  const { data, status, error } = useQuery({
+  const { data, status, error } = useSuspenseQuery({
     queryKey: ["bannerData"],
     queryFn: async () => await getBannerImages(),
   });
@@ -22,13 +21,12 @@ const Banner = () => {
     navigate(`detail/${showId}`);
   };
 
-  if (status === "pending") return <Skeleton className={styles.section} />;
   return (
     <section className={styles.section}>
       <h2 className={"a11y-hidden"}>진행중인 공연/전시 배너</h2>
 
       <>
-        {status === "error" && <>{error.message}</>}
+        {status === "error" && <>{error?.message}</>}
         <Carousel index={3} setIsDragging={setIsCarouselDragging}>
           {data?.map((item) => (
             <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>

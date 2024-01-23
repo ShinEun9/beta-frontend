@@ -1,10 +1,10 @@
-import { Banner, StorySection, CalendarSection } from "@/components/main";
+import { BannerSection, StorySection, CalendarSection } from "@/components/main";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const MainPage = () => {
   return (
     <main>
-      <Banner />
+      <BannerSection />
       <StorySection />
       <CalendarSection />
     </main>
