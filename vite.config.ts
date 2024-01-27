@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import svgr from "vite-plugin-svgr";
@@ -13,7 +13,6 @@ export default defineConfig({
     react(),
     svgr(),
     ckeditor5({ theme: require.resolve("@ckeditor/ckeditor5-theme-lark") }),
-    splitVendorChunkPlugin(),
     visualizer({
       filename: "./dist/report.html",
       open: true,
@@ -32,20 +31,5 @@ export default defineConfig({
   },
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          const module = id.split("node_modules/").pop().split("/");
-          if (module) {
-            if (module.includes("@ckeditor")) {
-              return `${module[1]}`;
-            }
-            return `${module[0]}`;
-          }
-        },
-      },
-    },
   },
 });
