@@ -37,8 +37,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          const module = id.split("node_modules/").pop().split("/")[0];
-          if (module) return `${module}`;
+          const module = id.split("node_modules/").pop().split("/");
+          if (module) {
+            if (module.includes("@ckeditor")) {
+              return `${module[1]}`;
+            }
+            return `${module[0]}`;
+          }
         },
       },
     },
