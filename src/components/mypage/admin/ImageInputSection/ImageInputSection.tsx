@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import ImgUploadIcon from "@/assets/ImgUploadIcon.svg?react";
 import { DeleteButton } from "@/components/common";
 import styles from "./ImageInputSection.module.css";
@@ -12,6 +12,8 @@ interface PropsType {
 const ImageInputSection: React.FC<PropsType> = ({ imgExistingUrls, setImgExistingUrls }) => {
   const { resetImageFiles, addImageFiles, removeImageFiles } = useImageFileStore();
   const { imagePreviewUrls, resetImagePreviewUrls, addImagePreviewUrls, removeImagePreviewUrls } = useImagePreviewUrlStore();
+
+  const timestamp = useRef(new Date().getTime()).current;
 
   useEffect(() => {
     return () => {
@@ -53,7 +55,7 @@ const ImageInputSection: React.FC<PropsType> = ({ imgExistingUrls, setImgExistin
             imgExistingUrls.map((image) => (
               <li key={image}>
                 <div className={styles["img-cover"]}>
-                  <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + image} alt="" />
+                  <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + image + "?" + timestamp} alt="" />
                   <DeleteButton spanHidden="해당 이미지 삭제" onClick={() => handleRemoveExistingImage(image)} forImage />
                 </div>
               </li>
