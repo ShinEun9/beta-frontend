@@ -10,8 +10,8 @@ import PayFailPage from "./PayFail/PayFailPage";
 import Mypage from "./Mypage/Mypage";
 import ProfilePage from "./Mypage/ProfilePage/ProfilePage";
 import PostManagePage from "./Mypage/admin/PostManage/PostManagePage";
-import PostUpdatePage from "./Mypage/admin/PostUpdate/PostUpdatePage";
 import PostUploadPage from "./Mypage/admin/PostUpload/PostUploadPage";
+import PostUpdatePage from "./Mypage/admin/PostUpdate/PostUpdatePage";
 import AdminReservationManagePage from "./Mypage/admin/ReservationManage/ReservationManagePage";
 import LikeManagePage from "./Mypage/user/LikeManage/LikeManagePage";
 import ReviewManagePage from "./Mypage/user/ReviewManage/ReviewManagePage";
@@ -31,8 +31,8 @@ export {
   Mypage,
   ProfilePage,
   PostManagePage,
-  PostUpdatePage,
   PostUploadPage,
+  PostUpdatePage,
   AdminReservationManagePage,
   UserReservationManagePage,
   LikeManagePage,

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { ReviewEditForm } from "..";
 import EllipsisProfileImg from "@/assets/ellipsis-profile.svg?react";
 import IconEllipsisVertical from "@/assets/icon-ellipsis-vertical.png";
 import { ReviewDeleteParamType, ReviewType } from "@/types";
-import { useLoginStore } from "@/stores/useLoginStore";
-import getElapsedTime from "@/utils/getElapsedTime";
-import { deleteReview } from "@/apis";
+import { useLoginStore } from "@/stores";
+import { getElapsedTime } from "@/utils";
+import { deleteUserReview } from "@/apis";
 import styles from "./ReviewItem.module.css";
 
 interface PropsType {
@@ -18,6 +18,7 @@ interface PropsType {
 }
 
 const ReviewItem: React.FC<PropsType> = ({ item, clickedReviewId, setClickedReviewId }) => {
+  const queryClient = useQueryClient();
   const [isEditMode, setIsEditMode] = useState(false);
   const { id: show_id } = useParams();
   const {
@@ -25,7 +26,7 @@ const ReviewItem: React.FC<PropsType> = ({ item, clickedReviewId, setClickedRevi
   } = useLoginStore();
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: (review: ReviewDeleteParamType) => deleteReview(review),
+    mutationFn: (review: ReviewDeleteParamType) => deleteUserReview(review),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["reviewData", show_id],

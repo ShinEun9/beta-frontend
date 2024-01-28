@@ -17,11 +17,12 @@ import {
   StoryManagePage,
   UserReservationManagePage,
   PostManagePage,
-  PostUpdatePage,
   PostUploadPage,
+  PostUpdatePage,
   AdminReservationManagePage,
 } from "@/pages";
 import { InfoSection, ReviewSection } from "@/components/detail";
+import { NavBar } from "./components/layouts";
 
 const router = createBrowserRouter([
   {
