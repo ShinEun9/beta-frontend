@@ -23,6 +23,7 @@ import TicketCard from "./TicketCard/TicketCard";
 import UserAccessModal from "./UserAccessModal/UserAccessModal";
 import NullField from "./NullField/NullField";
 import TagInputRHF from "./TagInput/TagInputRHF";
+import BannerImage from "./BannerImage/BannerImage";
 
 export {
   Button,
@@ -49,4 +50,5 @@ export {
   TicketCard,
   UserAccessModal,
   NullField,
+  BannerImage,
 };
