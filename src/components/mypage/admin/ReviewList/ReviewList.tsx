@@ -3,10 +3,10 @@ import { useGetReviewListQuery, useDeleteReviewQuery } from "@/hooks";
 import { DeleteButton, NullField } from "@/components/common";
 import { getElapsedTime } from "@/utils";
 import { ReviewType } from "@/types";
-import ReviewListModalSekelton from "./ReviewListSekelton";
+import ReviewListSekelton from "./ReviewListSekelton";
 import styles from "./ReviewListModal.module.css";
 
-function ReviewListModal() {
+function ReviewList() {
   const { showId } = useShowIdStore();
   const { reviewList, reviewLisStatus, reviewListError } = useGetReviewListQuery(showId!);
   const { deleteMutate } = useDeleteReviewQuery(showId!);
@@ -19,7 +19,7 @@ function ReviewListModal() {
   };
 
   if (reviewLisStatus === "error") return <h1>{reviewListError?.message}</h1>;
-  if (reviewLisStatus == "success") return <ReviewListModalSekelton />;
+  if (reviewLisStatus !== "success") return <ReviewListSekelton />;
 
   return (
     <>
@@ -44,4 +44,4 @@ function ReviewListModal() {
   );
 }
 
-export default ReviewListModal;
+export default ReviewList;

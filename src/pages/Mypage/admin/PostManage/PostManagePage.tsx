@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useModalStore } from "@/stores";
 import { Button, Modal } from "@/components/common";
-import { ReviewListModal, ShowList } from "@/components/mypage";
+import { ReviewList, ShowList } from "@/components/mypage";
 
 const PostManagePage = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const PostManagePage = () => {
       </Button>
       {openModal.state && (
         <Modal title={openModal.type}>
-          <ReviewListModal />
+          <ReviewList />
         </Modal>
       )}
     </>

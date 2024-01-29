@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
-import styles from "./ReviewListModal.module.css";
+import styles from "./ReviewList.module.css";
 
-const ReviewListModalSekelton = () => {
+const ReviewListSekelton = () => {
   return (
     <>
       <div className={styles["review-count"]}>
@@ -27,4 +27,4 @@ const ReviewListModalSekelton = () => {
   );
 };
 
-export default ReviewListModalSekelton;
+export default ReviewListSekelton;
