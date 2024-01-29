@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Carousel } from "@/components/common";
 import { StoryCard } from "..";
 import { getStoryList } from "@/apis";
@@ -10,13 +10,14 @@ interface PropsType {
   setInitialStorySlide: React.Dispatch<React.SetStateAction<number>>;
 }
 const StoryList: React.FC<PropsType> = ({ setInitialStorySlide }) => {
-  const { data, status, error } = useSuspenseQuery({
+  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
+  const { setOpenModal } = useModalStore();
+
+  const { data } = useSuspenseQuery({
     queryKey: ["storyData"],
     queryFn: async () => await getStoryList(),
     select: (item) => item.slice(0, 7),
   });
-  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
-  const { setOpenModal } = useModalStore();
 
   const handleClickStoryCard = (slideNum: number) => (e: React.MouseEvent) => {
     if (isCarouselDragging) {
@@ -27,7 +28,6 @@ const StoryList: React.FC<PropsType> = ({ setInitialStorySlide }) => {
     setOpenModal({ state: true, type: "more" });
   };
 
-  if (status === "error") return <>{error?.message}</>;
   return (
     <div className={styles["carousel-container"]}>
       {data && (
