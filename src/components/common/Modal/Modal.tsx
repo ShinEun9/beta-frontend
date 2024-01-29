@@ -1,5 +1,4 @@
 import React from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { createPortal } from "react-dom";
 import { useModalStore } from "@/stores";
 import { usePreventScroll } from "@/hooks";
@@ -17,8 +16,7 @@ interface PropsType {
 }
 
 const Modal: React.FC<PropsType> = ({ children, width, height, title, titleHidden = false }) => {
-  const queryClient = useQueryClient();
-  const { openModal, setOpenModal } = useModalStore();
+  const { setOpenModal } = useModalStore();
 
   usePreventScroll({ isModal: true });
 
