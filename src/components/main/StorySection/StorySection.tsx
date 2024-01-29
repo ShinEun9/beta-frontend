@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Carousel, Modal, UserAccessModal } from "@/components/common";
 import { StoryCard, StoryUploadModal, StoryViewModal, StorySectionSkeleton } from "@/components/main";
-import { useModalStore, useLoginStore, useCarouselDragStore } from "@/stores";
+import { useModalStore, useLoginStore } from "@/stores";
 import { getStoryList } from "@/apis";
 import { checkIsNotUser } from "@/utils";
 import styles from "./StorySection.module.css";
@@ -13,7 +13,7 @@ const StorySection = () => {
     userState: { user_role },
   } = useLoginStore();
   const [initialSlide, setInitialSlide] = useState(0);
-  const { isDragging } = useCarouselDragStore();
+  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
 
   const { data, status, error } = useQuery({
     queryKey: ["storyData"],
@@ -36,7 +36,7 @@ const StorySection = () => {
   };
 
   const handleClickStoryCard = (slideNum: number) => (e: React.MouseEvent) => {
-    if (isDragging) {
+    if (isCarouselDragging) {
       e.stopPropagation();
       return;
     }
@@ -81,7 +81,7 @@ const StorySection = () => {
           {status === "error" && <>{error.message}</>}
 
           {data && (
-            <Carousel index={1}>
+            <Carousel index={1} setIsDragging={setIsCarouselDragging}>
               {data.map((item, index) => (
                 <StoryCard key={item.id} item={item} onClick={handleClickStoryCard(index)} />
               ))}
