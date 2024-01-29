@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { Carousel } from "@/components/common";
+import { BannerImage, Carousel } from "@/components/common";
 import { getBannerImages } from "@/apis";
 import styles from "./Banner.module.css";
 
@@ -32,7 +32,8 @@ const Banner = () => {
           <Carousel index={0} setIsDragging={setIsCarouselDragging} dataLength={data?.length}>
             {data?.map((item) => (
               <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>
-                <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} />
+                <BannerImage imgUrl={item.image_url} page="main" />
+                {/* <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} /> */}
               </div>
             ))}
           </Carousel>
