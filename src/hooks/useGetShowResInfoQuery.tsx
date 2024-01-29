@@ -1,9 +1,10 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getShowReservationInfo } from "@/apis";
-import { queryClient } from "@/main";
 import { ShowType } from "@/types";
-import { useQuery } from "@tanstack/react-query";
 
 const useGetShowResInfoQuery = (showId: string) => {
+  const queryClient = useQueryClient();
+
   const {
     data: showResInfoData,
     status: showResInfoStatus,

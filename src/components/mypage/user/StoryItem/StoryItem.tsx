@@ -4,10 +4,11 @@ import { formatDate, getTxtColorByBgColor } from "@/utils";
 import { StoryType } from "@/types";
 import { deleteStory } from "@/apis";
 import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import styles from "./StoryItem.module.css";
 
 const StoryItem: React.FC<StoryType> = ({ id, login_id, story_image_url, story_color, created_at }) => {
+  const queryClient = useQueryClient();
   // const openModal = (id: number) => {
   //   console.log("openModal", id);
   // };

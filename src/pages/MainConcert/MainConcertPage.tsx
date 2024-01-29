@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { NavBar } from "@/components/layouts";
 import { Filters } from "@/components/common";
 import { ConcertListSection } from "@/components/mainConcert";
 import { getTodayStringDate } from "@/utils";
@@ -17,13 +16,10 @@ const MainConcertPage = () => {
   });
 
   return (
-    <>
-      <NavBar />
-      <main>
-        <Filters filterRequest={filterRequest} setFilterRequest={setFilterRequest} />
-        <ConcertListSection filterRequest={filterRequest} />
-      </main>
-    </>
+    <main>
+      <Filters filterRequest={filterRequest} setFilterRequest={setFilterRequest} />
+      <ConcertListSection filterRequest={filterRequest} />
+    </main>
   );
 };
 

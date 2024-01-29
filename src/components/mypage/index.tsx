@@ -11,6 +11,8 @@ import StoryItem from "./user/StoryItem/StoryItem";
 import ShowList from "./admin/ShowList/ShowList";
 import ShowListItem from "./admin/ShowListItem/ShowListItem";
 import ReviewListModal from "./admin/ReviewListModal/ReviewListModal";
+import LikeItemList from "./user/ListItemList/LikeItemList";
+import LikeItem from "./user/LikeItem/LikeItem";
 
 export {
   ReservationListModal,
@@ -26,4 +28,6 @@ export {
   ShowList,
   ShowListItem,
   ReviewListModal,
+  LikeItemList,
+  LikeItem,
 };

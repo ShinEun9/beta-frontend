@@ -5,6 +5,8 @@ import useLike from "./useLike";
 import usePreventScroll from "./usePreventScroll";
 import useResizeZoom from "./useResizeZoom";
 import useGetReviewListQuery from "./useGetReviewListQuery";
+import useApiError from "./useApiError";
+import useNetworkOffline from "./useNetworkOffline";
 import useGetShowInfoQuery from "./useGetShowInfoQuery";
 import useGetShowResInfoQuery from "./useGetShowResInfoQuery";
 import useUploadShowQuery from "./useUploadShowQuery";
@@ -28,4 +30,6 @@ export {
   useDeleteReviewQuery,
   useDeleteShowQuery,
   usePickMainImageColor,
+  useApiError,
+  useNetworkOffline,
 };
