@@ -24,20 +24,22 @@ const Banner = () => {
 
   if (status === "pending") return <Skeleton className={styles.section} />;
   return (
-    <section className={styles.section}>
-      <h2 className={"a11y-hidden"}>진행중인 공연/전시 배너</h2>
+    !!data?.length && (
+      <section className={styles.section}>
+        <h2 className={"a11y-hidden"}>진행중인 공연/전시 배너</h2>
 
-      <>
-        {status === "error" && <>{error.message}</>}
-        <Carousel index={3}>
-          {data?.map((item) => (
-            <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>
-              <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} />
-            </div>
-          ))}
-        </Carousel>
-      </>
-    </section>
+        <>
+          {status === "error" && <>{error.message}</>}
+          <Carousel index={0} dataLength={data?.length}>
+            {data?.map((item) => (
+              <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>
+                <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} />
+              </div>
+            ))}
+          </Carousel>
+        </>
+      </section>
+    )
   );
 };
 
