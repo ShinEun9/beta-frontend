@@ -9,9 +9,9 @@ import StoryUploadModal from "./StoryUploadModal/StoryUploadModal";
 import StoryViewModal from "./StoryViewModal/StoryViewModal";
 import StoryViewModalCard from "./StoryViewModalCard/StoryViewModalCard";
 import CalendarSection from "./CalendarSection/CalendarSection";
-import CalendarSectionSkeleton from "./CalendarSectionSkeleton/CalendarSectionSkeleton";
 import CalendarFilters from "./CalendarFilters/CalendarFilters";
 import CalendarList from "./CalendarList/CalendarList";
+import CalendarListSkeleton from "./CalendarList/CalendarListSkeleton";
 import CalendarDateButton from "./CalendarDateButton/CalendarDateButton";
 
 export {
@@ -26,7 +26,7 @@ export {
   StoryViewModal,
   StoryViewModalCard,
   CalendarSection,
-  CalendarSectionSkeleton,
+  CalendarListSkeleton,
   CalendarList,
   CalendarFilters,
   CalendarDateButton,
