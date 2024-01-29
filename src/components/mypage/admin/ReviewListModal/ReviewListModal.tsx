@@ -3,6 +3,7 @@ import { useGetReviewListQuery, useDeleteReviewQuery } from "@/hooks";
 import { DeleteButton, NullField } from "@/components/common";
 import { getElapsedTime } from "@/utils";
 import { ReviewType } from "@/types";
+import ReviewListModalSekelton from "./ReviewListSekelton";
 import styles from "./ReviewListModal.module.css";
 
 function ReviewListModal() {
@@ -18,7 +19,7 @@ function ReviewListModal() {
   };
 
   if (reviewLisStatus === "error") return <h1>{reviewListError?.message}</h1>;
-  if (reviewLisStatus !== "success") return <h1>loading...</h1>;
+  if (reviewLisStatus == "success") return <ReviewListModalSekelton />;
 
   return (
     <>

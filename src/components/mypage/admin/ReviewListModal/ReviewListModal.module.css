@@ -1,4 +1,8 @@
 /* review modal */
+.review-list {
+  min-height: 20rem;
+}
+
 .review-count {
   display: block;
   width: fit-content;
@@ -32,7 +36,7 @@
 }
 
 .review__content {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--gray400-color);
   word-break: break-all;
 }
@@ -40,8 +44,8 @@
 .review__date {
   position: absolute;
   bottom: 0.8rem;
-  right: 0.9375rem;
-  font-size: 0.625rem;
+  right: 1.875rem;
+  font-size: 0.75rem;
   font-weight: bold;
   color: var(--gray300-color);
 }

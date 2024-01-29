@@ -10,7 +10,7 @@ import ReviewItem from "./user/ReviewItem/ReviewItem";
 import StoryItem from "./user/StoryItem/StoryItem";
 import ShowList from "./admin/ShowList/ShowList";
 import ShowListItem from "./admin/ShowListItem/ShowListItem";
-import ReviewListModal from "./admin/ReviewListModal/ReviewListModal";
+import ReviewList from "./admin/ReviewList/ReviewList";
 import LikeItemList from "./user/ListItemList/LikeItemList";
 import LikeItem from "./user/LikeItem/LikeItem";
 
@@ -27,7 +27,7 @@ export {
   ImageInputSection,
   ShowList,
   ShowListItem,
-  ReviewListModal,
+  ReviewList,
   LikeItemList,
   LikeItem,
 };
