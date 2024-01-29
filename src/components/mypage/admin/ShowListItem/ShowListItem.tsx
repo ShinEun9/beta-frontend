@@ -1,7 +1,5 @@
-import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useModalStore } from "@/stores";
-import { showIdContext } from "@/stores/ShowIdContext";
+import { useModalStore, useShowIdStore } from "@/stores";
 import { ShowListItemType } from "@/apis/show/getAdminShowList";
 import { Button } from "@/components/common";
 import LikeIcon from "@/assets/like.svg?react";
@@ -18,11 +16,11 @@ interface PropsType {
 const ShowListItem: React.FC<PropsType> = ({ item }) => {
   const navigate = useNavigate();
   const { setOpenModal } = useModalStore();
-  const { handleShowId } = useContext(showIdContext);
+  const { setShowId } = useShowIdStore();
 
   const handleClickReviewsCnt = async (title: string, showId: string) => {
     setOpenModal({ state: true, type: title });
-    handleShowId(showId);
+    setShowId(showId);
   };
 
   return (

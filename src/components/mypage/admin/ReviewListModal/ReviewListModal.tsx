@@ -1,6 +1,4 @@
-import { useContext } from "react";
-import { useModalStore } from "@/stores";
-import { showIdContext } from "@/stores/ShowIdContext";
+import { useModalStore, useShowIdStore } from "@/stores";
 import { useGetReviewListQuery, useDeleteReviewQuery } from "@/hooks";
 import { DeleteButton, Modal, NullField } from "@/components/common";
 import { getElapsedTime } from "@/utils";
@@ -9,7 +7,7 @@ import styles from "./ReviewListModal.module.css";
 
 function ReviewListModal() {
   const { openModal } = useModalStore();
-  const { showId } = useContext(showIdContext);
+  const { showId } = useShowIdStore();
   const { reviewList, reviewLisStatus, reviewListError } = useGetReviewListQuery(showId!);
   const { deleteMutate } = useDeleteReviewQuery(showId!);
 
