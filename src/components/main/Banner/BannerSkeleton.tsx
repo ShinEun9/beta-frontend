@@ -1,8 +1,7 @@
 import Skeleton from "react-loading-skeleton";
-import styles from "./Banner.module.css";
 
 const BannerSkeleton = () => {
-  return <Skeleton className={styles.section} />;
+  return <Skeleton style={{ width: "100%", aspectRatio: "2/1" }} />;
 };
 
 export default BannerSkeleton;
