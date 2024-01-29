@@ -1,28 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import {
-  LoginPage,
-  SignupPage,
-  MainPage,
-  MainConcertPage,
-  MainExhibitionPage,
-  DetailPage,
-  ErrorPage,
-  PaySuccessPage,
-  PayFailPage,
-  Mypage,
-  ProfilePage,
-  LikeManagePage,
-  ReviewManagePage,
-  StoryManagePage,
-  UserReservationManagePage,
-  PostManagePage,
-  PostUploadPage,
-  PostUpdatePage,
-  AdminReservationManagePage,
-} from "@/pages";
-import { InfoSection, ReviewSection } from "@/components/detail";
-import { NavBar } from "./components/layouts";
+import ErrorPage from "./pages/Error/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -33,66 +11,107 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <MainPage />,
+        async lazy() {
+          const { default: MainPage } = await import("./pages/Main/MainPage");
+          return { Component: MainPage };
+        },
       },
       {
         path: "/concert",
-        element: <MainConcertPage />,
+        async lazy() {
+          const { default: MainConcertPage } = await import("./pages/MainConcert/MainConcertPage");
+          return { Component: MainConcertPage };
+        },
       },
       {
         path: "/exhibition",
-        element: <MainExhibitionPage />,
+        async lazy() {
+          const { default: MainExhibitionPage } = await import("./pages/MainExhibition/MainExhibitionPage");
+          return { Component: MainExhibitionPage };
+        },
       },
       {
         path: "/detail/:id",
-        element: <DetailPage />,
+        async lazy() {
+          const { default: DetailPage } = await import("./pages/Detail/DetailPage");
+          return { Component: DetailPage };
+        },
         children: [
           {
             index: true,
-            element: <InfoSection />,
+            async lazy() {
+              const { default: InfoSection } = await import("./components/detail/InfoSection/InfoSection");
+              return { Component: InfoSection };
+            },
           },
           {
             path: "review",
-            element: <ReviewSection />,
+            async lazy() {
+              const { default: LoginPage } = await import("./components/detail/ReviewSection/ReviewSection");
+              return { Component: LoginPage };
+            },
           },
         ],
       },
       {
         path: "/login",
-        element: <LoginPage />,
+        async lazy() {
+          const { default: LoginPage } = await import("./pages/Login/LoginPage");
+          return { Component: LoginPage };
+        },
       },
       {
         path: "/signup",
-        element: <SignupPage />,
+        async lazy() {
+          const { default: SignupPage } = await import("./pages/Signup/SignupPage");
+          return { Component: SignupPage };
+        },
       },
       {
         path: "/mypage",
-        element: <Mypage />,
+        async lazy() {
+          const { default: Mypage } = await import("./pages/Mypage/Mypage");
+          return { Component: Mypage };
+        },
         children: [
           {
             index: true,
             path: "profile",
-            element: <ProfilePage />,
+            async lazy() {
+              const { default: ProfilePage } = await import("./pages/Mypage/ProfilePage/ProfilePage");
+              return { Component: ProfilePage };
+            },
           },
-
           {
             path: "admin",
             children: [
               {
                 path: "reservation",
-                element: <AdminReservationManagePage />,
+                async lazy() {
+                  const { default: AdminReservationManagePage } = await import("./pages/Mypage/admin/ReservationManage/ReservationManagePage");
+                  return { Component: AdminReservationManagePage };
+                },
               },
               {
                 path: "post",
-                element: <PostManagePage />,
+                async lazy() {
+                  const { default: PostManagePage } = await import("./pages/Mypage/admin/PostManage/PostManagePage");
+                  return { Component: PostManagePage };
+                },
               },
               {
                 path: "post/upload",
-                element: <PostUploadPage />,
+                async lazy() {
+                  const { default: PostUploadPage } = await import("./pages/Mypage/admin/PostUpload/PostUploadPage");
+                  return { Component: PostUploadPage };
+                },
               },
               {
                 path: "post/update",
-                element: <PostUpdatePage />,
+                async lazy() {
+                  const { default: PostUpdatePage } = await import("./pages/Mypage/admin/PostUpdate/PostUpdatePage");
+                  return { Component: PostUpdatePage };
+                },
               },
             ],
           },
@@ -101,19 +120,31 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "like",
-                element: <LikeManagePage />,
+                async lazy() {
+                  const { default: LikeManagePage } = await import("./pages/Mypage/user/LikeManage/LikeManagePage");
+                  return { Component: LikeManagePage };
+                },
               },
               {
                 path: "review",
-                element: <ReviewManagePage />,
+                async lazy() {
+                  const { default: ReviewManagePage } = await import("./pages/Mypage/user/ReviewManage/ReviewManagePage");
+                  return { Component: ReviewManagePage };
+                },
               },
               {
                 path: "story",
-                element: <StoryManagePage />,
+                async lazy() {
+                  const { default: StoryManagePage } = await import("./pages/Mypage/user/StoryManage/StoryManagePage");
+                  return { Component: StoryManagePage };
+                },
               },
               {
                 path: "reservation",
-                element: <UserReservationManagePage />,
+                async lazy() {
+                  const { default: UserReservationManagePage } = await import("./pages/Mypage/user/ReservationManage/ReservationManagePage");
+                  return { Component: UserReservationManagePage };
+                },
               },
             ],
           },
@@ -124,11 +155,17 @@ const router = createBrowserRouter([
         children: [
           {
             path: "success",
-            element: <PaySuccessPage />,
+            async lazy() {
+              const { default: PaySuccessPage } = await import("./pages/PaySuccess/PaySuccessPage");
+              return { Component: PaySuccessPage };
+            },
           },
           {
             path: "fail",
-            element: <PayFailPage />,
+            async lazy() {
+              const { default: PayFailPage } = await import("./pages/PayFail/PayFailPage");
+              return { Component: PayFailPage };
+            },
           },
         ],
       },
