@@ -10,9 +10,7 @@ const getShowList = async (
   category: string = "all",
 ) => {
   const { data } = await axios<ShowResponseType>(
-    `${
-      import.meta.env.VITE_APP_API_ENDPOINT
-    }/api/${type}?start_date=${start_date}&end_date=${end_date}&location=${location}&progress=${progress}&category=${category}`,
+    `/api/${type}?start_date=${start_date}&end_date=${end_date}&location=${location}&progress=${progress}&category=${category}`,
   );
 
   return data.data;
