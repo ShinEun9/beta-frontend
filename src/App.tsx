@@ -41,7 +41,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       {isNetworkOffline && <NetworkErrorPage />}
-      {location.pathname !== "/signup" && location.pathname !== "/login" && <Header />}
       {isNotLoginOrSignUpPage && <Header />}
       {isPrivateRoute ? (
         <PrivateRoute />
