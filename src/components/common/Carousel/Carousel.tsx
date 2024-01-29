@@ -1,6 +1,5 @@
 import React from "react";
 import Slider from "react-slick";
-import { useCarouselDragStore } from "@/stores";
 import nextArrow from "@/assets/next-arrow.png";
 import prevArrow from "@/assets/prev-arrow.png";
 import "./slick.css";
@@ -11,6 +10,7 @@ interface PropsType {
   index: number;
   initialSlide?: number;
   children: React.ReactNode;
+  setIsDragging?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const renderCustomDots = (dots: never) => {
@@ -129,18 +129,16 @@ const settings = [
   },
 ];
 
-const Carousel: React.FC<PropsType> = ({ index, initialSlide = 0, children }) => {
-  const { setIsDragging } = useCarouselDragStore();
-
+const Carousel: React.FC<PropsType> = ({ index, initialSlide = 0, children, setIsDragging }) => {
   return (
     <Slider
       {...settings[index]}
       initialSlide={initialSlide}
       beforeChange={() => {
-        setIsDragging(true);
+        setIsDragging?.(true);
       }}
       afterChange={() => {
-        setIsDragging(false);
+        setIsDragging?.(false);
       }}
     >
       {children}
