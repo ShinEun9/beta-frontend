@@ -12,6 +12,7 @@ function App() {
   const location = useLocation();
   const { setOpenModal } = useModalStore();
   const isPrivateRoute = location.pathname.startsWith("/mypage");
+  const isNotLoginOrSignUpPage = location.pathname !== "/signup" && location.pathname !== "/login";
   const isNetworkOffline = useNetworkOffline();
 
   useEffect(() => {
@@ -41,11 +42,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       {isNetworkOffline && <NetworkErrorPage />}
       {location.pathname !== "/signup" && location.pathname !== "/login" && <Header />}
+      {isNotLoginOrSignUpPage && <Header />}
       {isPrivateRoute ? (
         <PrivateRoute />
       ) : (
         <>
-          <NavBar />
+          {isNotLoginOrSignUpPage && <NavBar />}
           <Outlet />
         </>
       )}
