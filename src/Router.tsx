@@ -128,7 +128,7 @@ const router = createBrowserRouter([
               {
                 path: "review",
                 async lazy() {
-                  const { default: ReviewManagePage } = await import("./pages/Mypage/user/ReservationManage/ReservationManagePage");
+                  const { default: ReviewManagePage } = await import("./pages/Mypage/user/ReviewManage/ReviewManagePage");
                   return { Component: ReviewManagePage };
                 },
               },
