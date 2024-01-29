@@ -23,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       pauseOnHover={true}
       draggable={true}
       theme="light"
+      limit={1}
     />
   </>,
   // </React.StrictMode>,
