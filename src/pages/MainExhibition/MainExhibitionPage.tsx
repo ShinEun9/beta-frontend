@@ -9,7 +9,7 @@ const MainExhibitionPage = () => {
     start_date: todayString,
     end_date: todayString,
     location: "all",
-    progress: "all",
+    progress: "1",
   });
 
   return (
