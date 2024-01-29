@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { PaymentWidgetInstance, loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
@@ -12,6 +12,7 @@ const clientKey = import.meta.env.VITE_APP_TOSS_PAYMENTS_CLIENT_KEY as string;
 const customerKey = nanoid();
 
 const ReservationPayment: React.FC = () => {
+  const queryClient = useQueryClient();
   const { id: showId } = useParams();
   const { price, title } = queryClient.getQueryData<ShowReservationInfoType>(["reservationData", showId])!;
   const { user_name, user_email, phone_number } = queryClient.getQueryData<MemberType>(["userInfo"])!;

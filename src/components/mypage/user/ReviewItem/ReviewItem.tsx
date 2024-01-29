@@ -5,10 +5,11 @@ import { DeleteButton } from "@/components/common";
 import { getElapsedTime, checkIsWithinOneDay } from "@/utils";
 import { ReviewType } from "@/types";
 import { deleteUserReview } from "@/apis";
-import { queryClient } from "@/main";
+import { useQueryClient } from "@tanstack/react-query";
 import styles from "./ReviewItem.module.css";
 
 const ReviewItem: React.FC<ReviewType> = (item) => {
+  const queryClient = useQueryClient();
   const { mutate: deleteMutate } = useMutation({
     mutationFn: (review: { review_id: number; show_id: number }) => deleteUserReview(review),
     onSuccess: () => {
