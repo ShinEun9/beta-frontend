@@ -8,7 +8,7 @@ import styles from "./Banner.module.css";
 const Banner = () => {
   const navigate = useNavigate();
   const [isCarouselDragging, setIsCarouselDragging] = useState(false);
-  const { data, status, error } = useSuspenseQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["bannerData"],
     queryFn: async () => await getBannerImages(),
   });
@@ -22,20 +22,20 @@ const Banner = () => {
   };
 
   return (
-    <section className={styles.section}>
-      <h2 className={"a11y-hidden"}>진행중인 공연/전시 배너</h2>
-
-      <>
-        {status === "error" && <>{error?.message}</>}
-        <Carousel index={3} setIsDragging={setIsCarouselDragging}>
-          {data?.map((item) => (
-            <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>
-              <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} />
-            </div>
-          ))}
-        </Carousel>
-      </>
-    </section>
+    !!data?.length && (
+      <section className={styles.section}>
+        <h2 className={"a11y-hidden"}>진행중인 공연/전시 배너</h2>
+        <>
+          <Carousel index={0} setIsDragging={setIsCarouselDragging} dataLength={data?.length}>
+            {data?.map((item) => (
+              <div onClick={handleClickBannerImage(item.show_id)} key={item.id}>
+                <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${item.image_url}`} className={styles["banner-image"]} />
+              </div>
+            ))}
+          </Carousel>
+        </>
+      </section>
+    )
   );
 };
 

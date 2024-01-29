@@ -17,7 +17,7 @@ const Banner = () => {
   const bannerImgs = [mainImg, ...subImgs];
 
   return (
-    <Carousel index={0}>
+    <Carousel index={0} dataLength={bannerImgs.length}>
       {bannerImgs.map((img, index) => (
         <div key={index}>
           <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + img} className={styles["slider__img"]} />
