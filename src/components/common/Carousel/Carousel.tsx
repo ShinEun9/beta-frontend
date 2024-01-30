@@ -89,30 +89,18 @@ const settings = [
     centerMode: true,
     infinite: true,
     slidesToShow: 1,
-    speed: 500,
-    centerPadding: "10%",
-
     nextArrow: <NextArrows />,
     prevArrow: <PrevArrows />,
-    responsive: [
-      {
-        breakpoint: 500,
-        settings: {
-          centerPadding: "0",
-        },
-      },
-    ],
   },
 ];
 
-
 const Carousel: React.FC<PropsType> = ({ index, initialSlide = 0, children, setIsDragging, dataLength }) => {
-   const calculatedSettings = useMemo(() => {
+  const calculatedSettings = useMemo(() => {
     if (index === 0 && dataLength! <= 2) {
       return { ...settings[0], autoplay: false };
     } else return settings[index];
   }, [index, dataLength]);
-                                     
+
   return (
     <Slider
       {...calculatedSettings}
