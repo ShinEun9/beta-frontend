@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Carousel, Modal, UserAccessModal } from "@/components/common";
 import { StoryCard, StoryUploadModal, StoryViewModal, StorySectionSkeleton } from "@/components/main";
@@ -27,12 +27,12 @@ const StorySection = () => {
       return;
     }
 
-    setOpenModal({ state: true, type: "upload" });
+    setOpenModal({ state: true, type: "storyUpload" });
   };
 
   const handleClickMoreBtn = () => {
     setInitialSlide(8);
-    setOpenModal({ state: true, type: "more" });
+    setOpenModal({ state: true, type: "storyView" });
   };
 
   const handleClickStoryCard = (slideNum: number) => (e: React.MouseEvent) => {
@@ -41,9 +41,12 @@ const StorySection = () => {
       return;
     }
     setInitialSlide(slideNum);
-    setOpenModal({ state: true, type: "more" });
+    setOpenModal({ state: true, type: "storyView" });
   };
 
+  useEffect(() => {
+    setOpenModal({ state: true, type: "storyView" });
+  }, []);
   return (
     <>
       <section className={styles["section"]}>
@@ -54,7 +57,7 @@ const StorySection = () => {
           </button>
           {openModal.state && (
             <>
-              {openModal.type === "upload" && (
+              {openModal.type === "storyUpload" && (
                 <Modal width={"18.75rem"} height={"35.625rem"} title={"스토리 업로드"}>
                   <StoryUploadModal />
                 </Modal>
@@ -69,10 +72,10 @@ const StorySection = () => {
           <button className={styles["story-more-btn"]} type="button" onClick={handleClickMoreBtn}>
             더보기
           </button>
-          {openModal.state && openModal.type === "more" && (
-            <Modal title={"스토리"} titleHidden={true}>
-              <StoryViewModal initialSlide={initialSlide} />
-            </Modal>
+          {openModal.state && openModal.type === "storyView" && (
+            // <Modal title={"스토리"} titleHidden={true}>
+            <StoryViewModal initialSlide={initialSlide} />
+            // </Modal>
           )}
         </div>
 
