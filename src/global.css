@@ -172,6 +172,7 @@ table {
   position: fixed;
   inset: 0;
   background-color: var(--modal-bg-color);
+  height: 100vh;
   z-index: 100;
 }
 
