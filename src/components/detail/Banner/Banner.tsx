@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { BannerImage, Carousel } from "@/components/common";
+import { Carousel } from "@/components/common";
 import { ShowType } from "@/types";
 import styles from "./Banner.module.css";
 import { useLoginStore } from "@/stores";
@@ -20,8 +20,7 @@ const Banner = () => {
     <Carousel index={0} dataLength={bannerImgs.length}>
       {bannerImgs.map((img, index) => (
         <div key={index}>
-          <BannerImage imgUrl={img} page="detail" />
-          {/* <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + img} className={styles["slider__img"]} /> */}
+          <img src={import.meta.env.VITE_APP_IMAGE_DOMAIN + img} className={styles["slider__img"]} />
         </div>
       ))}
     </Carousel>
