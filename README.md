@@ -12,16 +12,25 @@
 ## 목차
 
 ### 1. [목표](#goal)
+
 ### 2. [프로젝트 소개](#intro)
+
 - 개발 배경 및 목적, 주요 기능 등
 - 개발 기간
 - 프로젝트 사용법
+
 ### 3. [기술 스택](#tech)
+
 - 기술 선정 이유
+
 ### 4. [정보구조도](#feature)
+
 ### 5. [화면 구성](#screen)
+
 ### 6. [트러블슈팅](#trouble)
+
 ### 7. [컨벤션](#convention)
+
 ### 8. [디렉토리 구조](#directory)
 
 <br>
@@ -39,6 +48,18 @@
 
 ### [🔗 beta 바로가기](https://beta-beta.net)
 
+#### 테스트 아이디
+
+##### 일반 유저
+
+- ID : user
+- PW : !user1234
+
+##### 관리자 유저
+
+- ID : admin
+- PW : !admin1234
+
 <br>
 
 ### 예체능 분야 대학생들이 자신의 작품을 효과적으로 소개하고 홍보할 수 있는 중앙 집중형 플랫폼
@@ -50,8 +71,11 @@
 ### 개발 기간
 
 - 1차 개발 : 2023년 12월 2일(월) ~ 2023년 12월 25일(월)<br>
-   <img width=500 src='https://github-production-user-asset-6210df.s3.amazonaws.com/90684277/294849252-9ca69518-b563-4a64-885a-5543c29c8926.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240108T085019Z&X-Amz-Expires=300&X-Amz-Signature=ef5e97d6d8508bc6470b5c00bde6ef8f7bfe9b82cc1f2a0e1ef2b2d98976ac37&X-Amz-SignedHeaders=host&actor_id=90684277&key_id=0&repo_id=727000793'>
-- 2차 개발 : 2024년 1월 4일(목) ~ 진행 중
+  <img width=500 src='https://github-production-user-asset-6210df.s3.amazonaws.com/90684277/294849252-9ca69518-b563-4a64-885a-5543c29c8926.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240108T085019Z&X-Amz-Expires=300&X-Amz-Signature=ef5e97d6d8508bc6470b5c00bde6ef8f7bfe9b82cc1f2a0e1ef2b2d98976ac37&X-Amz-SignedHeaders=host&actor_id=90684277&key_id=0&repo_id=727000793'>
+- 2차 개발 : 2024년 1월 4일(목) ~ 2024년 2월 3일(토)
+  - 버그 수정
+  - 리팩터링
+  - 최적화
 
 <br>
 
@@ -71,10 +95,18 @@
   ```
   VITE_APP_KAKAOMAP_API_KEY=
   VITE_APP_IMAGE_DOMAIN=
-
   VITE_APP_TOSS_PAYMENTS_CLIENT_KEY=
-  VITE_APP_TOSS_PAYMENTS_SECRET_KEY=
+  ```
 
+- .env.development
+
+  ```
+  VITE_APP_API_ENDPOINT=
+  ```
+
+- .env.production
+
+  ```
   VITE_APP_API_ENDPOINT=
   ```
 
@@ -125,7 +157,9 @@
 ### 기술 선정 이유
 
 #### 1. Vite
+
 - **개발 서버 시작 시간**
+
   - CRA는 Webpack을 사용하여 개발 서버를 시작할 때 모든 모듈을 한 번에 변환하는 반면,
   - Vite는 모듈을 요청할 때마다 동적으로 변환하고 ES 모듈을 사용하여 브라우저에서 직접 로드하기 때문에 서버 시작 시간이 매우 빠름
   - 특히 window 환경에서 빌드 속도가 CRA와 확연하게 차이남
@@ -142,17 +176,21 @@
   - React의 Context API에 의존하지 않기 때문에 불필요한 리렌더링을 최소화할 수 있고 성능 향상에 기여할 수 있음 또한, 개발 과정을 더욱 간결하게 만들 수 있음
 
 - <b>러닝 커브</b>
+
   - 짧은 기간 동안 학습하기에 적합함
   - 팀원 모두가 빠르게 적응하고 효율적으로 작업할 수 있음
 
 - <b>단일 스토어 관리</b>
+
   - 하나의 스토어에서 개별적인 기능 및 상태를 관리할 수 있음
   - 상태 관리의 복잡성을 줄이고 관리의 효율성을 높여줌
 
 - <b>경량화된 라이브러리</b>
+
   - 매우 작은 크기로 프로젝트의 전체적인 크기를 최소화하며 로딩 시간과 성능에 긍정적인 영향을 미침
 
 - <b>다른 상태 관리 라이브러리</b>
+
   - Recoil은 업데이트가 드물고 파일 크기가 큼
   - Redux는 다소 복잡한 편
   - Jotai나 Valtio 등은 고려하지 않음
@@ -163,7 +201,6 @@
 
 - <b>효율적인 데이터 캐싱</b>
   - 자동적으로 서버에서 받은 데이터를 캐시하기 때문에 API 요청 수를 줄이고 사용자 경험을 개선
-    
 - <b>쿼리 키를 통한 데이터 관리</b>
   - 각 쿼리는 고유한 키를 가지며 이를 통해 데이터를 쉽게 조회, 업데이트, 무효화할 수 있음
 
@@ -231,15 +268,9 @@
 
 ## <span id='trouble'>6. 트러블슈팅</span>
 
-### color-thief 라이브러리
+[📍 해결한 트러블슈팅 보러가기](https://github.com/FESP-TEAM-1/beta-frontend/issues?q=label%3A%22%F0%9F%95%B9%EF%B8%8F+%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%22+is%3Aclosed)
 
-<img width=800 src='https://github-production-user-asset-6210df.s3.amazonaws.com/90684277/294851444-f32779bf-904a-41a9-a1dd-e84aec817dae.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240108T090126Z&X-Amz-Expires=300&X-Amz-Signature=2cff57bb41f45d71b0fb95b3dd09e51fd33f7dd067601cbcee7b29533ed331f7&X-Amz-SignedHeaders=host&actor_id=90684277&key_id=0&repo_id=727000793' />
-
-### text to base64
-
-<img width=800 src='https://github-production-user-asset-6210df.s3.amazonaws.com/90684277/294851654-ebdffa94-e9bb-4592-99b9-12c359bb1797.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240108T090143Z&X-Amz-Expires=300&X-Amz-Signature=0029863d43f3322571fbc9418da717e28e2f43b64481723ba021ace66e5e0f4b&X-Amz-SignedHeaders=host&actor_id=90684277&key_id=0&repo_id=727000793'>
-
-### 이미지 최적화
+[🕹️ 해결 중인 트러블슈팅 보러가기](https://github.com/FESP-TEAM-1/beta-frontend/labels/%F0%9F%95%B9%EF%B8%8F%20%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85)
 
 <br>
 
@@ -259,34 +290,72 @@
  ┃ ┗ 📜favicon.ico
  ┣ 📂src
  ┃ ┣ 📂apis
- ┃ ┃ ┣ 📜deleteCancelShow.ts
- ┃ ┃ ┣  ...
+ ┃ ┃ ┣ 📂image
+ ┃ ┃ ┃ ┗ 📜getBannerImages.ts
+ ┃ ┃ ┣ 📂like
+ ┃ ┃ ┃ ┣ 📜deleteLike.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📂reservation
+ ┃ ┃ ┃ ┣ 📜deleteReservation.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📂review
+ ┃ ┃ ┃ ┣ 📜deleteAdminReview.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📂show
+ ┃ ┃ ┃ ┣ 📜deleteAdminShow.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📂story
+ ┃ ┃ ┃ ┣ 📜deleteStory.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📂user
+ ┃ ┃ ┃ ┣ 📜getDuplicateIdCheck.ts
+ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂assets
  ┃ ┃ ┣ 📜arrow.svg
- ┃ ┃ ┣  ...
+ ┃ ┃ ┗ ...
  ┃ ┣ 📂components
  ┃ ┃ ┣ 📂common
  ┃ ┃ ┃ ┣ 📂BasicCard
- ┃ ┃ ┃ ┃ ┣ 📜BasicCard.module.css
- ┃ ┃ ┃ ┃ ┗ 📜BasicCard.tsx
+ ┃ ┃ ┃ ┃ ...
+ ┃ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┃ ┣ 📂detail
+ ┃ ┃ ┃ ┣ 📂Banner
  ┃ ┃ ┃ ┃ ...
  ┃ ┃ ┃ ┗ 📜index.tsx
  ┃ ┃ ┣ 📂layouts
- ┃ ┃ ┣ 📂detail
+ ┃ ┃ ┃ ┣ 📂ButtonAfterLogin
+ ┃ ┃ ┃ ┃ ...
+ ┃ ┃ ┃ ┗ 📜index.tsx
  ┃ ┃ ┣ 📂main
- ┃ ┃ ┣ 📂mypage
+ ┃ ┃ ┃ ┣ 📂Banner
+ ┃ ┃ ┃ ┃ ...
+ ┃ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┃ ┣ 📂mainConcert
+ ┃ ┃ ┃ ┣ 📂ConertListSection
+ ┃ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┃ ┣ 📂mainExhibition
+ ┃ ┃ ┃ ┣ 📂ExhibitionListSection
+ ┃ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┃ ┗ 📂mypage
+ ┃ ┃ ┃ ┣ 📂admin
+ ┃ ┃ ┃ ┃ ┣ 📂ImageInputSection
+ ┃ ┃ ┃ ┃ ┃ ...
+ ┃ ┃ ┃ ┣ 📂Profile
+ ┃ ┃ ┃ ┃ ┗ 📜Profile.tsx
+ ┃ ┃ ┃ ┣ 📂user
+ ┃ ┃ ┃ ┃ ┣ 📂LikeItem
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜LikeItem.tsx
+ ┃ ┃ ┃ ┃ ┃ ...
+ ┃ ┃ ┃ ┗ 📜index.tsx
  ┃ ┣ 📂data
  ┃ ┃ ┗ 📜univList.json
  ┃ ┣ 📂hooks
- ┃ ┃ ┣ 📜index.tsx
- ┃ ┃ ┣ 📜useAuth.tsx
- ┃ ┃ ┣ 📜useFilterSlide.tsx
- ┃ ┃ ┣ 📜useInputs.tsx
- ┃ ┃ ┗ 📜usePreventScroll.tsx
+ ┃ ┃ ┣ 📜useApiError.tsx
+ ┃ ┃ ┃ ┃  ...
+ ┃ ┃ ┗ 📜index.tsx
  ┃ ┣ 📂pages
  ┃ ┃ ┣ 📂Detail
- ┃ ┃ ┃ ┣ 📜DetailPage.tsx
- ┃ ┃ ┃ ┗ 📜DetaiPage.module.css
  ┃ ┃ ┣ 📂Error
  ┃ ┃ ┣ 📂Login
  ┃ ┃ ┣ 📂Main
@@ -295,32 +364,27 @@
  ┃ ┃ ┣ 📂Mypage
  ┃ ┃ ┃ ┣ 📂admin
  ┃ ┃ ┃ ┃ ┣ 📂PostManage
- ┃ ┃ ┃ ┃ ┃ ┣ 📜PostManagePage.module.css
- ┃ ┃ ┃ ┃ ┃ ┗ 📜PostManagePage.tsx
- ┃ ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┃ ┣ 📂ProfilePage
+ ┃ ┃ ┃ ┃ ...
  ┃ ┃ ┃ ┣ 📂user
  ┃ ┃ ┃ ┃ ┣ 📂LikeManage
- ┃ ┃ ┃ ┃ ┃ ┣ 📜LikeManagePage.module.css
- ┃ ┃ ┃ ┃ ┃ ┗ 📜LikeManagePage.tsx
- ┃ ┃ ┃ ┃ ┗ ...
+ ┃ ┃ ┃ ┃ ┃ ...
  ┃ ┃ ┃ ┣ 📜Mypage.module.css
  ┃ ┃ ┃ ┗ 📜Mypage.tsx
  ┃ ┃ ┣ 📂PayFail
  ┃ ┃ ┣ 📂PaySuccess
- ┃ ┃ ┣ 📂Signup
- ┃ ┃ ┗ 📜index.tsx
+ ┃ ┃ ┗ 📂Signup
  ┃ ┣ 📂stores
- ┃ ┃ ┣ 📜useCarouselDragStore.ts
- ┃ ┃ ┗ ...
+ ┃ ┃ ┣ 📜useShowIdStore.ts
+ ┃ ┃ ┃ ...
+ ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂types
  ┃ ┃ ┣ 📜addressSearchType.ts
- ┃ ┃ ┣ ...
+ ┃ ┃ ┃ ...
  ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📂utils
- ┃ ┃ ┣ 📜base64ToBytes.ts
+ ┃ ┃ ┣ 📜appendResultToFormData.ts
  ┃ ┃ ┃ ...
- ┃ ┃ ┗ index.ts
+ ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📜App.tsx
  ┃ ┣ 📜global.css
  ┃ ┣ 📜main.tsx
@@ -329,6 +393,8 @@
  ┃ ┣ 📜toast.css
  ┃ ┗ 📜vite-env.d.ts
  ┣ 📜.env
+ ┣ 📜.env.development
+ ┣ 📜.env.production
  ┣ 📜.eslintrc.cjs
  ┣ 📜.gitignore
  ┣ 📜.prettierrc.cjs
@@ -341,6 +407,7 @@
  ┣ 📜tsconfig.json
  ┣ 📜tsconfig.node.json
  ┗ 📜vite.config.ts
+
 ```
 
 <br>
