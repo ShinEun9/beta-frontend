@@ -1,5 +1,6 @@
 import { useReservationFormStore } from "@/stores";
 import { Link, useSearchParams } from "react-router-dom";
+import "@/components/detail/ReservationPayment/style.css";
 
 const PayFailPage = () => {
   const { reservationForm } = useReservationFormStore();

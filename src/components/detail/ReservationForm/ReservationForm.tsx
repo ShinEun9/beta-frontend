@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
 import { useInputs } from "@/hooks";
-import { useModalStore, useReservationFormStore } from "@/stores";
+import { useLoginStore, useModalStore, useReservationFormStore } from "@/stores";
 import { UserReservationInputsType, MemberType, UserReservationFormType, ShowReservationInfoType } from "@/types";
 import { convertBase64ToBytes } from "@/utils";
-import { postReservation } from "@/apis";
+import { postPayVerification, postReservation } from "@/apis";
 import RadioStyles from "@/components/common/RadioButtonGroup/RadioButtonGroup.module.css";
 import styles from "./ReservationForm.module.css";
 import classNames from "classnames/bind";
@@ -23,6 +23,10 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
   const queryClient = useQueryClient();
   const { id: showId } = useParams();
   const { setOpenModal } = useModalStore();
+
+  const {
+    userState: { login_id },
+  } = useLoginStore();
 
   const { location, price, date_time, notice, show_id } = queryClient.getQueryData<ShowReservationInfoType>(["reservationData", showId])!;
   const { user_name, user_email, phone_number } = queryClient.getQueryData<MemberType>(["userInfo"])!;
@@ -39,12 +43,29 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
 
   const { setReservationForm } = useReservationFormStore();
 
-  const submitFreeReservation = async (reservationParam: UserReservationFormType) => {
+  const submitReservation = async (reservationParam: UserReservationFormType) => {
     setSubmitBtnDisabled(true);
-    const toastId = toast.loading("예매 진행 중...");
+    const toastId = toast.loading("검증 중...");
     try {
-      await postReservation(reservationParam);
+      // 예매 검증
+      await postPayVerification(reservationParam);
 
+      // 유료 예매인 경우 토스페이먼츠 모달 띄움
+      if (price !== 0) {
+        toast.dismiss(toastId);
+        goToPaymentStep();
+        return;
+      }
+
+      // 검증 완료 후 무료 예매로 넘어갈 때
+      toast.update(toastId, {
+        render: "예매 진행 중...",
+        type: toast.TYPE.INFO,
+        isLoading: true,
+      });
+
+      // 무료 예매인 경우
+      await postReservation(reservationParam);
       toast.update(toastId, {
         render: (
           <p>
@@ -56,10 +77,18 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
         isLoading: false,
         autoClose: 2000,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["infoData", showId, login_id],
+      });
       setOpenModal({ state: false, type: "" });
     } catch (err) {
+      let errorMessage = "예매에 실패하였습니다.";
+      if (axios.isAxiosError(err) && err.response) {
+        errorMessage = err.response.data.message || errorMessage;
+      }
+
       toast.update(toastId, {
-        render: (err as AxiosError).message,
+        render: errorMessage,
         type: toast.TYPE.ERROR,
         isLoading: false,
         autoClose: 2000,
@@ -84,12 +113,7 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
     }
 
     setReservationForm(formParam);
-    if (price !== 0) {
-      goToPaymentStep();
-      return;
-    }
-
-    submitFreeReservation(formParam);
+    submitReservation(formParam);
   };
 
   return (
