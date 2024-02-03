@@ -27,8 +27,11 @@ const StoryItem: React.FC<StoryType> = ({ id, login_id, story_image_url, story_c
 
   const handleClickDeleteStory = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const story_id = e.currentTarget.name;
-    deleteMutate({ story_id, login_id });
+    if (window.confirm("정말 스토리를 삭제 하시겠습니까?")) {
+      const story_id = e.currentTarget.name;
+      deleteMutate({ story_id, login_id });
+      return;
+    }
   };
 
   return (
