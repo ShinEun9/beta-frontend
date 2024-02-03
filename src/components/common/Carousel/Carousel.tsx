@@ -90,19 +90,8 @@ const settings: Settings[] = [
     centerMode: true,
     infinite: true,
     slidesToShow: 1,
-    speed: 500,
-    centerPadding: "10%",
-
     nextArrow: <NextArrows />,
     prevArrow: <PrevArrows />,
-    responsive: [
-      {
-        breakpoint: 500,
-        settings: {
-          centerPadding: "0",
-        },
-      },
-    ],
   },
 ];
 

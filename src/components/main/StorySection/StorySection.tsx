@@ -1,6 +1,7 @@
-import { Suspense, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Modal, UserAccessModal } from "@/components/common";
-import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleton } from "@/components/main";
+import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleto } from "@/components/main";
 import { useModalStore, useLoginStore } from "@/stores";
 import { checkIsNotUser } from "@/utils";
 import styles from "./StorySection.module.css";
@@ -17,14 +18,18 @@ const StorySection = () => {
       setOpenModal({ state: true, type: "guestAccess" });
       return;
     }
-    setOpenModal({ state: true, type: "upload" });
+    setOpenModal({ state: true, type: "storyUpload" });
   };
 
   const handleClickMoreBtn = () => {
-    setInitialStorySlide(8);
-    setOpenModal({ state: true, type: "more" });
+    setInitialSlide(8);
+    setOpenModal({ state: true, type: "storyView" });
   };
 
+  useEffect(() => {
+    setOpenModal({ state: true, type: "storyView" });
+  }, []);
+  
   return (
     <>
       <section className={styles["section"]}>
@@ -35,7 +40,7 @@ const StorySection = () => {
           </button>
           {openModal.state && (
             <>
-              {openModal.type === "upload" && (
+              {openModal.type === "storyUpload" && (
                 <Modal width={"18.75rem"} height={"35.625rem"} title={"스토리 업로드"}>
                   <StoryUploadModal />
                 </Modal>
@@ -50,10 +55,8 @@ const StorySection = () => {
           <button className={styles["story-more-btn"]} type="button" onClick={handleClickMoreBtn}>
             더보기
           </button>
-          {openModal.state && openModal.type === "more" && (
-            <Modal title={"스토리"} titleHidden={true}>
-              <StoryViewModal initialSlide={initialStorySlide} />
-            </Modal>
+          {openModal.state && openModal.type === "storyView" && (
+            <StoryViewModal initialSlide={initialSlide} />
           )}
         </div>
 

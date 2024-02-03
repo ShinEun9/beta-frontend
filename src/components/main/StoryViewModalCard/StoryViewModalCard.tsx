@@ -1,9 +1,9 @@
 import React, { useMemo, useRef } from "react";
 import { StoryType } from "@/types";
-import styles from "./StoryViewModalCard.module.css";
 import { getTxtColorByBgColor } from "@/utils";
 import { useImgLazyLoading } from "@/hooks";
 import classNames from "classnames/bind";
+import styles from "./StoryViewModalCard.module.css";
 
 const cx = classNames.bind(styles);
 
@@ -21,7 +21,7 @@ const StoryViewModalCard: React.FC<PropsType> = ({ item }) => {
   return (
     <article
       className={cx("card", "gray-scrollbar")}
-      style={{ backgroundColor: item.story_color || "", color: getTxtColorByBgColor(item.story_color), borderRadius: "0.5rem" }}
+      style={{ backgroundColor: item.story_color || "", color: getTxtColorByBgColor(item.story_color) }}
     >
       <>
         <strong className={styles["card__nickname"]}>@{item.login_id.slice(0, 3)}***</strong>
