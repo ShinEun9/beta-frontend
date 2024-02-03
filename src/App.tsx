@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Header, NavBar } from "./components/layouts";
+import { Header } from "./components/layouts";
 import { useModalStore } from "./stores";
 import PrivateRoute from "./PrivateRoute";
 import { useApiError, useNetworkOffline } from "./hooks";
@@ -42,14 +42,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       {isNetworkOffline && <NetworkErrorPage />}
       {isNotLoginOrSignUpPage && <Header />}
-      {isPrivateRoute ? (
-        <PrivateRoute />
-      ) : (
-        <>
-          {isNotLoginOrSignUpPage && <NavBar />}
-          <Outlet />
-        </>
-      )}
+      {isPrivateRoute ? <PrivateRoute /> : <Outlet />}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
