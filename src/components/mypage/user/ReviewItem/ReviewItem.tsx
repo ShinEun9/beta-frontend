@@ -20,7 +20,10 @@ const ReviewItem: React.FC<ReviewType> = (item) => {
   });
 
   const handleClickDeleteButton = (review_id: number, show_id: number) => {
-    deleteMutate({ review_id, show_id });
+    if (confirm("정말 삭제하시겠습니까?")) {
+      deleteMutate({ review_id, show_id });
+    }
+    return;
   };
 
   const elapsedTime = getElapsedTime(item.created_at);
