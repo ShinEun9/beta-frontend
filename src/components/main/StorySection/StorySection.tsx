@@ -1,7 +1,6 @@
 import { useEffect, useState, Suspense } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Modal, UserAccessModal } from "@/components/common";
-import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleto } from "@/components/main";
+import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleton } from "@/components/main";
 import { useModalStore, useLoginStore } from "@/stores";
 import { checkIsNotUser } from "@/utils";
 import styles from "./StorySection.module.css";
@@ -22,14 +21,14 @@ const StorySection = () => {
   };
 
   const handleClickMoreBtn = () => {
-    setInitialSlide(8);
+    setInitialStorySlide(8);
     setOpenModal({ state: true, type: "storyView" });
   };
 
   useEffect(() => {
     setOpenModal({ state: true, type: "storyView" });
   }, []);
-  
+
   return (
     <>
       <section className={styles["section"]}>
@@ -55,9 +54,7 @@ const StorySection = () => {
           <button className={styles["story-more-btn"]} type="button" onClick={handleClickMoreBtn}>
             더보기
           </button>
-          {openModal.state && openModal.type === "storyView" && (
-            <StoryViewModal initialSlide={initialSlide} />
-          )}
+          {openModal.state && openModal.type === "storyView" && <StoryViewModal initialSlide={initialStorySlide} />}
         </div>
 
         <Suspense fallback={<StoryListSkeleton />}>

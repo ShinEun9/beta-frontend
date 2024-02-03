@@ -25,7 +25,7 @@ const StoryList: React.FC<PropsType> = ({ setInitialStorySlide }) => {
       return;
     }
     setInitialStorySlide(slideNum);
-    setOpenModal({ state: true, type: "more" });
+    setOpenModal({ state: true, type: "storyView" });
   };
 
   return (
