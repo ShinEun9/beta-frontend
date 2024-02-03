@@ -1,12 +1,15 @@
-import { Banner, StorySection, CalendarSection } from "@/components/main";
+import { BannerSection, StorySection, CalendarSection } from "@/components/main";
 import "react-loading-skeleton/dist/skeleton.css";
+import { ErrorBoundary } from "react-error-boundary";
 
 const MainPage = () => {
   return (
     <main>
-      <Banner />
-      <StorySection />
-      <CalendarSection />
+      <ErrorBoundary fallback={<div>에러페이지</div>}>
+        <BannerSection />
+        <StorySection />
+        <CalendarSection />
+      </ErrorBoundary>
     </main>
   );
 };

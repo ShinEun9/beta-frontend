@@ -2,7 +2,7 @@ import { Carousel } from "@/components/common";
 import Skeleton from "react-loading-skeleton";
 import styles from "@/components/main/StoryCard/StoryCard.module.css";
 
-const StorySectionSkeleton = () => {
+const StoryListSkeleton = () => {
   return (
     <Carousel index={1}>
       {Array(4)
@@ -18,4 +18,4 @@ const StorySectionSkeleton = () => {
   );
 };
 
-export default StorySectionSkeleton;
+export default StoryListSkeleton;

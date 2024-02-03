@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import nextArrow from "@/assets/next-arrow.png";
 import prevArrow from "@/assets/prev-arrow.png";
 import DummyBannerImage from "@/assets/dummy-banner-img.svg?react";
@@ -44,8 +44,9 @@ const PrevArrows = (props: { onClick?: () => void }) => {
   );
 };
 
-const settings = [
+const settings: Settings[] = [
   {
+    lazyLoad: "anticipated",
     dots: true,
     infinite: true,
     autoplay: true,

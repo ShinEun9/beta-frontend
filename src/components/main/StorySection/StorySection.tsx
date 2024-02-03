@@ -1,32 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Carousel, Modal, UserAccessModal } from "@/components/common";
-import { StoryCard, StoryUploadModal, StoryViewModal, StorySectionSkeleton } from "@/components/main";
+import { Modal, UserAccessModal } from "@/components/common";
+import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleto } from "@/components/main";
 import { useModalStore, useLoginStore } from "@/stores";
-import { getStoryList } from "@/apis";
 import { checkIsNotUser } from "@/utils";
 import styles from "./StorySection.module.css";
 
 const StorySection = () => {
-  const { openModal, setOpenModal } = useModalStore();
   const {
     userState: { user_role },
   } = useLoginStore();
-  const [initialSlide, setInitialSlide] = useState(0);
-  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
-
-  const { data, status, error } = useQuery({
-    queryKey: ["storyData"],
-    queryFn: async () => await getStoryList(),
-    select: (item) => item.slice(0, 7),
-  });
+  const { openModal, setOpenModal } = useModalStore();
+  const [initialStorySlide, setInitialStorySlide] = useState(0);
 
   const handleClickUploadBtn = () => {
     if (checkIsNotUser(user_role)) {
       setOpenModal({ state: true, type: "guestAccess" });
       return;
     }
-
     setOpenModal({ state: true, type: "storyUpload" });
   };
 
@@ -35,18 +26,10 @@ const StorySection = () => {
     setOpenModal({ state: true, type: "storyView" });
   };
 
-  const handleClickStoryCard = (slideNum: number) => (e: React.MouseEvent) => {
-    if (isCarouselDragging) {
-      e.stopPropagation();
-      return;
-    }
-    setInitialSlide(slideNum);
-    setOpenModal({ state: true, type: "storyView" });
-  };
-
   useEffect(() => {
     setOpenModal({ state: true, type: "storyView" });
   }, []);
+  
   return (
     <>
       <section className={styles["section"]}>
@@ -73,24 +56,13 @@ const StorySection = () => {
             더보기
           </button>
           {openModal.state && openModal.type === "storyView" && (
-            // <Modal title={"스토리"} titleHidden={true}>
             <StoryViewModal initialSlide={initialSlide} />
-            // </Modal>
           )}
         </div>
 
-        <div className={styles["carousel-container"]}>
-          {status === "pending" && <StorySectionSkeleton />}
-          {status === "error" && <>{error.message}</>}
-
-          {data && (
-            <Carousel index={1} setIsDragging={setIsCarouselDragging}>
-              {data.map((item, index) => (
-                <StoryCard key={item.id} item={item} onClick={handleClickStoryCard(index)} />
-              ))}
-            </Carousel>
-          )}
-        </div>
+        <Suspense fallback={<StoryListSkeleton />}>
+          <StoryList setInitialStorySlide={setInitialStorySlide} />
+        </Suspense>
       </section>
     </>
   );
