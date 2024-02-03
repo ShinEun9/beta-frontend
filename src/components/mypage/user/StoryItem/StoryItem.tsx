@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useRef } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { DeleteButton } from "@/components/common";
 import { formatDate, getTxtColorByBgColor } from "@/utils";
 import { StoryType } from "@/types";
 import { deleteStory } from "@/apis";
-import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useImgLazyLoading } from "@/hooks";
 import styles from "./StoryItem.module.css";
 
 const StoryItem: React.FC<StoryType> = ({ id, login_id, story_image_url, story_color, created_at }) => {
+  const imgRef = useRef<HTMLImageElement>(null);
+  useImgLazyLoading(imgRef);
+
   const queryClient = useQueryClient();
   // const openModal = (id: number) => {
   //   console.log("openModal", id);
@@ -35,7 +38,7 @@ const StoryItem: React.FC<StoryType> = ({ id, login_id, story_image_url, story_c
       // onClick={() => openModal(id)}
     >
       <DeleteButton onClick={handleClickDeleteStory} spanHidden={`${id}`} name={`${id}`} />
-      <img src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${story_image_url}`} alt="스토리 이미지" />
+      <img ref={imgRef} data-src={`${import.meta.env.VITE_APP_IMAGE_DOMAIN}${story_image_url}`} alt="스토리 이미지" />
       <div className={styles["story-date"]}>{formatDate(new Date(created_at))}</div>
     </div>
   );

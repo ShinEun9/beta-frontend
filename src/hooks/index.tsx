@@ -15,6 +15,7 @@ import useDeleteShowQuery from "./useDeleteShowQuery";
 import usePickMainImageColor from "./usePickMainImageColor";
 import useInterval from "./useInterval";
 import useDeleteReviewQuery from "./useDeleteReviewQuery";
+import useImgLazyLoading from "./useImgLazyLoading";
 
 export {
   useAuth,
@@ -34,4 +35,5 @@ export {
   useApiError,
   useNetworkOffline,
   useInterval,
+  useImgLazyLoading,
 };

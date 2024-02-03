@@ -11,7 +11,7 @@ const appendUpdateImageToFormData = async (formData: FormData, imageFiles: File[
     // 기존 메인 이미지가 변경되면 (그대로면 보내지 않음)
     if (imgExistingUrls[0] !== originMainUrl) {
       // imgExistingUrls[0]을 file로 변환하고 jpeg 리사이즈해서 보내기
-      const mainImageFile = await convertUrlToFile(import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0]);
+      const mainImageFile = await convertUrlToFile(import.meta.env.VITE_APP_IMAGE_DOMAIN + imgExistingUrls[0] + "?" + new Date().getTime());
       const blobString = URL.createObjectURL(mainImageFile);
       const jpeg = await reduceImageSize(blobString);
       const finalMainImageFile = new File([jpeg], imgExistingUrls[0], { type: "image/jpeg" });

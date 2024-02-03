@@ -1,52 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
+import queryString from "query-string";
 import { toast } from "react-toastify";
 import { FilterButton, SelectBox } from "@/components/common";
-import { ShowFilterRequestType } from "@/types";
-import { getTodayStringDate, getStringDate } from "@/utils";
+import { getTodayStringDate, getStringDate, checkIsEndDateAfterStartDate, DATES, LOCATIONS, CATEGORIES, PROGRESSES } from "@/utils";
 import { useFilterSlide } from "@/hooks";
 import classNames from "classnames/bind";
 import styles from "./Filters.module.css";
 
+interface FilterType {
+  [key: string]: string;
+}
 const cx = classNames.bind(styles);
 
-const dates = ["오늘", "+7일", "+2주", "직접선택"];
-const locations = [
-  "전체",
-  "강남구",
-  "강동구",
-  "강북구",
-  "강서구",
-  "관악구",
-  "광진구",
-  "구로구",
-  "금천구",
-  "노원구",
-  "도봉구",
-  "동대문구",
-  "동작구",
-  "마포구",
-  "서대문구",
-  "서초구",
-  "성동구",
-  "성북구",
-  "송파구",
-  "양천구",
-  "영등포구",
-  "용산구",
-  "은평구",
-  "종로구",
-  "중구",
-  "중랑구",
-];
-const categories = ["전체", "음악", "연극", "기타"];
-const progresses = ["전체", "진행중", "진행 예정", "종료"];
+const Filters: React.FC = () => {
+  const { pathname } = useLocation();
 
-interface PropsType {
-  filterRequest: ShowFilterRequestType;
-  setFilterRequest: React.Dispatch<React.SetStateAction<ShowFilterRequestType>>;
-}
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queries = queryString.parse(searchParams.toString());
 
-const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
   const { todayYear, todayMonth, todayDay, todayString } = getTodayStringDate();
   const {
     scrollRef: locationScrollRef,
@@ -55,73 +27,79 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
     handleClickNext: handleClickLocationNext,
   } = useFilterSlide();
 
-  const [filter, setFilter] = useState({
-    date: "오늘",
-    location: "전체",
-    category: "전체",
-    progress: "진행중",
-  });
+  const [filter, setFilter] = useState<FilterType>({});
 
-  const [selectDate, setSelectDate] = useState({
-    start_date: todayString,
-    end_date: todayString,
-  });
+  useEffect(() => {
+    const date = queries.date as string;
+    const start_date = queries.start_date as string;
+    const end_date = queries.end_date as string;
+    const location = queries.location as string;
+    const category = queries.category as string;
+    const progress = queries.progress as string;
 
-  const isEndDateAfterStartDate = (startDate: string, endDate: string) => {
-    const start_date = new Date(startDate).getTime();
-    const end_date = new Date(endDate).getTime();
-
-    if (end_date >= start_date) {
-      return true;
-    } else return false;
-  };
+    setFilter({
+      date,
+      start_date,
+      end_date,
+      location: location === "all" ? "전체" : location,
+      category: category === "all" ? "전체" : category,
+      progress: progress === "all" ? "전체" : PROGRESSES[Number(progress)],
+    });
+  }, [searchParams]);
 
   const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target as HTMLInputElement;
-    setSelectDate((prev) => ({ ...prev, [name]: value }));
+    setFilter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleChangeDateSubmit = () => {
-    const { start_date, end_date } = selectDate;
-    if (!isEndDateAfterStartDate(start_date, end_date)) {
+  const handleSubmitDate = () => {
+    const { start_date, end_date } = filter;
+
+    if (!checkIsEndDateAfterStartDate(start_date, end_date)) {
       toast.warn("시작날짜보다 끝나는 날짜가 앞설 수 없습니다. 날짜를 다시 설정해주세요.");
       return;
     }
-    setFilterRequest((prev) => ({ ...prev, start_date: start_date, end_date: end_date }));
+
+    searchParams.set("start_date", start_date);
+    searchParams.set("end_date", end_date);
+    setSearchParams(searchParams);
   };
 
   // 서버에 보낼 start_date와 end_date를 set하는 함수
   const dateSetFunc = (value: string) => {
     let dateString = todayString;
+
     switch (value) {
-      case dates[1]:
+      case DATES[1]:
         ({ dateString } = getStringDate(todayYear, todayMonth, todayDay + 7));
         break;
-      case dates[2]:
+      case DATES[2]:
         ({ dateString } = getStringDate(todayYear, todayMonth, todayDay + 14));
         break;
       default:
         break;
     }
-    setFilterRequest((prev) => ({ ...prev, start_date: dateString }));
+    searchParams.set("date", value);
+    searchParams.set("start_date", dateString);
+    searchParams.set("end_date", dateString);
+    setSearchParams(searchParams);
   };
 
   // progress를 all, 1, 2, 3으로 set하는 함수
   const progressSetFunc = (value: string) => {
-    let progressStatus = progresses.indexOf(value).toString();
+    let progressStatus = PROGRESSES.indexOf(value).toString();
     if (progressStatus === "0") {
       progressStatus = "all";
     }
-    setFilterRequest({ ...filterRequest, progress: progressStatus });
+
+    searchParams.set("progress", progressStatus);
+    setSearchParams(searchParams);
   };
 
   // date, progress를 제외한 나머지 항목 set하는 함수
   const etcSetFunc = (name: string, value: string) => {
-    if (value === "전체") {
-      setFilterRequest({ ...filterRequest, [name]: "all" });
-      return;
-    }
-    setFilterRequest({ ...filterRequest, [name]: value });
+    searchParams.set(name, value === "전체" ? "all" : value);
+    setSearchParams(searchParams);
   };
 
   // FilterButton을 눌렀을 때 동작하는 함수
@@ -134,7 +112,6 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
     } else {
       etcSetFunc(name, value!);
     }
-    setFilter((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -143,7 +120,7 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
         <strong className={styles["filter-row__title"]}>날짜</strong>
 
         <div className={styles["filter-contents"]}>
-          {dates.map((item) => (
+          {DATES.map((item: string) => (
             <FilterButton key={item} selected={filter.date === item} onClick={handleClickFilterButton} name={"date"}>
               {item}
             </FilterButton>
@@ -154,13 +131,19 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
       <div className={cx("date-select-container", filter.date === "직접선택" && "show")}>
         <label>
           <p className="a11y-hidden">시작일</p>
-          <input className={styles["date-input"]} type="date" name="start_date" value={selectDate.start_date} onChange={handleChangeDate} />
+          <input
+            className={styles["date-input"]}
+            type="date"
+            name="start_date"
+            onChange={handleChangeDate}
+            value={filter.start_date || todayString}
+          />
         </label>
         <label>
           <p className={"a11y-hidden"}>종료일</p>
-          <input className={styles["date-input"]} type="date" name="end_date" value={selectDate.end_date} onChange={handleChangeDate} />
+          <input className={styles["date-input"]} type="date" name="end_date" onChange={handleChangeDate} value={filter.end_date || todayString} />
         </label>
-        <FilterButton onClick={handleChangeDateSubmit} selected={true}>
+        <FilterButton onClick={handleSubmitDate} selected={true}>
           적용
         </FilterButton>
       </div>
@@ -171,7 +154,7 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
           <div className={cx("arrow", "prev")} onClick={handleClickLocationPrev}></div>
           <div className={cx("arrow", "next")} onClick={handleClickLocationNext}></div>
           <ul ref={locationScrollRef} style={{ transform: `translateX(${locationScrollValue})` }}>
-            {locations.map((item) => (
+            {LOCATIONS.map((item: string) => (
               <li key={item}>
                 <FilterButton name={"location"} selected={filter.location === item} onClick={handleClickFilterButton}>
                   {item}
@@ -182,11 +165,11 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
         </div>
       </div>
 
-      {location.pathname === "/concert" && (
+      {pathname === "/concert" && (
         <div className={styles["filter-row"]}>
           <strong className={styles["filter-row__title"]}>카테고리</strong>
           <div className={styles["filter-contents"]}>
-            {categories.map((item) => (
+            {CATEGORIES.map((item: string) => (
               <FilterButton key={item} selected={filter.category === item} onClick={handleClickFilterButton} name={"category"}>
                 {item}
               </FilterButton>
@@ -196,7 +179,7 @@ const Filters: React.FC<PropsType> = ({ filterRequest, setFilterRequest }) => {
       )}
 
       <div className={styles["filter-row-select"]}>
-        <SelectBox options={progresses} name={"progress"} onClick={handleClickFilterButton} selectedValue={filter.progress} />
+        <SelectBox options={PROGRESSES} name={"progress"} onClick={handleClickFilterButton} selectedValue={filter.progress} />
       </div>
     </>
   );
