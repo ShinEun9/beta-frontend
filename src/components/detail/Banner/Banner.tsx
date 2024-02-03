@@ -13,8 +13,8 @@ const Banner = () => {
   } = useLoginStore();
 
   const { main_image_url: mainImg, sub_images_url } = queryClient.getQueryData<ShowType>(["infoData", showId, login_id])!;
-  const subImgs = sub_images_url ? Object.values(JSON.parse(sub_images_url)) : [];
-  const bannerImgs = [mainImg, ...subImgs];
+  const subImgs: string[] = sub_images_url ? Object.values(JSON.parse(sub_images_url)) : [];
+  const bannerImgs: string[] = [mainImg, ...subImgs];
 
   return (
     <Carousel index={0} dataLength={bannerImgs.length}>
