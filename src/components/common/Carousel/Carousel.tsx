@@ -68,19 +68,19 @@ const settings: Settings[] = [
   },
   {
     infinite: false,
-    slidesToShow: 4,
+    slidesToShow: 4.2,
     swipeToSlide: true,
     responsive: [
       {
         breakpoint: 760,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 3.2,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 2.2,
         },
       },
     ],
