@@ -16,6 +16,7 @@ import usePickMainImageColor from "./usePickMainImageColor";
 import useInterval from "./useInterval";
 import useDeleteReviewQuery from "./useDeleteReviewQuery";
 import useImgLazyLoading from "./useImgLazyLoading";
+import useReservationAlert from "./useReservationAlert";
 
 export {
   useAuth,
@@ -36,4 +37,5 @@ export {
   useNetworkOffline,
   useInterval,
   useImgLazyLoading,
+  useReservationAlert,
 };
