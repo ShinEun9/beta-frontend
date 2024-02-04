@@ -1,8 +1,8 @@
 import React from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { NullField } from "@/components/common";
 import { LikeItem } from "@/components/mypage";
-import { ShowType } from "@/types";
+import { getUserLikeList } from "@/apis";
 import styles from "./LikeItemList.module.css";
 import classNames from "classnames/bind";
 
@@ -13,10 +13,18 @@ interface PropsType {
 }
 
 const LikeItemList = React.memo<PropsType>(({ selectedCategory }) => {
-  const queryClient = useQueryClient();
-  const userLikeList = queryClient.getQueryData<ShowType[]>(["userLikeList"]) || [];
+  const {
+    data: filteredList,
+    status,
+    error,
+  } = useQuery({
+    queryKey: ["userLikeList"],
+    queryFn: () => getUserLikeList(),
+    select: (data) => data.filter((data) => data.show_type === selectedCategory),
+  });
 
-  const filteredList = userLikeList.filter((data) => data.show_type === selectedCategory);
+  if (status === "pending") return <h1>loading...</h1>;
+  if (status === "error") return <h1>{error.message}</h1>;
 
   if (filteredList.length === 0) {
     return (
