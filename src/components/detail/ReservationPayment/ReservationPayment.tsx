@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PaymentWidgetInstance, loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
 import { MemberType, ShowReservationInfoType } from "@/types";
-import "./style.css";
+import "@/styles/payment.css";
 
 const selector = "#payment-widget";
 const clientKey = import.meta.env.VITE_APP_TOSS_PAYMENTS_CLIENT_KEY as string;

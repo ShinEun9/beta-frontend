@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "./components/layouts";
 import { useModalStore } from "./stores";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./routes/PrivateRoute";
 import { useApiError, useNetworkOffline } from "./hooks";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import NetworkErrorPage from "./pages/Error/NetworkErrorPage";
