@@ -55,12 +55,12 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
     setOpenModal({ state: false, type: "" });
   };
 
-  const submitReservation = async () => {
+  const submitReservation = async (formParam: UserReservationFormType) => {
     setSubmitBtnDisabled(true);
     const toastId = toast.loading("검증 중...");
     try {
       // 예매 검증
-      await postPayVerification(reservationForm!);
+      await postPayVerification(formParam);
 
       if (price !== 0) {
         toast.dismiss(toastId);
@@ -95,7 +95,7 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
     }
 
     setReservationForm(formParam);
-    submitReservation();
+    submitReservation(formParam);
   };
 
   return (
