@@ -25,13 +25,15 @@
 
 ### 4. [정보구조도](#feature)
 
-### 5. [화면 구성](#screen)
+### 5. [역할분담](#role)
 
-### 6. [트러블슈팅](#trouble)
+### 6. [화면 구성](#screen)
 
-### 7. [컨벤션](#convention)
+### 7. [트러블슈팅](#trouble)
 
-### 8. [디렉토리 구조](#directory)
+### 8. [컨벤션](#convention)
+
+### 9. [디렉토리 구조](#directory)
 
 <br>
 <br>
@@ -215,7 +217,14 @@
 
 <br>
 
-## <span id='screen'>5. 화면 구성</span>
+## <span id='role'>5. 역할분담</span>
+<p align="center">
+<img width="90%" src="https://github.com/FESP-TEAM-1/beta-frontend/assets/75666099/57574c58-e06b-488d-9551-304df2d3f3bd"/>
+</p>
+
+<br>
+
+## <span id='screen'>6. 화면 구성</span>
 
 ### 1) 메인 페이지 <br>
 
@@ -297,7 +306,7 @@
 
 <br>
 
-## <span id='trouble'>6. 트러블슈팅</span>
+## <span id='trouble'>7. 트러블슈팅</span>
 
 [📍 해결한 트러블슈팅 보러가기](https://github.com/FESP-TEAM-1/beta-frontend/issues?q=label%3A%22%F0%9F%95%B9%EF%B8%8F+%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%22+is%3Aclosed)
 
@@ -305,7 +314,7 @@
 
 <br>
 
-## <span id='convention'>7. 컨벤션</span>
+## <span id='convention'>8. 컨벤션</span>
 
 ### [📕 커밋 컨벤션](https://github.com/FESP-TEAM-1/beta-frontend/wiki/%EC%BB%A4%EB%B0%8B-%EC%BB%A8%EB%B2%A4%EC%85%98)
 
@@ -313,7 +322,7 @@
 
 <br>
 
-## <span id='directory'>8. 디렉토리 구조</span>
+## <span id='directory'>9. 디렉토리 구조</span>
 
 ```
 📦BETA-FRONTEND
