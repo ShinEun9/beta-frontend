@@ -1,4 +1,4 @@
-import { CATEGORY_LIST, CONCERT_CATEGORY_LIST, IS_RESERVATION_LIST, METHOD_LIST, DATES, LOCATIONS, CATEGORIES, PROGRESSES } from "./constant";
+import { CATEGORY_LIST, CONCERT_CATEGORY_LIST, IS_RESERVATION_LIST, METHOD_LIST, DATES, LOCATIONS, CONCERT_CATEGORIES, PROGRESSES } from "./constant";
 import appendResultToFormData from "./appendResultToFormData";
 import appendUploadImageToFormData from "./appendUploadImageToFormData";
 import appendUpdateImageToFormData from "./appendUpdateImageToFormData";
@@ -63,6 +63,6 @@ export {
   METHOD_LIST,
   DATES,
   LOCATIONS,
-  CATEGORIES,
+  CONCERT_CATEGORIES,
   PROGRESSES,
 };

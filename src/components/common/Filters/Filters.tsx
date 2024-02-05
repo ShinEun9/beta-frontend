@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import queryString from "query-string";
 import { toast } from "react-toastify";
 import { FilterButton, SelectBox } from "@/components/common";
-import { getTodayStringDate, getStringDate, checkIsEndDateAfterStartDate, DATES, LOCATIONS, CATEGORIES, PROGRESSES } from "@/utils";
+import { getTodayStringDate, getStringDate, checkIsEndDateAfterStartDate, DATES, LOCATIONS, CONCERT_CATEGORIES, PROGRESSES } from "@/utils";
 import { useFilterSlide } from "@/hooks";
 import classNames from "classnames/bind";
 import styles from "./Filters.module.css";
@@ -30,12 +30,12 @@ const Filters: React.FC = () => {
   const [filter, setFilter] = useState<FilterType>({});
 
   useEffect(() => {
-    const date = queries.date as string;
-    const start_date = queries.start_date as string;
-    const end_date = queries.end_date as string;
-    const location = queries.location as string;
-    const category = queries.category as string;
-    const progress = queries.progress as string;
+    const date = (queries.date as string) || "오늘";
+    const start_date = (queries.start_date as string) || todayString;
+    const end_date = (queries.end_date as string) || todayString;
+    const location = (queries.location as string) || "all";
+    const category = (queries.category as string) || "all";
+    const progress = (queries.progress as string) || "1";
 
     setFilter({
       date,
@@ -169,7 +169,7 @@ const Filters: React.FC = () => {
         <div className={styles["filter-row"]}>
           <strong className={styles["filter-row__title"]}>카테고리</strong>
           <div className={styles["filter-contents"]}>
-            {CATEGORIES.map((item: string) => (
+            {CONCERT_CATEGORIES.map((item: string) => (
               <FilterButton key={item} selected={filter.category === item} onClick={handleClickFilterButton} name={"category"}>
                 {item}
               </FilterButton>

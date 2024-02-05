@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { Modal, UserAccessModal } from "@/components/common";
 import { StoryUploadModal, StoryViewModal, StoryList, StoryListSkeleton } from "@/components/main";
 import { useModalStore, useLoginStore } from "@/stores";
@@ -24,10 +24,6 @@ const StorySection = () => {
     setInitialStorySlide(8);
     setOpenModal({ state: true, type: "storyView" });
   };
-
-  useEffect(() => {
-    setOpenModal({ state: true, type: "storyView" });
-  }, []);
 
   return (
     <>
