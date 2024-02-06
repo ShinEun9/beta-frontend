@@ -4,7 +4,7 @@ import axios from "axios";
 import { useReservationFormStore } from "@/stores";
 import { postTossConfirm } from "@/apis";
 import CheckBoxIconSrc from "@/assets/checkbox-payment.svg";
-import "@/components/detail/ReservationPayment/style.css";
+import "@/styles/payment.css";
 
 const PaySuccessPage = () => {
   const navigate = useNavigate();
