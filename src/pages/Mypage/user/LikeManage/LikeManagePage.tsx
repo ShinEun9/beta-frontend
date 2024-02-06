@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserLikeList } from "@/apis";
+import { useQueryClient } from "@tanstack/react-query";
 import { FilterButton } from "@/components/common";
 import { LikeItemList } from "@/components/mypage";
 import styles from "./LikeManagePage.module.css";
@@ -16,14 +15,6 @@ const LikeManagePage = () => {
     setSelectedCategory(value!);
     queryClient.invalidateQueries({ queryKey: ["userLikeList"] });
   };
-
-  const { status, error } = useQuery({
-    queryKey: ["userLikeList"],
-    queryFn: () => getUserLikeList(),
-  });
-
-  if (status === "pending") return <h1>loading...</h1>;
-  if (status === "error") return <h1>{error.message}</h1>;
 
   return (
     <div className={styles["filter-row"]}>
