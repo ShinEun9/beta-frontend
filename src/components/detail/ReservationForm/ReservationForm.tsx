@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
-import { useInputs } from "@/hooks";
+import { useInputs, useReservationAlert } from "@/hooks";
 import { useLoginStore, useModalStore, useReservationFormStore } from "@/stores";
 import { UserReservationInputsType, MemberType, UserReservationFormType, ShowReservationInfoType } from "@/types";
 import { convertBase64ToBytes } from "@/utils";
@@ -22,14 +22,16 @@ interface PropsType {
 const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
   const queryClient = useQueryClient();
   const { id: showId } = useParams();
-  const { setOpenModal } = useModalStore();
-
   const {
     userState: { login_id },
   } = useLoginStore();
 
+  // 공연 예매 정보(공연정보 및 회차/가격 정보)
   const { location, price, date_time, notice, show_id } = queryClient.getQueryData<ShowReservationInfoType>(["reservationData", showId])!;
+
+  // 유저의 예매폼 정보
   const { user_name, user_email, phone_number } = queryClient.getQueryData<MemberType>(["userInfo"])!;
+  const { reservationForm, setReservationForm } = useReservationFormStore();
 
   const [email1, email2] = user_email.split("@");
   const [phone1, phone2, phone3] = phone_number.split("-");
@@ -39,60 +41,39 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
     is_receive_email: false,
   });
 
+  const { showReservationSuccessAlert, showReservationFailAlert } = useReservationAlert();
+  const { setOpenModal } = useModalStore();
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);
 
-  const { setReservationForm } = useReservationFormStore();
+  const submitFreeReservation = async () => {
+    await postReservation(reservationForm!);
+    showReservationSuccessAlert();
 
-  const submitReservation = async (reservationParam: UserReservationFormType) => {
+    queryClient.invalidateQueries({
+      queryKey: ["infoData", showId, login_id],
+    });
+
+    setOpenModal({ state: false, type: "" });
+  };
+
+  const submitReservation = async (formParam: UserReservationFormType) => {
+    toast.dismiss();
     setSubmitBtnDisabled(true);
-    const toastId = toast.loading("검증 중...");
     try {
-      // 예매 검증
-      await postPayVerification(reservationParam);
+      await postPayVerification(formParam); // 예매 검증
 
-      // 유료 예매인 경우 토스페이먼츠 모달 띄움
       if (price !== 0) {
-        toast.dismiss(toastId);
         goToPaymentStep();
         return;
       }
 
-      // 검증 완료 후 무료 예매로 넘어갈 때
-      toast.update(toastId, {
-        render: "예매 진행 중...",
-        type: toast.TYPE.INFO,
-        isLoading: true,
-      });
-
-      // 무료 예매인 경우
-      await postReservation(reservationParam);
-      toast.update(toastId, {
-        render: (
-          <p>
-            예매 성공하였습니다. <br />
-            마이페이지에서 확인하세요.
-          </p>
-        ),
-        type: toast.TYPE.SUCCESS,
-        isLoading: false,
-        autoClose: 2000,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["infoData", showId, login_id],
-      });
-      setOpenModal({ state: false, type: "" });
+      await submitFreeReservation();
     } catch (err) {
       let errorMessage = "예매에 실패하였습니다.";
       if (axios.isAxiosError(err) && err.response) {
         errorMessage = err.response.data.message || errorMessage;
       }
-
-      toast.update(toastId, {
-        render: errorMessage,
-        type: toast.TYPE.ERROR,
-        isLoading: false,
-        autoClose: 2000,
-      });
+      showReservationFailAlert(errorMessage);
     } finally {
       setSubmitBtnDisabled(false);
     }
@@ -169,7 +150,7 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
         </div>
       </form>
 
-      <Button type="submit" form="reservation" disabled={submitBtnDisabled}>
+      <Button type="submit" form="reservation" disabled={submitBtnDisabled} loading={submitBtnDisabled}>
         예매하기
       </Button>
     </>
@@ -177,23 +158,3 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
 };
 
 export default ReservationForm;
-
-{
-  /* TODO: show_sub_type일때  */
-}
-{
-  /* {show_sub_type === "연극" && (
-        <div className={styles["show-agreement"]}>
-          <h2 className="a11y-hidden">동의서</h2>
-          <CheckBox inputId="외부 유출 금지 동의">
-            본 공연에 대한 권리는 모두 00대학교 oo학과 및 '제목' 제작진에게 있으므로 관람 시 무단 녹화, 캡처, 녹음 및 유출 등 모든 외부 유출을 절대
-            금지합니다.
-          </CheckBox>
-          <CheckBox inputId="노쇼 (NO SHOW) 및 양도 방지">
-            예매자 본인은 본 공연을 관람 가능한 일시에 예매 하고 있으며, 확정된 예매 티켓을 타인에게 무단으로 양도하지 않을 것을 동의합니다. 이후
-            사전에 취소 절차를 진행하지 않고 공연을 노쇼(NO SHOW)하게 될 경우 이에 따르는 불이익을 예매자 본인이 책임지는 것에 동의합니다.
-            <span>*노쇼 (NO SHOW)및 무단양도 관객의 경우 다음 oo대학교 oo학과 공연 예매가 제한 될 수 있음을 안내드립니다.</span>
-          </CheckBox>
-        </div>
-      )} */
-}
