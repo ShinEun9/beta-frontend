@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { toast, Id } from "react-toastify";
+import { toast } from "react-toastify";
 import { Button, CheckBox, InputField, InputFieldGroup } from "@/components/common";
 import { useInputs, useReservationAlert } from "@/hooks";
 import { useLoginStore, useModalStore, useReservationFormStore } from "@/stores";
@@ -22,14 +22,16 @@ interface PropsType {
 const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
   const queryClient = useQueryClient();
   const { id: showId } = useParams();
-  const { setOpenModal } = useModalStore();
-
   const {
     userState: { login_id },
   } = useLoginStore();
 
+  // 공연 예매 정보(공연정보 및 회차/가격 정보)
   const { location, price, date_time, notice, show_id } = queryClient.getQueryData<ShowReservationInfoType>(["reservationData", showId])!;
+
+  // 유저의 예매폼 정보
   const { user_name, user_email, phone_number } = queryClient.getQueryData<MemberType>(["userInfo"])!;
+  const { reservationForm, setReservationForm } = useReservationFormStore();
 
   const [email1, email2] = user_email.split("@");
   const [phone1, phone2, phone3] = phone_number.split("-");
@@ -39,14 +41,13 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
     is_receive_email: false,
   });
 
-  const { reservationForm, setReservationForm } = useReservationFormStore();
-  const { showReservationAlert, showReservationSuccessAlert, showReservationFailAlert } = useReservationAlert();
+  const { showReservationSuccessAlert, showReservationFailAlert } = useReservationAlert();
+  const { setOpenModal } = useModalStore();
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);
 
-  const submitFreeReservation = async (toastId: Id) => {
-    showReservationAlert(toastId);
+  const submitFreeReservation = async () => {
     await postReservation(reservationForm!);
-    showReservationSuccessAlert(toastId);
+    showReservationSuccessAlert();
 
     queryClient.invalidateQueries({
       queryKey: ["infoData", showId, login_id],
@@ -56,25 +57,23 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
   };
 
   const submitReservation = async (formParam: UserReservationFormType) => {
+    toast.dismiss();
     setSubmitBtnDisabled(true);
-    const toastId = toast.loading("검증 중...");
     try {
-      // 예매 검증
-      await postPayVerification(formParam);
+      await postPayVerification(formParam); // 예매 검증
 
       if (price !== 0) {
-        toast.dismiss(toastId);
         goToPaymentStep();
         return;
       }
 
-      await submitFreeReservation(toastId);
+      await submitFreeReservation();
     } catch (err) {
       let errorMessage = "예매에 실패하였습니다.";
       if (axios.isAxiosError(err) && err.response) {
         errorMessage = err.response.data.message || errorMessage;
       }
-      showReservationFailAlert(toastId, errorMessage);
+      showReservationFailAlert(errorMessage);
     } finally {
       setSubmitBtnDisabled(false);
     }
@@ -151,7 +150,7 @@ const ReservationForm: React.FC<PropsType> = ({ goToPaymentStep }) => {
         </div>
       </form>
 
-      <Button type="submit" form="reservation" disabled={submitBtnDisabled}>
+      <Button type="submit" form="reservation" disabled={submitBtnDisabled} loading={submitBtnDisabled}>
         예매하기
       </Button>
     </>
