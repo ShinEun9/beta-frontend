@@ -413,10 +413,17 @@
  ┃ ┃ ┣ 📂PayFail
  ┃ ┃ ┣ 📂PaySuccess
  ┃ ┃ ┗ 📂Signup
+ ┃ ┣ 📂routes
+ ┃ ┃ ┣ 📜PrivateRoute.tsx
+ ┃ ┃ ┗ 📜Router.tsx
  ┃ ┣ 📂stores
  ┃ ┃ ┣ 📜useShowIdStore.ts
  ┃ ┃ ┃ ...
  ┃ ┃ ┗ 📜index.ts
+ ┃ ┣ 📂styles
+ ┃ ┃ ┣ 📜global.css
+ ┃ ┃ ┣ 📜payment.css
+ ┃ ┃ ┗ 📜toast.css
  ┃ ┣ 📂types
  ┃ ┃ ┣ 📜addressSearchType.ts
  ┃ ┃ ┃ ...
@@ -426,11 +433,7 @@
  ┃ ┃ ┃ ...
  ┃ ┃ ┗ 📜index.ts
  ┃ ┣ 📜App.tsx
- ┃ ┣ 📜global.css
  ┃ ┣ 📜main.tsx
- ┃ ┣ 📜PrivateRoute.tsx
- ┃ ┣ 📜Router.tsx
- ┃ ┣ 📜toast.css
  ┃ ┗ 📜vite-env.d.ts
  ┣ 📜.env
  ┣ 📜.env.development
