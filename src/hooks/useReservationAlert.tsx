@@ -1,4 +1,4 @@
-import { toast, Id } from "react-toastify";
+import { toast } from "react-toastify";
 
 const useReservationAlert = () => {
   const showReservationSuccessAlert = () => {
