@@ -76,7 +76,7 @@
   top: 0;
   right: 0;
   width: 60%;
-  height: 100vh;
+  height: 100dvh;
   z-index: 200;
   background-color: white;
   padding: 1.25rem;
