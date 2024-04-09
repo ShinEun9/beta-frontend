@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@/suspense";
 import { Carousel } from "@/components/common";
 import { StoryCard } from "..";
 import { getStoryList } from "@/apis";
@@ -15,8 +15,7 @@ const StoryList: React.FC<PropsType> = ({ setInitialStorySlide }) => {
 
   const { data } = useSuspenseQuery({
     queryKey: ["storyData"],
-    queryFn: async () => await getStoryList(),
-    select: (item) => item.slice(0, 7),
+    queryFn: () => getStoryList(),
   });
 
   const handleClickStoryCard = (slideNum: number) => (e: React.MouseEvent) => {
