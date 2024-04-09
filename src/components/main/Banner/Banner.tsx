@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@/suspense/";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "@/components/common";
 import { getBannerImages } from "@/apis";
@@ -10,7 +10,7 @@ const Banner = () => {
   const [isCarouselDragging, setIsCarouselDragging] = useState(false);
   const { data } = useSuspenseQuery({
     queryKey: ["bannerData"],
-    queryFn: async () => await getBannerImages(),
+    queryFn: () => getBannerImages(),
   });
 
   const handleClickBannerImage = (showId: number) => (e: React.MouseEvent) => {
@@ -23,7 +23,7 @@ const Banner = () => {
 
   return (
     <>
-      {data.length ? (
+      {data?.length ? (
         <Carousel index={0} setIsDragging={setIsCarouselDragging} dataLength={data?.length}>
           {data.map((item) => (
             <img
