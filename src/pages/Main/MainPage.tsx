@@ -1,7 +1,6 @@
 import { BannerSection, StorySection, CalendarSection } from "@/components/main";
 import "react-loading-skeleton/dist/skeleton.css";
-import { ErrorBoundary } from "react-error-boundary";
-
+import { ErrorBoundary } from "@/suspense";
 const MainPage = () => {
   return (
     <main>
